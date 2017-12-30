@@ -8,21 +8,15 @@
 #include "character.h"
 
 Character::Character(Physics* physics, Point* position) {
-
   this->position = position;
 
   ball = gluNewQuadric();
-  gluQuadricTexture(ball, GL_TRUE);    // Create Texture Coords
-  gluQuadricNormals(ball, GLU_SMOOTH); // Create Smooth Normals
+  gluQuadricTexture(ball, GL_TRUE);
+  gluQuadricNormals(ball, GLU_SMOOTH);
 
   this->physics = physics;
 
-  // for (int i = 0; i <= 10; i++) {
-  //   futurePositions.push_front(new Point(i * sin(-0.78), -i * cos(-0.78), 0));
-  // }
-
   default_shot_rotation = -0.78;
-  //default_shot_rotation = 0;
   shot_rotation = default_shot_rotation;
   default_shot_power = 20.0;
   shot_power = 0;
@@ -59,44 +53,44 @@ void Character::render(int game_mode) {
   // nose
   Textures::setTexture("bear_nose");
 
-  glTranslatef(0,-0.62,0.15);
+  glTranslatef(0, -0.62, 0.15);
   gluSphere(ball, 0.25, 20, 20);
-  glTranslatef(0,0.62,-0.15);
+  glTranslatef(0, 0.62, -0.15);
 
   // parts
   Textures::setTexture("bear_arms");
 
   // arms
-  glTranslatef(-0.6,-0.25,0);
+  glTranslatef(-0.6, -0.25, 0);
   gluSphere(ball, 0.25, 20, 20);
-  glTranslatef(0.6,0.25,0);
+  glTranslatef(0.6, 0.25, 0);
 
-  glTranslatef(0.6,-0.25,0);
+  glTranslatef(0.6, -0.25, 0);
   gluSphere(ball, 0.25, 20, 20);
-  glTranslatef(-0.6,0.25,0);
+  glTranslatef(-0.6, 0.25, 0);
 
   // ears
-  glTranslatef(-0.4,0,0.6);
+  glTranslatef(-0.4, 0, 0.6);
   gluSphere(ball, 0.17, 20, 20);
-  glTranslatef(0.4,0,-0.6);
+  glTranslatef(0.4, 0, -0.6);
 
-  glTranslatef(0.4,0,0.6);
+  glTranslatef(0.4, 0, 0.6);
   gluSphere(ball, 0.17, 20, 20);
-  glTranslatef(-0.4,0,-0.6);
+  glTranslatef(-0.4, 0, -0.6);
 
   // stubby lil' feet
-  glTranslatef(-0.4,0,-0.55);
+  glTranslatef(-0.4, 0, -0.55);
   gluSphere(ball, 0.25, 20, 20);
-  glTranslatef(0.4,0,0.55);
+  glTranslatef(0.4, 0, 0.55);
 
-  glTranslatef(0.4,0,-0.55);
+  glTranslatef(0.4, 0, -0.55);
   gluSphere(ball, 0.25, 20, 20);
-  glTranslatef(-0.4,0,0.55);
+  glTranslatef(-0.4, 0, 0.55);
 
   // tail
-  glTranslatef(0,0.62,-0.15);
+  glTranslatef(0, 0.62, -0.15);
   gluSphere(ball, 0.17, 20, 20);
-  glTranslatef(0,-0.62,0.15);
+  glTranslatef(0, -0.62, 0.15);
 
   if (game_mode == PREP_MODE && shot_rotation == default_shot_rotation) {
     // Tutorial info
@@ -136,7 +130,8 @@ void Character::render(int game_mode) {
     glEnd();
     for (auto position = futurePositions.begin(); position != futurePositions.end(); ++position) {
       btScalar m[16];
-      position->getOpenGLMatrix(m);glPushMatrix();
+      position->getOpenGLMatrix(m);
+      glPushMatrix();
       glMultMatrixf((GLfloat*)m);
       gluSphere(ball, radius * 0.15, 10, 10);
       glPopMatrix();
@@ -146,14 +141,16 @@ void Character::render(int game_mode) {
 
 void Character::setShotRotation(float value, bool recompute_trajectory) {
   shot_rotation = value;
-  physics->setRotation(identity,0,0,shot_rotation);
+  physics->setRotation(identity, 0, 0, shot_rotation);
 
   if (recompute_trajectory) {
     // calculate future points
     futurePositions.clear();
     if (up_shot) {
       // a 45 degree shot
-      impulse(0.293 * default_shot_power * sin(shot_rotation), 0.293 * -default_shot_power * cos(shot_rotation), 0.707 * default_shot_power);
+      impulse(0.293 * default_shot_power * sin(shot_rotation),
+        0.293 * -default_shot_power * cos(shot_rotation),
+        0.707 * default_shot_power);
     } else {
       impulse(default_shot_power * sin(shot_rotation), -default_shot_power * cos(shot_rotation), 0.5);
     }
@@ -167,7 +164,7 @@ void Character::setShotRotation(float value, bool recompute_trajectory) {
     physics->stop(identity);
     physics->setPositionAndRotation(identity,
         new Point(position->x, position->y, position->z + 0.001f),
-        0,0,shot_rotation);
+        0, 0, shot_rotation);
   }
 }
 

@@ -7,15 +7,10 @@
 
 #include "textures.h"
 
-//tex.texture_map = {};
-//tex.texture_root = "Art/";
-
 std::map<std::string, GLuint*> Textures::texture_map = {};
 std::string Textures::texture_root = "Art/";
 
-
 Textures::Textures() {
-
 }
 
 void Textures::addTexture(std::string texture_name, std::string texture_file) {
@@ -27,7 +22,7 @@ void Textures::addTexture(std::string texture_name, std::string texture_file) {
 
   SDL_Surface*  image = IMG_Load(path.c_str());
   if (image == nullptr) {
-      printf( "IMG_Load failed for %s with error: %s\n", path.c_str(), IMG_GetError() );
+      printf("IMG_Load failed for %s with error: %s\n", path.c_str(), IMG_GetError());
   }
 
   GLuint* tex = new GLuint[1];

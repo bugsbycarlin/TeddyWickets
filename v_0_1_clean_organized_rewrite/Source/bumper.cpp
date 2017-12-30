@@ -7,19 +7,19 @@
 
 #include "bumper.h"
 
-Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrude_direction) {
+Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrusion) {
   this->start = start;
   this->end = end;
-  this->extrude_direction = extrude_direction;
+  this->extrusion = extrusion;
 
   // wrong
-  this->normal = physics->normalVectorRelative(extrude_direction, end, start);
+  this->normal = physics->normalVectorRelative(extrusion, end, start);
 
   last_bumped = 0;
 
   this->physics = physics;
 
-  identity = physics->addBumper(start, end, extrude_direction);
+  identity = physics->addBumper(start, end, extrusion);
 }
 
 void Bumper::bump() {
@@ -48,30 +48,50 @@ void Bumper::render() {
 
   glBegin(GL_QUADS);
 
-    glTexCoord2f(0, 0); glVertex3f(start->x, start->y, start->z);
-    glTexCoord2f(4, 0); glVertex3f(end->x, end->y, end->z);
-    glTexCoord2f(4, 1); glVertex3f(end->x, end->y, end->z + bumper_height);
-    glTexCoord2f(0, 1); glVertex3f(start->x, start->y, start->z + bumper_height);
+    glTexCoord2f(0, 0);
+    glVertex3f(start->x, start->y, start->z);
+    glTexCoord2f(4, 0);
+    glVertex3f(end->x, end->y, end->z);
+    glTexCoord2f(4, 1);
+    glVertex3f(end->x, end->y, end->z + bumper_height);
+    glTexCoord2f(0, 1);
+    glVertex3f(start->x, start->y, start->z + bumper_height);
 
-    glTexCoord2f(0, 0); glVertex3f(start->x + extrude_direction->x, start->y + extrude_direction->y, start->z + extrude_direction->z);
-    glTexCoord2f(4, 0); glVertex3f(end->x + extrude_direction->x, end->y + extrude_direction->y, end->z + extrude_direction->z);
-    glTexCoord2f(4, 1); glVertex3f(end->x + extrude_direction->x, end->y + extrude_direction->y, end->z + extrude_direction->z + bumper_height);
-    glTexCoord2f(0, 1); glVertex3f(start->x + extrude_direction->x, start->y + extrude_direction->y, start->z + extrude_direction->z + bumper_height);
+    glTexCoord2f(0, 0);
+    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z);
+    glTexCoord2f(4, 0);
+    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z);
+    glTexCoord2f(4, 1);
+    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + bumper_height);
+    glTexCoord2f(0, 1);
+    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + bumper_height);
 
-    glTexCoord2f(0, 0); glVertex3f(start->x, start->y, start->z + bumper_height);
-    glTexCoord2f(4, 0); glVertex3f(end->x, end->y, end->z + bumper_height);
-    glTexCoord2f(4, 1); glVertex3f(end->x + extrude_direction->x, end->y + extrude_direction->y, end->z + extrude_direction->z + bumper_height);
-    glTexCoord2f(0, 1); glVertex3f(start->x + extrude_direction->x, start->y + extrude_direction->y, start->z + extrude_direction->z + bumper_height);
+    glTexCoord2f(0, 0);
+    glVertex3f(start->x, start->y, start->z + bumper_height);
+    glTexCoord2f(4, 0);
+    glVertex3f(end->x, end->y, end->z + bumper_height);
+    glTexCoord2f(4, 1);
+    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + bumper_height);
+    glTexCoord2f(0, 1);
+    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + bumper_height);
 
-    glTexCoord2f(0.5, 0); glVertex3f(start->x, start->y, start->z);
-    glTexCoord2f(1, 0); glVertex3f(start->x, start->y, start->z + bumper_height);
-    glTexCoord2f(1, 1); glVertex3f(start->x + extrude_direction->x, start->y + extrude_direction->y, start->z + extrude_direction->z + bumper_height);
-    glTexCoord2f(0.5, 1); glVertex3f(start->x + extrude_direction->x, start->y + extrude_direction->y, start->z + extrude_direction->z);
+    glTexCoord2f(0.5, 0);
+    glVertex3f(start->x, start->y, start->z);
+    glTexCoord2f(1, 0);
+    glVertex3f(start->x, start->y, start->z + bumper_height);
+    glTexCoord2f(1, 1);
+    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + bumper_height);
+    glTexCoord2f(0.5, 1);
+    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z);
 
-    glTexCoord2f(0.5, 0); glVertex3f(end->x, end->y, end->z);
-    glTexCoord2f(1, 0); glVertex3f(end->x, end->y, end->z + bumper_height);
-    glTexCoord2f(1, 1); glVertex3f(end->x + extrude_direction->x, end->y + extrude_direction->y, end->z + extrude_direction->z + bumper_height);
-    glTexCoord2f(0.5, 1); glVertex3f(end->x + extrude_direction->x, end->y + extrude_direction->y, end->z + extrude_direction->z);
+    glTexCoord2f(0.5, 0);
+    glVertex3f(end->x, end->y, end->z);
+    glTexCoord2f(1, 0);
+    glVertex3f(end->x, end->y, end->z + bumper_height);
+    glTexCoord2f(1, 1);
+    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + bumper_height);
+    glTexCoord2f(0.5, 1);
+    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z);
 
   glEnd();
 

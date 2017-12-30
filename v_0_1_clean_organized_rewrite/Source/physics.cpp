@@ -11,7 +11,7 @@ Physics::Physics() {
   objectCounter = 0;
 }
 
-//add the body to the dynamics world
+// add the body to the dynamics world
 int Physics::addBody(btRigidBody* body) {
   int identity = objectCounter;
   dynamicsWorld->addRigidBody(body);
@@ -40,7 +40,7 @@ Point* Physics::normalVectorRelative(Point* p1, Point* p2, Point* base) {
   p3->x /= scale_factor;
   p3->y /= scale_factor;
   p3->z /= scale_factor;
-  //printf("Normal = %f,%f,%f\n", p3->x, p3->y, p3->z);
+  // printf("Normal = %f,%f,%f\n", p3->x, p3->y, p3->z);
   return p3;
 }
 
@@ -74,7 +74,7 @@ int Physics::addBumper(Point* start, Point* end, Point* normal) {
 
   btVector3 localInertia(0, 0, 0);
 
-  //using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
+  // using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
   btRigidBody* body = new btRigidBody(rbInfo);
@@ -106,7 +106,7 @@ int Physics::addWall(Point* p1, Point* p2, Point* p3, Point* p4) {
 
   btVector3 localInertia(0, 0, 0);
 
-  //using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
+  // using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
   btRigidBody* body = new btRigidBody(rbInfo);
@@ -133,7 +133,7 @@ int Physics::addWall(float xWidth, float yWidth, float zWidth, float xPos, float
 
   btVector3 localInertia(0, 0, 0);
 
-  //using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
+  // using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, groundShape, localInertia);
   btRigidBody* body = new btRigidBody(rbInfo);
@@ -157,8 +157,8 @@ int Physics::addWicket(Point* pole_1_position, Point* pole_2_position, float hei
   collisionShapes.push_back(colShape_2);
 
   // eventual top of the wicket
-  //btCollisionShape* colShape_3 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
-  //collisionShapes.push_back(colShape_2);
+  // btCollisionShape* colShape_3 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
+  // collisionShapes.push_back(colShape_2);
 
   btScalar mass(0.);
   btVector3 localInertia(0, 0, 0);
@@ -188,13 +188,13 @@ int Physics::addBall(float radius, float xPos, float yPos, float zPos) {
   btCollisionShape* colShape = new btSphereShape(btScalar(radius));
   collisionShapes.push_back(colShape);
 
-  /// Create Dynamic Objects
+  // Create Dynamic Objects
   btTransform startTransform;
   startTransform.setIdentity();
 
   btScalar mass(1.f);
 
-  //rigidbody is dynamic if and only if mass is non zero, otherwise static
+  // rigidbody is dynamic if and only if mass is non zero, otherwise static
   bool isDynamic = (mass != 0.f);
 
   btVector3 localInertia(0, 0, 0);
@@ -204,14 +204,12 @@ int Physics::addBall(float radius, float xPos, float yPos, float zPos) {
   startTransform.setOrigin(btVector3(xPos, yPos, zPos));
 
   btQuaternion quat;
-  quat.setEuler(0,0,-0.78);
-  //quat.setEuler(0,0,0);
+  quat.setEuler(0, 0, -0.78);
   startTransform.setRotation(quat);
 
-  //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+  // using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
-  //rbInfo.m_friction = 7.9;
   btRigidBody* body = new btRigidBody(rbInfo);
 
   body->setFriction(0.4f);
@@ -232,12 +230,9 @@ void Physics::setPosition(int identity, Point* p) {
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[identity];
   btRigidBody* body = btRigidBody::upcast(obj);
   btTransform trans;
-  if (body && body->getMotionState())
-  {
+  if (body && body->getMotionState()) {
     body->getMotionState()->getWorldTransform(trans);
-  }
-  else
-  {
+  } else {
     trans = obj->getWorldTransform();
   }
   trans.setOrigin(btVector3(p->x, p->y, p->z));
@@ -248,24 +243,18 @@ void Physics::setRotation(int identity, float yaw, float pitch, float roll) {
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[identity];
   btRigidBody* body = btRigidBody::upcast(obj);
   btTransform trans;
-  if (body && body->getMotionState())
-  {
+  if (body && body->getMotionState()) {
     body->getMotionState()->getWorldTransform(trans);
-  }
-  else
-  {
+  } else {
     trans = obj->getWorldTransform();
   }
-  //btTransform newTransform;
 
-  //newTransform.setIdentity();
   Point* p = new Point(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ());
   trans.setOrigin(btVector3(p->x, p->y, p->z));
 
   btQuaternion quat;
   quat.setEuler(yaw, pitch, roll);
   trans.setRotation(quat);
-  
 
   body->setWorldTransform(trans);
 }
@@ -273,8 +262,8 @@ void Physics::setRotation(int identity, float yaw, float pitch, float roll) {
 void Physics::stop(int identity) {
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[identity];
   btRigidBody* body = btRigidBody::upcast(obj);
-  body->setLinearVelocity(btVector3(0,0,0));
-  body->setAngularVelocity(btVector3(0,0,0));
+  body->setLinearVelocity(btVector3(0, 0, 0));
+  body->setAngularVelocity(btVector3(0, 0, 0));
 }
 
 float Physics::getVelocity(int identity) {
@@ -284,17 +273,14 @@ float Physics::getVelocity(int identity) {
   return (float) v.length();
 }
 
-// Can't get rotation and translation to stop overwriting each other. Somewhere I'm implicitly setting an identity. 
+// Can't get rotation and translation to stop overwriting each other. Somewhere I'm implicitly setting an identity.
 void Physics::setPositionAndRotation(int identity, Point* p, float yaw, float pitch, float roll) {
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[identity];
   btRigidBody* body = btRigidBody::upcast(obj);
   btTransform trans;
-  if (body && body->getMotionState())
-  {
+  if (body && body->getMotionState()) {
     body->getMotionState()->getWorldTransform(trans);
-  }
-  else
-  {
+  } else {
     trans = obj->getWorldTransform();
   }
   trans.setOrigin(btVector3(p->x, p->y, p->z));
@@ -302,7 +288,6 @@ void Physics::setPositionAndRotation(int identity, Point* p, float yaw, float pi
   btQuaternion quat;
   quat.setEuler(yaw, pitch, roll);
   trans.setRotation(quat);
-  
 
   body->setWorldTransform(trans);
 }
@@ -320,21 +305,20 @@ void Physics::update(float timeStep) {
 }
 
 void Physics::printPositions() {
-  //print positions of all objects
-  for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
-  {
+  // print positions of all objects
+  for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
     btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
     btRigidBody* body = btRigidBody::upcast(obj);
     btTransform trans;
-    if (body && body->getMotionState())
-    {
+    if (body && body->getMotionState()) {
       body->getMotionState()->getWorldTransform(trans);
-    }
-    else
-    {
+    } else {
       trans = obj->getWorldTransform();
     }
-    printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+    printf("world pos object %d = %f,%f,%f\n", j,
+      float(trans.getOrigin().getX()),
+      float(trans.getOrigin().getY()),
+      float(trans.getOrigin().getZ()));
   }
 }
 
@@ -343,12 +327,9 @@ void Physics::updatePoint(Point* p, int identity) {
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[identity];
   btRigidBody* body = btRigidBody::upcast(obj);
   btTransform trans;
-  if (body && body->getMotionState())
-  {
+  if (body && body->getMotionState()) {
     body->getMotionState()->getWorldTransform(trans);
-  }
-  else
-  {
+  } else {
     trans = obj->getWorldTransform();
   }
   p->x = float(trans.getOrigin().getX());
@@ -360,18 +341,12 @@ btTransform Physics::getTransform(int identity) {
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[identity];
   btRigidBody* body = btRigidBody::upcast(obj);
   btTransform trans;
-  if (body && body->getMotionState())
-  {
+  if (body && body->getMotionState()) {
     body->getMotionState()->getWorldTransform(trans);
-  }
-  else
-  {
+  } else {
     trans = obj->getWorldTransform();
   }
   return trans;
-  //btQuaternion rot = trans.getRotation();
-  //q = new btQuaternion(rot.x(), rot.y(), rot.z(), rot.w());
-  //printf("rotation = %f,%f,%f,%f\n", float(rot.w()), float(rot.x()), float(rot.y()), float(rot.z()));
 }
 
 bool Physics::checkActive(int identity) {
@@ -408,11 +383,9 @@ bool Physics::hasCollision(int identity, int identity2) {
 
 void myTickCallback(btDynamicsWorld *world, btScalar timeStep) {
     contacts.clear();
-    //printf("The world just ticked by %f seconds\n", (float)timeStep);
 
     int numManifolds = world->getDispatcher()->getNumManifolds();
-    for (int i = 0; i < numManifolds; i++)
-    {
+    for (int i = 0; i < numManifolds; i++) {
         btPersistentManifold* contactManifold =  world->getDispatcher()->getManifoldByIndexInternal(i);
         const btCollisionObject* obA = contactManifold->getBody0();
         const btCollisionObject* obB = contactManifold->getBody1();
@@ -425,16 +398,17 @@ void myTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 }
 
 bool Physics::initializePhysics() {
-  // collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
+  // collision configuration contains default setup for memory, collision setup.
+  // Advanced users can create their own configuration.
   collisionConfiguration = new btDefaultCollisionConfiguration();
 
-  // use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
+  // use the default collision dispatcher.
   dispatcher = new btCollisionDispatcher(collisionConfiguration);
 
   // btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
   overlappingPairCache = new btDbvtBroadphase();
 
-  // the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
+  // the default constraint solver.
   solver = new btSequentialImpulseConstraintSolver;
 
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
@@ -451,41 +425,38 @@ void Physics::shutdown() {
   // Clean up Bullet physics
   int i;
 
-  //remove the rigidbodies from the dynamics world and delete them
-  for (i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-  {
+  // remove the rigidbodies from the dynamics world and delete them
+  for (i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
     btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
     btRigidBody* body = btRigidBody::upcast(obj);
-    if (body && body->getMotionState())
-    {
+    if (body && body->getMotionState()) {
       delete body->getMotionState();
     }
     dynamicsWorld->removeCollisionObject(obj);
     delete obj;
   }
 
-  //delete collision shapes
-  for (int j = 0; j < collisionShapes.size(); j++)
-  {
+  // delete collision shapes
+  for (int j = 0; j < collisionShapes.size(); j++) {
     btCollisionShape* shape = collisionShapes[j];
     collisionShapes[j] = 0;
     delete shape;
   }
 
-  //delete dynamics world
+  // delete dynamics world
   delete dynamicsWorld;
 
-  //delete solver
+  // delete solver
   delete solver;
 
-  //delete broadphase
+  // delete broadphase
   delete overlappingPairCache;
 
-  //delete dispatcher
+  // delete dispatcher
   delete dispatcher;
 
   delete collisionConfiguration;
 
-  //next line is optional: it will be cleared by the destructor when the array goes out of scope
+  // next line is optional: it will be cleared by the destructor when the array goes out of scope
   collisionShapes.clear();
 }

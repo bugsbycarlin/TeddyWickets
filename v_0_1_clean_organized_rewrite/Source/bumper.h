@@ -19,7 +19,7 @@ class Bumper {
  public:
     Point* start;
     Point* end;
-    Point* extrude_direction;
+    Point* extrusion;
     Point* normal;
     Physics* physics;
 
@@ -29,7 +29,7 @@ class Bumper {
 
     bool use_grey;
 
-    Bumper(Physics* physics, Point* start, Point* end, Point* extrude_direction);
+    Bumper(Physics* physics, Point* start, Point* end, Point* extrusion);
 
     void bump();
 

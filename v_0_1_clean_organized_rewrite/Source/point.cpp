@@ -10,14 +10,14 @@
 Point::Point() {
 }
 
-Point::Point(float x,float y,float z) {
+Point::Point(float x, float y, float z) {
   this->x = x;
   this->y = y;
   this->z = z;
 }
 
 void Point::v() {
-  glVertex3f(x,y,z);
+  glVertex3f(x, y, z);
 }
 
 void Point::add(Point* p2) {
