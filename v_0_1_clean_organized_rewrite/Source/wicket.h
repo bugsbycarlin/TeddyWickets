@@ -11,8 +11,8 @@
 
 #include <OpenGL/GLU.h>
 
-#include "point.h"
 #include "physics.h"
+#include "point.h"
 #include "textures.h"
 
 class Wicket {

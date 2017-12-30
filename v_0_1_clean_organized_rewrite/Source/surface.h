@@ -13,8 +13,8 @@
 #include <OpenGL/GLU.h>
 #include <cstdlib>
 
-#include "point.h"
 #include "physics.h"
+#include "point.h"
 #include "textures.h"
 
 class Surface {
@@ -26,9 +26,9 @@ class Surface {
     Point* normal;
     Physics* physics;
 
-    float color_R;
-    float color_G;
-    float color_B;
+    float color_r;
+    float color_g;
+    float color_b;
 
     bool use_grey;
 

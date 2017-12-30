@@ -16,9 +16,9 @@ Character::Character(Physics* physics, Point* position) {
 
   this->physics = physics;
 
-  default_shot_rotation = -0.78;
+  default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
-  default_shot_power = 20.0;
+  default_shot_power = k_default_shot_power;
   shot_power = 0;
   up_shot = false;
 
@@ -32,23 +32,27 @@ void Character::updateFromPhysics() {
 }
 
 void Character::render(int game_mode) {
-  GLfloat mat_a[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat mat_d[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat mat_s[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat low_sh[] = {5.0};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_a);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_d);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_s);
-  glMaterialfv(GL_FRONT, GL_SHININESS, low_sh);
+  GLfloat material_ambient[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat material_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat shininess[] = {5.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
   Textures::setTexture("bear_face");
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-  btScalar m[16];
-  btTransform trans = physics->getTransform(identity);
-  trans.getOpenGLMatrix(m);
+  btScalar transform_matrix[16];
+  btTransform transform = physics->getTransform(identity);
+  transform.getOpenGLMatrix(transform_matrix);
   glPushMatrix();
-  glMultMatrixf((GLfloat*)m);
+  glMultMatrixf((GLfloat*)transform_matrix);
   gluSphere(ball, radius, 20, 20);
+
+  // at the moment, all of the renders below are fixed to a parent ball radius of 0.75.
+  // rather than change this now, I'll wait for the future, where all of this will be
+  // replaced by a mesh loading system and meshes made in Maya.
 
   // nose
   Textures::setTexture("bear_nose");
@@ -92,7 +96,7 @@ void Character::render(int game_mode) {
   gluSphere(ball, 0.17, 20, 20);
   glTranslatef(0, -0.62, 0.15);
 
-  if (game_mode == PREP_MODE && shot_rotation == default_shot_rotation) {
+  if (game_mode == k_prep_mode && shot_rotation == default_shot_rotation) {
     // Tutorial info
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -117,25 +121,29 @@ void Character::render(int game_mode) {
 
   glPopMatrix();
 
-  if (game_mode == PREP_MODE) {
-    // future positions
+  if (game_mode == k_prep_mode) {
+    // render future positions
     Textures::setTexture("plain");
-    glLineWidth(3);
-    glBegin(GL_LINE_STRIP);
-    for (auto position = futurePositions.begin(); position != futurePositions.end(); ++position) {
-      btScalar m[16];
-      position->getOpenGLMatrix(m);
-      glVertex3f(position->getOrigin().getX(), position->getOrigin().getY(), position->getOrigin().getZ());
-    }
-    glEnd();
-    for (auto position = futurePositions.begin(); position != futurePositions.end(); ++position) {
-      btScalar m[16];
-      position->getOpenGLMatrix(m);
+
+    // balls marking future positions
+    for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
+      btScalar transform_matrix[16];
+      position->getOpenGLMatrix(transform_matrix);
       glPushMatrix();
-      glMultMatrixf((GLfloat*)m);
+      glMultMatrixf((GLfloat*)transform_matrix);
       gluSphere(ball, radius * 0.15, 10, 10);
       glPopMatrix();
     }
+
+    // lines between balls
+    glLineWidth(3);
+    glBegin(GL_LINE_STRIP);
+    for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
+      btScalar transform_matrix[16];
+      position->getOpenGLMatrix(transform_matrix);
+      glVertex3f(position->getOrigin().getX(), position->getOrigin().getY(), position->getOrigin().getZ());
+    }
+    glEnd();
   }
 }
 
@@ -144,23 +152,24 @@ void Character::setShotRotation(float value, bool recompute_trajectory) {
   physics->setRotation(identity, 0, 0, shot_rotation);
 
   if (recompute_trajectory) {
-    // calculate future points
-    futurePositions.clear();
+    // calculate future points...
+    future_positions.clear();
     if (up_shot) {
-      // a 45 degree shot
+      // ... using a 45 degree shot
       impulse(0.293 * default_shot_power * sin(shot_rotation),
         0.293 * -default_shot_power * cos(shot_rotation),
         0.707 * default_shot_power);
     } else {
+      // ... using a flat shot
       impulse(default_shot_power * sin(shot_rotation), -default_shot_power * cos(shot_rotation), 0.5);
     }
     physics->activate(identity);
-    btTransform currentTrans = physics->getTransform(identity);
+    btTransform current_transform = physics->getTransform(identity);
     for (int i = 0; i < 300; i++) {
       physics->update(1.0f / 60.f);
-      if (i % 5 == 0) futurePositions.push_front(btTransform(physics->getTransform(identity)));
+      if (i % 5 == 0) future_positions.push_front(btTransform(physics->getTransform(identity)));
     }
-    physics->setTransform(identity, currentTrans);
+    physics->setTransform(identity, current_transform);
     physics->stop(identity);
     physics->setPositionAndRotation(identity,
         new Point(position->x, position->y, position->z + 0.001f),

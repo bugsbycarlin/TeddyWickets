@@ -14,9 +14,9 @@ Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p
   this->p4 = p4;
 
   float grey_value = ((double) rand() / (RAND_MAX)) / 5.0 + 0.65;
-  color_R = grey_value;
-  color_G = grey_value;
-  color_B = grey_value;
+  color_r = grey_value;
+  color_g = grey_value;
+  color_b = grey_value;
 
   this->use_grey = use_grey;
 
@@ -31,19 +31,19 @@ void Surface::render() {
   Textures::setTexture("tiles");
 
   if (use_grey) {
-    glColor4f(color_R, color_G, color_B, 1.0f);
+    glColor4f(color_r, color_g, color_b, 1.0f);
   } else {
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
   }
 
-  GLfloat mat_a[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat mat_d[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat mat_s[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat low_sh[] = {5.0};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_a);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_d);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_s);
-  glMaterialfv(GL_FRONT, GL_SHININESS, low_sh);
+  GLfloat material_ambient[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat material_diffuse[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat shininess[] = {5.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
   glBegin(GL_QUADS);
 

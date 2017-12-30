@@ -16,7 +16,7 @@ Point::Point(float x, float y, float z) {
   this->z = z;
 }
 
-void Point::v() {
+void Point::vertex() {
   glVertex3f(x, y, z);
 }
 

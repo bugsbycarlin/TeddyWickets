@@ -20,33 +20,26 @@
 // Standard libraries
 #include <math.h>
 #include <stdio.h>
-#include <string>
-#include <list>
-#include <cstdlib>
 #include <chrono>
+#include <cstdlib>
+#include <list>
+#include <string>
 
 // Fmod for sound
 #include "fmod.hpp"
 
 // Teddy Wickets includes
-#include "globals.h"
-#include "surface.h"
-#include "physics.h"
-#include "character.h"
 #include "bumper.h"
-#include "wicket.h"
+#include "character.h"
+#include "globals.h"
+#include "physics.h"
+#include "surface.h"
 #include "textures.h"
+#include "wicket.h"
 
 class Game {
  public:
   bool quit;
-
-  enum  {
-    DROP_MODE = 0,
-    PREP_MODE = 1,
-    POWER_MODE = 2,
-    ACTION_MODE = 3
-  };
 
   bool shot_rising = false;
 
@@ -61,33 +54,36 @@ class Game {
 
   int game_mode;
 
+  float default_speed_ramping;
+  float simulation_speed;
+
   bool mousedown;
   int drag_x;
   int drag_y;
   float pre_drag_rotation;
 
-  unsigned long startTime;
-  unsigned long lastTime;
+  unsigned long start_time;
+  unsigned long last_time;
 
-  // Function declarations
   Game();
 
-  void game_loop(SDL_Window* window, FMOD::System *sound_system);
+  void gameLoop(SDL_Window* window, FMOD::System *sound_system);
 
   void update();
-  void postUpdate();
+  void afterUpdate();
+
   void render();
   void renderDesign();
   void renderBackground();
-  void shutdown();
+
   void handleKeys(unsigned char key);
   void handleMouse(SDL_Event e);
 
-
   bool initialize();
-  bool initializeGameLogic();
+  bool initializeGamePieces();
   bool initializeTextures();
   bool initializeLighting();
+  void shutdown();
 };
 
 #endif

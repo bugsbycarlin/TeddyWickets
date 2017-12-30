@@ -13,17 +13,13 @@
 
 #include <list>
 
-#include "point.h"
+#include "globals.h"
 #include "physics.h"
+#include "point.h"
 #include "textures.h"
 
 class Character {
  public:
-    enum  {
-        PREP_MODE = 1,
-        ACTION_MODE = 2
-    };
-
     // Ball
     GLUquadric* ball;
     int identity;
@@ -39,7 +35,7 @@ class Character {
 
     float radius;
 
-    std::list<btTransform> futurePositions = { };
+    std::list<btTransform> future_positions = { };
 
     Character(Physics* physics, Point* position);
 

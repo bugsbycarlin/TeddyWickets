@@ -11,63 +11,59 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <list>
 #include <cstdlib>
+#include <list>
 
 // Bullet, for physics
 #include "btBulletDynamicsCommon.h"
 
+#include "globals.h"
 #include "point.h"
 
-struct Pair {
-    const btCollisionObject* obA;
-    const btCollisionObject* obB;
+struct CollisionPair {
+    const btCollisionObject* collision_object_a;
+    const btCollisionObject* collision_object_b;
 };
 
 class Physics {
  public:
-    // Bullet Physics variables
-    btAlignedObjectArray<btCollisionShape*> collisionShapes;
-    btDiscreteDynamicsWorld* dynamicsWorld;
+    btAlignedObjectArray<btCollisionShape*> collision_shapes;
+    btDiscreteDynamicsWorld* dynamics_world;
     btSequentialImpulseConstraintSolver* solver;
     btCollisionDispatcher* dispatcher;
-    btBroadphaseInterface* overlappingPairCache;
-    btDefaultCollisionConfiguration* collisionConfiguration;
+    btBroadphaseInterface* overlapping_pair_cache;
+    btDefaultCollisionConfiguration* collision_configuration;
 
-    int objectCounter;
+    int object_counter;
 
     Physics();
-
-    int addBody(btRigidBody* body);
-
-    int addWall(float xWidth, float yWidth, float zWidth, float xPos, float yPos, float zPos);
-    int addWall(Point* p1, Point* p2, Point* p3, Point* p4);
-
-    int addBumper(Point* start, Point* end, Point* normal);
-
-    int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
-
-    int addBall(float radius, float xPos, float yPos, float zPos);
 
     Point* normalVector(Point* p1, Point* p2);
     Point* normalVectorRelative(Point* p1, Point* p2, Point* base);
 
-    void impulse(int identity, float xImpulse, float yImpulse, float zImpulse);
+    int addBody(btRigidBody* body);
+
+    int addWall(Point* p1, Point* p2, Point* p3, Point* p4);
+    int addBumper(Point* start, Point* end, Point* normal);
+    int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
+    int addBall(float radius, float x_pos, float y_pos, float z_pos);
+
+    void update(float time_step);
+
+    void impulse(int identity, float x_impulse, float y_impulse, float z_impulse);
     void setPosition(int identity, Point* p);
     void setRotation(int identity, float yaw, float pitch, float roll);
     void setPositionAndRotation(int identity, Point* p, float yaw, float pitch, float roll);
-    void setTransform(int identity, btTransform trans);
+    void setTransform(int identity, btTransform transform);
     void stop(int identity);
-    float getVelocity(int identity);
-
-    void update(float timeStep);
 
     void printPositions();
-
     void updatePoint(Point* p, int identity);
     btTransform getTransform(int identity);
+    float getVelocity(int identity);
     bool hasCollision(int identity, int identity2);
     bool checkActive(int identity);
+
     void activate(int identity);
     void deactivate(int identity);
 

@@ -11,8 +11,9 @@
 
 #include <OpenGL/GLU.h>
 
-#include "point.h"
+#include "globals.h"
 #include "physics.h"
+#include "point.h"
 #include "textures.h"
 
 class Bumper {
@@ -20,7 +21,6 @@ class Bumper {
     Point* start;
     Point* end;
     Point* extrusion;
-    Point* normal;
     Physics* physics;
 
     int identity;
