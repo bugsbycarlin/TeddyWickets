@@ -1,3 +1,10 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+*/
+
 #include "game.h"
 
 void Start2DDraw();
@@ -770,4 +777,3 @@ void End2DDraw() {
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);
 }
-

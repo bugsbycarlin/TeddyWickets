@@ -1,15 +1,23 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+/*
 
-// Bullet, for physics
-#include "btBulletDynamicsCommon.h"
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
 
-#include "point.h"
+  Physics class wraps the Bullet Physics engine with Teddy Wickets specific functionality.
+*/
+
+#ifndef TEDDY_WICKETS_PHYSICS_H_
+#define TEDDY_WICKETS_PHYSICS_H_
 
 #include <stdio.h>
 #include <math.h>
 #include <list>
 #include <cstdlib>
+
+// Bullet, for physics
+#include "btBulletDynamicsCommon.h"
+
+#include "point.h"
 
 struct Pair {
     const btCollisionObject* obA;
@@ -17,8 +25,7 @@ struct Pair {
 };
 
 class Physics {
-  public:
-
+ public:
     // Bullet Physics variables
     btAlignedObjectArray<btCollisionShape*> collisionShapes;
     btDiscreteDynamicsWorld* dynamicsWorld;

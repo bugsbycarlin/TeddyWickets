@@ -1,3 +1,10 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+*/
+
 #include "physics.h"
 
 Physics::Physics() {

@@ -1,3 +1,10 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+*/
+
 #include "surface.h"
 
 Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4) {

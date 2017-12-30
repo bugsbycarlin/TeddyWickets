@@ -1,5 +1,13 @@
-#ifndef TEXTURES_H
-#define TEXTURES_H
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+  Textures class manages a set of textures.
+*/
+
+#ifndef TEDDY_WICKETS_TEXTURES_H_
+#define TEDDY_WICKETS_TEXTURES_H_
 
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
@@ -7,13 +15,13 @@
 
 #include <OpenGL/GLU.h>
 
+#include <stdio.h>
 #include <cstdlib>
 #include <map>
 #include <string>
-#include <stdio.h>
 
 class Textures {
-public:
+ public:
   static Textures& initialize() {
     static Textures instance;
     return instance;
@@ -26,7 +34,7 @@ public:
 
   static void setTexture(std::string texture_name);
 
-private:
+ private:
   Textures();
 };
 

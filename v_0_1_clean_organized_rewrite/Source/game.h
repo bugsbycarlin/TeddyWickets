@@ -1,10 +1,13 @@
 /*
 
-  Game class. This contains one game engine.
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
 
+  Game class is models one level of the game.
 */
-#ifndef GAME_H
-#define GAME_H
+
+#ifndef TEDDY_WICKETS_GAME_H_
+#define TEDDY_WICKETS_GAME_H_
 
 // SDL, for window, user input, and media
 #include <SDL2/SDL.h>
@@ -14,16 +17,16 @@
 // OpenGL, for drawing everything
 #include <OpenGL/GLU.h>
 
-// Fmod for sound
-#include "fmod.hpp"
-
 // Standard libraries
+#include <math.h>
 #include <stdio.h>
 #include <string>
 #include <list>
 #include <cstdlib>
-#include <math.h>
 #include <chrono>
+
+// Fmod for sound
+#include "fmod.hpp"
 
 // Teddy Wickets includes
 #include "globals.h"
@@ -34,10 +37,8 @@
 #include "wicket.h"
 #include "textures.h"
 
-class Game
-{
-public:
-
+class Game {
+ public:
   bool quit;
 
   enum  {

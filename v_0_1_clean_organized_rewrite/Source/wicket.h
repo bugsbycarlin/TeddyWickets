@@ -1,14 +1,22 @@
-#ifndef WICKET_H
-#define WICKET_H
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+  Wicket class models in-game wickets.
+*/
+
+#ifndef TEDDY_WICKETS_WICKET_H_
+#define TEDDY_WICKETS_WICKET_H_
+
+#include <OpenGL/GLU.h>
 
 #include "point.h"
 #include "physics.h"
 #include "textures.h"
-#include <OpenGL/GLU.h>
 
 class Wicket {
-  public:
-
+ public:
     int identity;
 
     GLUquadric* pole;

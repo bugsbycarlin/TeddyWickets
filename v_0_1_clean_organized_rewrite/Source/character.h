@@ -1,14 +1,24 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+  Character class models the player's avatar (ie the bear, or the ball).
+*/
+
+#ifndef TEDDY_WICKETS_CHARACTER_H_
+#define TEDDY_WICKETS_CHARACTER_H_
+
+#include <OpenGL/GLU.h>
+
+#include <list>
 
 #include "point.h"
 #include "physics.h"
 #include "textures.h"
-#include <OpenGL/GLU.h>
 
 class Character {
-  public:
-
+ public:
     enum  {
         PREP_MODE = 1,
         ACTION_MODE = 2

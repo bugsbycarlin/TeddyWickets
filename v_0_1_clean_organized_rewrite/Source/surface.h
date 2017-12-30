@@ -1,13 +1,24 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+  Surface class models an in-game surface, such as a wall or a floor.
+*/
+
+#ifndef TEDDY_WICKETS_SURFACE_H_
+#define TEDDY_WICKETS_SURFACE_H_
+
+#include <stdio.h>
+#include <OpenGL/GLU.h>
+#include <cstdlib>
 
 #include "point.h"
 #include "physics.h"
 #include "textures.h"
-#include <OpenGL/GLU.h>
-#include <cstdlib>
-#include <stdio.h>
 
 class Surface {
-  public:
+ public:
     Point* p1;
     Point* p2;
     Point* p3;
@@ -25,3 +36,5 @@ class Surface {
 
     void render();
 };
+
+#endif

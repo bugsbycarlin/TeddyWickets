@@ -1,3 +1,10 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+*/
+
 #include "bumper.h"
 
 Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrude_direction) {

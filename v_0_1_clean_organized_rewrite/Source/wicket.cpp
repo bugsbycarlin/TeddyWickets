@@ -1,3 +1,10 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+*/
+
 #include "wicket.h"
 
 Wicket::Wicket(Physics* physics, Point* pole_1_position, Point* pole_2_position, float height) {
