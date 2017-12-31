@@ -7,7 +7,7 @@
 
 #include "surface.h"
 
-Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4) {
+Surface::Surface(Physics* physics, Textures* textures, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4) {
   this->p1 = p1;
   this->p2 = p2;
   this->p3 = p3;
@@ -21,14 +21,15 @@ Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p
   this->use_grey = use_grey;
 
   this->physics = physics;
+  this->textures = textures;
 
   this->normal = physics->normalVectorRelative(p1, p3, p4);
 
-  physics->addWall(p1, p2, p3, p4);
+  physics->addSurface(p1, p2, p3, p4);
 }
 
 void Surface::render() {
-  Textures::setTexture("tiles");
+  textures->setTexture("tiles");
 
   if (use_grey) {
     glColor4f(color_r, color_g, color_b, 1.0f);

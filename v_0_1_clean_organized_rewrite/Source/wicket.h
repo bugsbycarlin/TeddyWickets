@@ -27,8 +27,9 @@ class Wicket {
     float height;
 
     Physics* physics;
+    Textures* textures;
 
-    Wicket(Physics* physics, Point* pole_1_position, Point* pole_2_position, float height);
+    Wicket(Physics* physics, Textures* textures, Point* pole_1_position, Point* pole_2_position, float height);
 
     void render();
 };

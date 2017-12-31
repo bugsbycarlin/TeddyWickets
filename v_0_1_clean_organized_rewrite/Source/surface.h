@@ -24,7 +24,9 @@ class Surface {
     Point* p3;
     Point* p4;
     Point* normal;
+
     Physics* physics;
+    Textures* textures;
 
     float color_r;
     float color_g;
@@ -32,7 +34,7 @@ class Surface {
 
     bool use_grey;
 
-    Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4);
+    Surface(Physics* physics, Textures* textures, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4);
 
     void render();
 };

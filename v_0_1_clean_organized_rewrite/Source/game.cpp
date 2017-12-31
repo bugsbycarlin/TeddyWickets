@@ -21,6 +21,7 @@ Game::Game() {
   simulation_speed = 1.0f;
 }
 
+// Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
 void Game::gameLoop(SDL_Window* window, FMOD::System *sound_system) {
   // Event handler
   SDL_Event e;
@@ -64,17 +65,7 @@ void Game::gameLoop(SDL_Window* window, FMOD::System *sound_system) {
   shutdown();
 }
 
-void Game::afterUpdate() {
-  if (game_mode == k_drop_mode && (!physics->checkActive(character->identity) ||
-    physics->getVelocity(character->identity) < 0.00001)) {
-    game_mode = k_prep_mode;
-    character->up_shot = false;
-    character->setShotRotation(character->default_shot_rotation, true);
-  }
-}
-
 void Game::update() {
-
   // Set time and perform physics update
   unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   physics->update(simulation_speed * (current_time - last_time) / 1000.0f);
@@ -129,9 +120,8 @@ void Game::update() {
 
     // uncomment this to force a weak shot if the player doesn't activate the power gauge.
     // if (character->shot_power < 0.1f) {
-    //   game_mode = k_action_mode;
-    //   character->impulse(0.01 * sin(character->shot_rotation), -0.01 * cos(character->shot_rotation), 0.5);
-    //   physics->activate(character->identity);
+    //   character->shot_power = k_default_shot_power / 10.0f;
+    //   shoot();
     // }
   }
 
@@ -149,191 +139,36 @@ void Game::update() {
   }
 }
 
-void Game::render() {
-  glViewport(0, 0, k_screen_width, k_screen_height);
-
-  // Clear color buffer
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  renderBackground();
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  // Set one of these perspectives:
-
-  // this is cool, super zoomed out
-  // glOrtho(-50, 50, -50, 50, -50, 50);
-
-  // weirdly reasonable ortho
-  glOrtho(-13.33, 13.33, -10, 10, -100, 100);
-
-  // normal perspective
-  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
-
-
-  // Light
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  GLfloat ambient[] = {0.5, 0.5, 0.5, 1.0};
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-  glEnable(GL_NORMALIZE);
-  glEnable(GL_RESCALE_NORMAL);
-
-  glMatrixMode(GL_MODELVIEW);
-
-  glLoadIdentity();
-
-  gluLookAt(character->position->x - 15, character->position->y - 15, 15,
-            character->position->x, character->position->y, 0,
-            0, 0, 1);
-
-  GLfloat light_ambient[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_position[] = {-1.0, 0.0, 1.0, 0.0};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-  glColor4f(1.0, 1.0, 1.0, 1.0);
-
-  // render surfaces (walls and floors)
-  for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
-    (*surface)->render();
-  }
-
-  // render bumpers
-  for (auto bumper = bumpers.begin(); bumper != bumpers.end(); ++bumper) {
-    (*bumper)->render();
-  }
-
-  // render wickets
-  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
-    (*wicket)->render();
-  }
-
-  // render the character
-  character->render(game_mode);
-
-  // render 2D overlay
-  Start2DDraw();
-
-  int info_x = 324;
-  int info_y = 20;
-
-  // render shot prep infographic
-  if (game_mode == k_prep_mode) {
-    Textures::setTexture("m_prep_info");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(info_x + 0.0, info_y + 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(info_x + 0.0, info_y + 400);
-    glTexCoord2d(1.0, 1.0); glVertex2d(info_x + 400, info_y + 400);
-    glTexCoord2d(1.0, 0.0); glVertex2d(info_x + 400, info_y + 0.0);
-    glEnd();
-  }
-
-  // render power mode
-  if (game_mode == k_power_mode) {
-    // render power mode infographic
-    Textures::setTexture("m_shot_info");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(info_x + 0.0, info_y + 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(info_x + 0.0, info_y + 400);
-    glTexCoord2d(1.0, 1.0); glVertex2d(info_x + 400, info_y + 400);
-    glTexCoord2d(1.0, 0.0); glVertex2d(info_x + 400, info_y + 0.0);
-    glEnd();
-
-    // render power gauge outline
-    int power_x = 974;
-    int power_y = 20;
-    Textures::setTexture("shot_power_outline");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(power_x + 0.0, power_y + 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(power_x + 0.0, power_y + 150);
-    glTexCoord2d(1.0, 1.0); glVertex2d(power_x + 30, power_y + 150);
-    glTexCoord2d(1.0, 0.0); glVertex2d(power_x + 30, power_y + 0.0);
-    glEnd();
-
-    // render power gauge fill
-    float portion = character->shot_power / character->default_shot_power;
-    Textures::setTexture("shot_power_fill");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 0.0, power_y + 150 - 140 * portion);
-    glTexCoord2d(0.0, 1.0); glVertex2d(power_x + 0.0, power_y + 150);
-    glTexCoord2d(1.0, 1.0); glVertex2d(power_x + 30, power_y + 150);
-    glTexCoord2d(1.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 30, power_y + 150 - 140 * portion);
-    glEnd();
-  }
-
-  End2DDraw();
-}
-
-void Game::renderBackground() {
-  Start2DDraw();
-
-  // background render
-  Textures::setTexture("clouds");
-  glBegin(GL_QUADS);
-  glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
-  glTexCoord2d(0.0, 1.0); glVertex2d(0.0, k_screen_height);
-  glTexCoord2d(1.0, 1.0); glVertex2d(k_screen_width, k_screen_height);
-  glTexCoord2d(1.0, 0.0); glVertex2d(k_screen_width, 0.0);
-  glEnd();
-
-  End2DDraw();
-}
-
-
-void Game::handleMouse(SDL_Event e) {
-  if (game_mode == k_prep_mode) {
-    if (mousedown && e.type == SDL_MOUSEMOTION /*&& e.button.button == SDL_BUTTON_LEFT*/) {
-      int x = 0, y = 0;
-      SDL_GetMouseState(&x, &y);
-      printf("%d %d\n", x, y);
-      character->setShotRotation(pre_drag_rotation - (drag_x - x) / 50.0f, false);
-    } else if (e.type == SDL_MOUSEBUTTONDOWN) {
-      mousedown = true;
-      SDL_GetMouseState(&drag_x, &drag_y);
-      pre_drag_rotation = character->shot_rotation;
-      printf("CLICK ENGAGED %d %d\n", drag_x, drag_y);
-    } else if (e.type == SDL_MOUSEBUTTONUP /*&& e.button.button == SDL_BUTTON_LEFT*/) {
-      mousedown = false;
-      int x = 0, y = 0;
-      SDL_GetMouseState(&x, &y);
-      printf("CLICK RELEASED %d %d\n", x, y);
-      character->setShotRotation(pre_drag_rotation - (drag_x - x) / 50.0f, true);
-      // this is a cheap hack
-      if (x == drag_x && y == drag_y) {
-        game_mode = k_power_mode;
-        character->shot_power = 0;
-        shot_rising = true;
-      }
-    }
-  } else if (game_mode == k_power_mode) {
-    if (e.type == SDL_MOUSEBUTTONUP) {
-      game_mode = k_action_mode;
-      simulation_speed = default_speed_ramping;
-      character->future_positions.clear();
-      if (character->up_shot) {
-        // a 45 degree shot
-        character->impulse(0.293 * character->shot_power * sin(character->shot_rotation),
-          0.293 * -character->shot_power * cos(character->shot_rotation),
-          0.707 * character->shot_power);
-      } else {
-        // a flat shot
-        character->impulse(character->shot_power * sin(character->shot_rotation),
-          -character->shot_power * cos(character->shot_rotation),
-          0.5);
-      }
-      physics->activate(character->identity);
-    }
+void Game::afterUpdate() {
+  if (game_mode == k_drop_mode && (!physics->checkActive(character->identity) ||
+    physics->getVelocity(character->identity) < 0.00001)) {
+    game_mode = k_prep_mode;
+    character->up_shot = false;
+    character->setShotRotation(character->default_shot_rotation, true);
   }
 }
 
+// Convenience method to do everything necessary for one "golf" shot.
+void Game::shoot() {
+  game_mode = k_action_mode;
+  simulation_speed = default_speed_ramping;
+  character->future_positions.clear();
+  if (character->up_shot) {
+    // an angled shot
 
+    character->impulse(cos(k_up_shot_angle) * character->shot_power * sin(character->shot_rotation),
+      cos(k_up_shot_angle) * -character->shot_power * cos(character->shot_rotation),
+      sin(k_up_shot_angle) * character->shot_power);
+  } else {
+    // a flat shot
+    character->impulse(character->shot_power * sin(character->shot_rotation),
+      -character->shot_power * cos(character->shot_rotation),
+      0.5);
+  }
+  physics->activate(character->identity);
+}
+
+// Handle keyboard input
 void Game::handleKeys(unsigned char key) {
   if (key == 'p') {
     quit = true;
@@ -368,21 +203,7 @@ void Game::handleKeys(unsigned char key) {
 
   if (game_mode == k_power_mode) {
     if (key == 'm') {
-      game_mode = k_action_mode;
-      simulation_speed = default_speed_ramping;
-      character->future_positions.clear();
-      if (character->up_shot) {
-        // a 45 degree shot
-        character->impulse(0.293 * character->shot_power * sin(character->shot_rotation),
-          0.293 * -character->shot_power * cos(character->shot_rotation),
-          0.707 * character->shot_power);
-      } else {
-        // a flat shot
-        character->impulse(character->shot_power * sin(character->shot_rotation),
-          -character->shot_power * cos(character->shot_rotation),
-          0.5);
-      }
-      physics->activate(character->identity);
+      shoot();
     }
 
     if (key == 'c') {
@@ -391,36 +212,209 @@ void Game::handleKeys(unsigned char key) {
   }
 }
 
+// Handle mouse input
+void Game::handleMouse(SDL_Event e) {
+  // In prep mode, I use mousemotion, mousedown and mouseup to track mouse dragging.
+  // In a drag event, I set the rotation of the character.
+  if (game_mode == k_prep_mode) {
+    if (mousedown && e.type == SDL_MOUSEMOTION) {
+      int x = 0, y = 0;
+      SDL_GetMouseState(&x, &y);
+      character->setShotRotation(pre_drag_rotation - (drag_x - x) / 50.0f, false);
+    } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+      mousedown = true;
+      SDL_GetMouseState(&drag_x, &drag_y);
+      pre_drag_rotation = character->shot_rotation;
+    } else if (e.type == SDL_MOUSEBUTTONUP) {
+      mousedown = false;
+      int x = 0, y = 0;
+      SDL_GetMouseState(&x, &y);
+      character->setShotRotation(pre_drag_rotation - (drag_x - x) / 50.0f, true);
+      // this is a cheap hack; if the player has released a click
+      // and there's no change in the mouse position, count it as a regular click
+      // and switch to power mode.
+      if (x == drag_x && y == drag_y) {
+        game_mode = k_power_mode;
+        character->shot_power = 0;
+        shot_rising = true;
+      }
+    }
+  } else if (game_mode == k_power_mode) {
+    // In power mode, clicking just makes you take the "golf" shot.
+    if (e.type == SDL_MOUSEBUTTONUP) {
+      shoot();
+    }
+  }
+}
+
+void Game::render() {
+  // Simple viewport.
+  glViewport(0, 0, k_screen_width, k_screen_height);
+
+  // Clear color buffer
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  renderBackground();
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  // Set one of these perspectives:
+
+  // 1. this is cool, super zoomed out
+  // glOrtho(-50, 50, -50, 50, -50, 50);
+
+  // 2. weirdly reasonable ortho
+  glOrtho(-13.33, 13.33, -10, 10, -100, 100);
+
+  // 3. normal perspective
+  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+
+  // Simple Opengl Lighting
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  GLfloat ambient[] = {0.5, 0.5, 0.5, 1.0};
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+  glEnable(GL_NORMALIZE);
+  glEnable(GL_RESCALE_NORMAL);
+
+  GLfloat light_ambient[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat light_position[] = {-1.0, 0.0, 1.0, 0.0};
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+  // Set the camera to look down at the character.
+  // For fun, change the z-value to change the viewing angle of the game.
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(character->position->x - 15, character->position->y - 15, 10,
+            character->position->x, character->position->y, 0,
+            0, 0, 1);
+
+  glColor4f(1.0, 1.0, 1.0, 1.0);
+
+  // render surfaces (walls and floors)
+  for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
+    (*surface)->render();
+  }
+
+  // render bumpers
+  for (auto bumper = bumpers.begin(); bumper != bumpers.end(); ++bumper) {
+    (*bumper)->render();
+  }
+
+  // render wickets
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    (*wicket)->render();
+  }
+
+  // render the character
+  character->render(game_mode);
+
+  // render 2D overlay
+  Start2DDraw();
+
+  int info_x = 324;
+  int info_y = 20;
+
+  // render shot prep infographic
+  if (game_mode == k_prep_mode) {
+    textures->setTexture("m_prep_info");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(info_x + 0.0, info_y + 0.0);
+    glTexCoord2d(0.0, 1.0); glVertex2d(info_x + 0.0, info_y + 400);
+    glTexCoord2d(1.0, 1.0); glVertex2d(info_x + 400, info_y + 400);
+    glTexCoord2d(1.0, 0.0); glVertex2d(info_x + 400, info_y + 0.0);
+    glEnd();
+  }
+
+  // render power mode
+  if (game_mode == k_power_mode) {
+    // render power mode infographic
+    textures->setTexture("m_shot_info");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(info_x + 0.0, info_y + 0.0);
+    glTexCoord2d(0.0, 1.0); glVertex2d(info_x + 0.0, info_y + 400);
+    glTexCoord2d(1.0, 1.0); glVertex2d(info_x + 400, info_y + 400);
+    glTexCoord2d(1.0, 0.0); glVertex2d(info_x + 400, info_y + 0.0);
+    glEnd();
+
+    // render power gauge outline
+    int power_x = 974;
+    int power_y = 20;
+    textures->setTexture("shot_power_outline");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(power_x + 0.0, power_y + 0.0);
+    glTexCoord2d(0.0, 1.0); glVertex2d(power_x + 0.0, power_y + 150);
+    glTexCoord2d(1.0, 1.0); glVertex2d(power_x + 30, power_y + 150);
+    glTexCoord2d(1.0, 0.0); glVertex2d(power_x + 30, power_y + 0.0);
+    glEnd();
+
+    // render power gauge fill
+    float portion = character->shot_power / character->default_shot_power;
+    textures->setTexture("shot_power_fill");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 0.0, power_y + 150 - 140 * portion);
+    glTexCoord2d(0.0, 1.0); glVertex2d(power_x + 0.0, power_y + 150);
+    glTexCoord2d(1.0, 1.0); glVertex2d(power_x + 30, power_y + 150);
+    glTexCoord2d(1.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 30, power_y + 150 - 140 * portion);
+    glEnd();
+  }
+
+  End2DDraw();
+}
+
+void Game::renderBackground() {
+  Start2DDraw();
+
+  // background render
+  textures->setTexture("clouds");
+  glBegin(GL_QUADS);
+  glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
+  glTexCoord2d(0.0, 1.0); glVertex2d(0.0, k_screen_height);
+  glTexCoord2d(1.0, 1.0); glVertex2d(k_screen_width, k_screen_height);
+  glTexCoord2d(1.0, 0.0); glVertex2d(k_screen_width, 0.0);
+  glEnd();
+
+  End2DDraw();
+}
+
+// This huge method puts all the crap on the game board.
 bool Game::initializeGamePieces() {
-  character = new Character(physics, new Point(0, 0, k_character_drop_height));
+  character = new Character(physics, textures, new Point(0, 0, k_character_drop_height));
   physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
 
   // first test wicket
-  wickets.push_front(new Wicket(physics,
+  wickets.push_front(new Wicket(physics, textures,
     new Point(0, -6, 0),
     new Point(-3, -6, 0),
     4.0));
 
   // second test wicket
-  wickets.push_front(new Wicket(physics,
+  wickets.push_front(new Wicket(physics, textures,
     new Point(-21, 0, -4),
     new Point(-21, -3, -4),
     4.0));
 
   // third test wicket
-  wickets.push_front(new Wicket(physics,
+  wickets.push_front(new Wicket(physics, textures,
     new Point(-54, 0, -8),
     new Point(-54, -3, -8),
     4.0));
 
   // fourth test wicket
-  wickets.push_front(new Wicket(physics,
+  wickets.push_front(new Wicket(physics, textures,
     new Point(-48, -9, -8),
     new Point(-51, -9, -8),
     4.0));
 
   // fifth test wicket
-  wickets.push_front(new Wicket(physics,
+  wickets.push_front(new Wicket(physics, textures,
     new Point(-45, 45, 0),
     new Point(-45, 48, 0),
     4.0));
@@ -429,7 +423,7 @@ bool Game::initializeGamePieces() {
   int height_array[] = {0, 0, 0, -2, -4, -4, -4, -6, -8};
   for (int k = 0; k < 8; k++) {
     for (int y = 0; y < 3; y++) {
-      surfaces.push_front(new Surface(physics,
+      surfaces.push_front(new Surface(physics, textures,
         false,
         new Point(0 - 6 * k, 0 - 6 * y, height_array[k+1]),
         new Point(6 - 6 * k, 0 - 6 * y, height_array[k]),
@@ -439,35 +433,35 @@ bool Game::initializeGamePieces() {
   }
 
   // bumper segment 1
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(6, -12, 0),
     new Point(-6, -12, 0),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-6, -12, 0),
     new Point(-18, -12, -4),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-18, -12, -4),
     new Point(-30, -12, -4),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-30, -12, -4),
     new Point(-42, -12, -8),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(6, 6, 0),
     new Point(-6, 6, 0),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-6, 6, 0),
     new Point(-18, 6, -4),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-18, 6, -4),
     new Point(-30, 6, -4),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-30, 6, -4),
     new Point(-42, 6, -8),
     new Point(0, -k_bumper_width, 0)));
@@ -477,7 +471,7 @@ bool Game::initializeGamePieces() {
   int last_y = 25 + rand() % static_cast<int>(25 + 1);
   for (int k = 0; k < 8; k++) {
     int new_y = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
+    surfaces.push_front(new Surface(physics, textures,
       true,
       new Point(0 - 6 * k, 0 - (6 * 2) - new_y, height_array[k+1] - 70),
       new Point(6 - 6 * k + first_x, 0 - (6 * 2) - last_y, height_array[k] - 70),
@@ -490,7 +484,7 @@ bool Game::initializeGamePieces() {
   // surfaces segment 2 (corner)
   for (int x = 0; x < 3; x++) {
     for (int y = 0; y < 3; y++) {
-      surfaces.push_front(new Surface(physics,
+      surfaces.push_front(new Surface(physics, textures,
         false,
         new Point(-48 - 6 * x, 0 - 6 * y, -8),
         new Point(-42 - 6 * x, 0 - 6 * y, -8),
@@ -500,11 +494,11 @@ bool Game::initializeGamePieces() {
   }
 
   // bumper segment 2 (corner)
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-60, -12, -8),
     new Point(-42, -12, -8),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-60, -12, -8),
     new Point(-60, 6, -8),
     new Point(k_bumper_width, 0.0, 0)));
@@ -512,7 +506,7 @@ bool Game::initializeGamePieces() {
   // mountain segment 2
   for (int k = 0; k < 3; k++) {
     int new_y = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
+    surfaces.push_front(new Surface(physics, textures,
       true,
       new Point(-48 - 6 * k, 0 - (6 * 2) - new_y, -8 - 70),
       new Point(-42 - 6 * k, 0 - (6 * 2) - last_y, -8 - 70),
@@ -523,7 +517,7 @@ bool Game::initializeGamePieces() {
 
   // mountain corner
   int last_x = 25 + rand() % static_cast<int>(25 + 1);
-  surfaces.push_front(new Surface(physics,
+  surfaces.push_front(new Surface(physics, textures,
     true,
     new Point(-60 - last_x, 0 - (6 * 2) - last_y, -8 - 70),
     new Point(-60, 0 - (6 * 2) - last_y, -8 - 70),
@@ -533,7 +527,7 @@ bool Game::initializeGamePieces() {
   // mountain segment 3
   for (int k = 0; k < 3; k++) {
     int new_x = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
+    surfaces.push_front(new Surface(physics, textures,
       true,
       new Point(-48 - 6 * 2 - new_x, -6 + 6 * k, -8 - 70),
       new Point(-48 - 6 * 2 - last_x, -12 + 6 * k - last_y, -8 - 70),
@@ -547,7 +541,7 @@ bool Game::initializeGamePieces() {
   int height_array2[] = {-8, -6, -4, -4, -4, -2, 0, 0, 0};
   for (int k = 0; k < 8; k++) {
     for (int x = 0; x < 3; x++) {
-      surfaces.push_front(new Surface(physics,
+      surfaces.push_front(new Surface(physics, textures,
         false,
         new Point(-48 - 6 * x, 6 + 6 * k, height_array2[k]),
         new Point(-42 - 6 * x, 6 + 6 * k, height_array2[k]),
@@ -557,35 +551,35 @@ bool Game::initializeGamePieces() {
   }
 
   // bumper segment 3
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-60, 6, -8),
     new Point(-60, 18, -4),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-60, 18, -4),
     new Point(-60, 30, -4),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-60, 30, -4),
     new Point(-60, 42, 0),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-60, 42, 0),
     new Point(-60, 54, 0),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-42, 6, -8),
     new Point(-42, 18, -4),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-42, 18, -4),
     new Point(-42, 30, -4),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-42, 30, -4),
     new Point(-42, 42, 0),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics,
+  bumpers.push_front(new Bumper(physics, textures,
     new Point(-42, 42, 0),
     new Point(-42, 54, 0),
     new Point(-k_bumper_width, 0.0, 0)));
@@ -593,7 +587,7 @@ bool Game::initializeGamePieces() {
   // mountain segment 4
   for (int k = 0; k < 8; k++) {
     int new_x = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
+    surfaces.push_front(new Surface(physics, textures,
       true,
       new Point(-48 - 6 * 2 - new_x, 12 + 6 * k, height_array2[k+1] - 70),
       new Point(-48 - 6 * 2 - last_x, 6 + 6 * k, height_array2[k] - 70),
@@ -637,29 +631,31 @@ bool Game::initialize() {
 bool Game::initializeTextures() {
   glEnable(GL_TEXTURE_2D);
 
-  Textures::addTexture("tiles", "tiles4.png");
+  textures = new Textures();
 
-  Textures::addTexture("bumper", "bumper2.png");
-  Textures::addTexture("lit_bumper", "bumper4.png");
+  textures->addTexture("tiles", "tiles4.png");
 
-  Textures::addTexture("bear_face", "bear_test2.png");
-  Textures::addTexture("bear_nose", "nose.png");
-  Textures::addTexture("bear_arms", "parts.png");
+  textures->addTexture("bumper", "bumper2.png");
+  textures->addTexture("lit_bumper", "bumper4.png");
 
-  Textures::addTexture("plain", "plain.png");
-  Textures::addTexture("black", "black.png");
+  textures->addTexture("bear_face", "bear_test2.png");
+  textures->addTexture("bear_nose", "nose.png");
+  textures->addTexture("bear_arms", "parts.png");
 
-  Textures::addTexture("shot_power_outline", "ShotPowerOutline.png");
-  Textures::addTexture("shot_power_fill", "ShotPowerFill.png");
+  textures->addTexture("plain", "plain.png");
+  textures->addTexture("black", "black.png");
 
-  Textures::addTexture("clouds", "clouds.png");
+  textures->addTexture("shot_power_outline", "ShotPowerOutline.png");
+  textures->addTexture("shot_power_fill", "ShotPowerFill.png");
 
-  Textures::addTexture("left_turn_info", "A_Key_Turn_Left.png");
-  Textures::addTexture("right_turn_info", "D_Key_Turn_Right.png");
-  Textures::addTexture("m_prep_info", "M_Key_Prep_Your_Shot.png");
-  Textures::addTexture("m_shot_info", "M_Again_Set_Power_And_Take_Shot.png");
+  textures->addTexture("clouds", "clouds.png");
 
-  Textures::addTexture("wicket", "barber_pole.png");
+  textures->addTexture("left_turn_info", "A_Key_Turn_Left.png");
+  textures->addTexture("right_turn_info", "D_Key_Turn_Right.png");
+  textures->addTexture("m_prep_info", "M_Key_Prep_Your_Shot.png");
+  textures->addTexture("m_shot_info", "M_Again_Set_Power_And_Take_Shot.png");
+
+  textures->addTexture("wicket", "barber_pole.png");
 
   // glFrontFace(GL_CW);
   // glEnable(GL_CULL_FACE);
@@ -698,6 +694,9 @@ bool Game::initializeLighting() {
 void Game::shutdown() {
   physics->shutdown();
   delete physics;
+
+  // To do: release the image files.
+  delete textures;
 }
 
 void Start2DDraw() {

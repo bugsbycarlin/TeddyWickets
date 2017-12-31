@@ -49,6 +49,7 @@ class Game {
   std::list<Wicket*> wickets = { };
 
   Physics* physics;
+  Textures* textures;
 
   Character* character;
 
@@ -71,6 +72,8 @@ class Game {
 
   void update();
   void afterUpdate();
+
+  void shoot();
 
   void render();
   void renderDesign();

@@ -7,7 +7,7 @@
 
 #include "bumper.h"
 
-Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrusion) {
+Bumper::Bumper(Physics* physics, Textures* textures, Point* start, Point* end, Point* extrusion) {
   this->start = start;
   this->end = end;
   this->extrusion = extrusion;
@@ -15,18 +15,19 @@ Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrusion) {
   last_bumped = 0;
 
   this->physics = physics;
+  this->textures = textures;
 
   identity = physics->addBumper(start, end, extrusion);
 }
 
+// If the bumper has been bumped, set a bump counter which will cause the bumper
+// to light up for a few frames.
 void Bumper::bump() {
-  // If the bumper has been bumped, set a bump counter which will cause the bumper
-  // to light up for a few frames.
   last_bumped = 2;
 }
 
+// reduce the bump counter on update
 void Bumper::update() {
-  // reduce the bump counter on update
   if (last_bumped > 0) {
     last_bumped--;
   }
@@ -35,14 +36,14 @@ void Bumper::update() {
 void Bumper::render() {
   // if the bumper has been bumped, light it up
   if (last_bumped > 0) {
-    Textures::setTexture("lit_bumper");
+    textures->setTexture("lit_bumper");
   } else {
-    Textures::setTexture("bumper");
+    textures->setTexture("bumper");
   }
 
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-  // bumpers are unlit for now
+  // bumpers have no opengl lighting for now
   glDisable(GL_LIGHTING);
 
   glBegin(GL_QUADS);

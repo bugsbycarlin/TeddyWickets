@@ -9,6 +9,8 @@
 #ifndef TEDDY_WICKETS_GLOBALS_H_
 #define TEDDY_WICKETS_GLOBALS_H_
 
+#include <string>
+
 // Screen variables
 const int k_screen_width = 1024;
 const int k_screen_height = 768;
@@ -23,6 +25,9 @@ const float k_default_shot_rotation = -0.78f;
 const float k_default_shot_power = 20.0f;
 const float k_character_drop_height = 1.5f;
 
+// Textures
+const std::string k_texture_root_path = "Art/";
+
 // Game modes
 enum  {
   k_drop_mode = 0,
@@ -33,7 +38,7 @@ enum  {
 
 // Game variables
 const float k_default_speed_ramping = 2.0f;
-
+const float k_up_shot_angle = 60.0f * 3.141592f / 180.0f;
 
 /*
 

@@ -26,6 +26,7 @@ class Character {
     Point* position;
 
     Physics* physics;
+    Textures* textures;
 
     float default_shot_rotation;
     float shot_rotation;
@@ -37,7 +38,7 @@ class Character {
 
     std::list<btTransform> future_positions = { };
 
-    Character(Physics* physics, Point* position);
+    Character(Physics* physics, Textures* textures, Point* position);
 
     void updateFromPhysics();
 

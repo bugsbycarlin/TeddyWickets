@@ -41,9 +41,14 @@ class Physics {
     Point* normalVector(Point* p1, Point* p2);
     Point* normalVectorRelative(Point* p1, Point* p2, Point* base);
 
-    int addBody(btRigidBody* body);
+    int addBody(btCollisionShape* shape,
+        btTransform transform,
+        float mass,
+        float friction,
+        float rolling_friction,
+        float restitution);
 
-    int addWall(Point* p1, Point* p2, Point* p3, Point* p4);
+    int addSurface(Point* p1, Point* p2, Point* p3, Point* p4);
     int addBumper(Point* start, Point* end, Point* normal);
     int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
     int addBall(float radius, float x_pos, float y_pos, float z_pos);
@@ -59,6 +64,7 @@ class Physics {
 
     void printPositions();
     void updatePoint(Point* p, int identity);
+    btRigidBody* getBodyById(int identity);
     btTransform getTransform(int identity);
     float getVelocity(int identity);
     bool hasCollision(int identity, int identity2);

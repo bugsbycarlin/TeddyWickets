@@ -20,22 +20,18 @@
 #include <map>
 #include <string>
 
+#include "globals.h"
+
 class Textures {
  public:
-  static Textures& initialize() {
-    static Textures instance;
-    return instance;
-  }
-
-  static std::map<std::string, GLuint*> texture_map;
-  static std::string texture_root;
-
-  static void addTexture(std::string texture_name, std::string texture_file);
-
-  static void setTexture(std::string texture_name);
-
- private:
   Textures();
+
+  std::map<std::string, GLuint*> texture_map;
+  std::string texture_root;
+
+  void addTexture(std::string texture_name, std::string texture_file);
+
+  void setTexture(std::string texture_name);
 };
 
 #endif

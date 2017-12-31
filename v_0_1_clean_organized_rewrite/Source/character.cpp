@@ -7,7 +7,7 @@
 
 #include "character.h"
 
-Character::Character(Physics* physics, Point* position) {
+Character::Character(Physics* physics, Textures* textures, Point* position) {
   this->position = position;
 
   ball = gluNewQuadric();
@@ -15,6 +15,7 @@ Character::Character(Physics* physics, Point* position) {
   gluQuadricNormals(ball, GLU_SMOOTH);
 
   this->physics = physics;
+  this->textures = textures;
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
@@ -27,11 +28,15 @@ Character::Character(Physics* physics, Point* position) {
   identity = physics->addBall(radius, position->x, position->y, position->z);
 }
 
+// this gets the position of the ball for game logic and rendering. I believe it's currently unused,
+// since rendering is done with the transform directly from physics. Keeping this method for now
+// for potential future use.
 void Character::updateFromPhysics() {
   physics->updatePoint(position, identity);
 }
 
 void Character::render(int game_mode) {
+  // set an opengl lighting material
   GLfloat material_ambient[] = {0.8, 0.8, 0.8, 1.0};
   GLfloat material_diffuse[] = {0.8, 0.8, 0.8, 1.0};
   GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
@@ -41,7 +46,9 @@ void Character::render(int game_mode) {
   glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
-  Textures::setTexture("bear_face");
+  // draw the main ball, using the transform from physics.
+  // this gets rotation as well as position.
+  textures->setTexture("bear_face");
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
   btScalar transform_matrix[16];
   btTransform transform = physics->getTransform(identity);
@@ -55,14 +62,14 @@ void Character::render(int game_mode) {
   // replaced by a mesh loading system and meshes made in Maya.
 
   // nose
-  Textures::setTexture("bear_nose");
+  textures->setTexture("bear_nose");
 
   glTranslatef(0, -0.62, 0.15);
   gluSphere(ball, 0.25, 20, 20);
   glTranslatef(0, 0.62, -0.15);
 
   // parts
-  Textures::setTexture("bear_arms");
+  textures->setTexture("bear_arms");
 
   // arms
   glTranslatef(-0.6, -0.25, 0);
@@ -96,11 +103,11 @@ void Character::render(int game_mode) {
   gluSphere(ball, 0.17, 20, 20);
   glTranslatef(0, -0.62, 0.15);
 
+  // Tutorial info
   if (game_mode == k_prep_mode && shot_rotation == default_shot_rotation) {
-    // Tutorial info
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-    Textures::setTexture("left_turn_info");
+    textures->setTexture("left_turn_info");
 
     glBegin(GL_QUADS);
       glTexCoord2f(0, 1); glVertex3f(3.2, 3.2, -6);
@@ -109,7 +116,7 @@ void Character::render(int game_mode) {
       glTexCoord2f(1, 1); glVertex3f(11.6, -5.3, -6);
     glEnd();
 
-    Textures::setTexture("right_turn_info");
+    textures->setTexture("right_turn_info");
 
     glBegin(GL_QUADS);
       glTexCoord2f(1, 1); glVertex3f(-1, 5.3, -6);
@@ -121,9 +128,9 @@ void Character::render(int game_mode) {
 
   glPopMatrix();
 
+  // future positions (to help the player predict the shot)
   if (game_mode == k_prep_mode) {
-    // render future positions
-    Textures::setTexture("plain");
+    textures->setTexture("plain");
 
     // balls marking future positions
     for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
@@ -147,6 +154,10 @@ void Character::render(int game_mode) {
   }
 }
 
+// This is sort of a hack. Force the physics of the ball to a particular angle.
+// Then, if recompute_trajectory is true, save the physics state and do some forward simulation
+// to predict the trajectory of the ball, saving the values. Finally, restore the old physics state.
+// The prediction values are rendered as part of shot preparation.
 void Character::setShotRotation(float value, bool recompute_trajectory) {
   shot_rotation = value;
   physics->setRotation(identity, 0, 0, shot_rotation);
@@ -155,10 +166,10 @@ void Character::setShotRotation(float value, bool recompute_trajectory) {
     // calculate future points...
     future_positions.clear();
     if (up_shot) {
-      // ... using a 45 degree shot
-      impulse(0.293 * default_shot_power * sin(shot_rotation),
-        0.293 * -default_shot_power * cos(shot_rotation),
-        0.707 * default_shot_power);
+      // ... using an angled degree shot
+      impulse(cos(k_up_shot_angle) * default_shot_power * sin(shot_rotation),
+        cos(k_up_shot_angle) * -default_shot_power * cos(shot_rotation),
+        sin(k_up_shot_angle) * default_shot_power);
     } else {
       // ... using a flat shot
       impulse(default_shot_power * sin(shot_rotation), -default_shot_power * cos(shot_rotation), 0.5);
@@ -177,6 +188,8 @@ void Character::setShotRotation(float value, bool recompute_trajectory) {
   }
 }
 
+
+// Put an impulse force on the ball.
 void Character::impulse(float x, float y, float z) {
   physics->impulse(identity, x, y, z);
 }
