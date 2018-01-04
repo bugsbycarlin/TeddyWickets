@@ -7,9 +7,6 @@
 
 #include "game.h"
 
-void Start2DDraw();
-void End2DDraw();
-
 // Game constructor
 Game::Game() {
   quit = false;
@@ -20,50 +17,37 @@ Game::Game() {
   drag_y = 0;
   default_speed_ramping = k_default_speed_ramping;
   simulation_speed = k_default_minimum_speed;
+  current_screen = k_1p_game_screen;
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
-void Game::gameLoop(SDL_Window* window, FMOD::System *sound_system) {
+void Game::loop(SDL_Window* window, FMOD::System *sound_system) {
   // Event handler
   SDL_Event e;
 
-  // Enable text input
-  SDL_StartTextInput();
-
-  start_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-  last_time = start_time;
-
-  // While application is running
-  while (!quit) {
-    // Handle events on queue
-    while (SDL_PollEvent(&e) != 0) {
-      // User requests quit
-      if (e.type == SDL_QUIT) {
-        quit = true;
-      } else if (e.type == SDL_TEXTINPUT) {
-        handleKeys(e.text.text[0]);
-      } else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONUP || e.type == SDL_MOUSEBUTTONDOWN) {
-        handleMouse(e);
-      }
+  // Handle events on queue
+  while (SDL_PollEvent(&e) != 0) {
+    // User requests quit
+    if (e.type == SDL_QUIT) {
+      quit = true;
+    } else if (e.type == SDL_TEXTINPUT) {
+      handleKeys(e.text.text[0]);
+    } else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONUP || e.type == SDL_MOUSEBUTTONDOWN) {
+      handleMouse(e);
     }
-
-    update();
-
-    render();
-
-    // Update sound
-    sound_system->update();
-
-    // Update screen
-    SDL_GL_SwapWindow(window);
-
-    afterUpdate();
   }
 
-  // Disable text input
-  SDL_StopTextInput();
+  update();
 
-  shutdown();
+  render();
+
+  // Update sound
+  sound_system->update();
+
+  // Update screen
+  SDL_GL_SwapWindow(window);
+
+  afterUpdate();
 }
 
 void Game::update() {
@@ -141,6 +125,8 @@ void Game::update() {
 }
 
 void Game::afterUpdate() {
+  // To do: fix this so it doesn't break the drop action, but also doesn't
+  // go back to long, awkward drops.
   if (game_mode == k_drop_mode && (!physics->checkActive(character->identity) ||
     physics->getVelocity(character->identity) < 0.00001)) {
     game_mode = k_prep_mode;
@@ -632,6 +618,9 @@ bool Game::initialize() {
     return false;
   }
 
+  start_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+  last_time = start_time;
+
   return true;
 }
 
@@ -704,25 +693,4 @@ void Game::shutdown() {
 
   // To do: release the image files.
   delete textures;
-}
-
-void Start2DDraw() {
-  glDisable(GL_LIGHTING);
-  glDisable(GL_DEPTH_TEST);
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-  glOrtho(0.0f, k_screen_width, k_screen_height, 0.0f, 0.0f, 1.0f);
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
-  glLoadIdentity();
-}
-
-void End2DDraw() {
-  glEnable(GL_LIGHTING);
-  glEnable(GL_DEPTH_TEST);
-  glPopMatrix();
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
 }

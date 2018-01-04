@@ -3,7 +3,7 @@
   Teddy Wickets
   Copyright 2017 - Matthew Carlin
 
-  Game class is models one level of the game.
+  Game class models one level of the game.
 */
 
 #ifndef TEDDY_WICKETS_GAME_H_
@@ -33,14 +33,13 @@
 #include "character.h"
 #include "globals.h"
 #include "physics.h"
+#include "screen.h"
 #include "surface.h"
 #include "textures.h"
 #include "wicket.h"
 
-class Game {
+class Game: public Screen {
  public:
-  bool quit;
-
   bool shot_rising = false;
 
   // Game logic
@@ -70,7 +69,7 @@ class Game {
 
   Game();
 
-  void gameLoop(SDL_Window* window, FMOD::System *sound_system);
+  void loop(SDL_Window* window, FMOD::System *sound_system);
 
   void update();
   void afterUpdate();

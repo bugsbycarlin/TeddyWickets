@@ -3,6 +3,9 @@
 TeddyWickets:
 		g++ -w \
 		./Source/main.cpp \
+		./Source/globals.cpp \
+		./Source/screen.cpp \
+		./Source/title.cpp \
 		./Source/game.cpp \
 		./Source/physics.cpp \
 		./Source/point.cpp \

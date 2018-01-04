@@ -31,9 +31,13 @@
   See ../../README.md for project details.
 */
 
+#include <string>
+
 #include "fmod.hpp"
 #include "fmod_errors.h"
+
 #include "game.h"
+#include "title.h"
 
 // The window
 SDL_Window* window;
@@ -142,11 +146,48 @@ int main(int argc, char* args[]) {
   // Sound disabled for the moment.
   // sound_system->playSound(audio_stream, NULL, false, 0);
 
-  Game* game = new Game();
-  bool initialized = game->initialize();
-  if (initialized) {
-    game->gameLoop(window, sound_system);
+  // Enable text input
+  SDL_StartTextInput();
+
+  int current_screen;
+  if (argc > 1 && (std::string(args[1]) == "title" || std::string(args[1]) == "Title")) {
+    current_screen = k_title_screen;
+  } else {
+    current_screen = k_1p_game_screen;
   }
+
+  Screen* screen = NULL;
+
+  bool quit = false;
+  while(!quit) {
+    if (screen == NULL || screen->current_screen != current_screen) {
+      if (screen != NULL) {
+        current_screen = screen->current_screen;
+        screen->shutdown();
+      }
+
+      if (current_screen == k_title_screen) {
+        screen = new Title();
+      } else if (current_screen == k_1p_game_screen) {
+        screen = new Game();
+      }
+
+      if (!screen->initialize()) {
+        quit = true;
+        break;
+      }
+    }
+
+    screen->loop(window, sound_system);
+
+    if (screen != NULL && screen->quit == true) {
+      screen->shutdown();
+      quit = true;
+    }
+  }
+
+  // Disable text input
+  SDL_StopTextInput();
 
   shutdown();
 }

@@ -9,6 +9,8 @@
 #ifndef TEDDY_WICKETS_GLOBALS_H_
 #define TEDDY_WICKETS_GLOBALS_H_
 
+#include <OpenGL/GLU.h>
+
 #include <string>
 
 // Screen variables
@@ -30,6 +32,14 @@ const float k_character_drop_height = 1.5f;
 // Textures
 const std::string k_texture_root_path = "Art/";
 
+// Screen modes
+enum {
+  k_title_screen = 0,
+  k_comic_screen = 1,
+  k_1p_game_screen = 2,
+  k_2p_game_screen = 3,
+};
+
 // Game modes
 enum  {
   k_drop_mode = 0,
@@ -42,6 +52,9 @@ enum  {
 const float k_default_speed_ramping = 2.0f;
 const float k_default_minimum_speed = 1.25f;
 const float k_up_shot_angle = 60.0f * 3.141592f / 180.0f;
+
+void Start2DDraw();
+void End2DDraw();
 
 /*
 
