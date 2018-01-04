@@ -58,6 +58,8 @@ class Game {
   float default_speed_ramping;
   float simulation_speed;
 
+  float zoom;
+
   bool mousedown;
   int drag_x;
   int drag_y;

@@ -3,6 +3,31 @@
   Teddy Wickets
   Copyright 2017 - Matthew Carlin
 
+  Currently working on V0.2 - One Minute Demo
+
+  This is a one minute playable demo of the game. Changes are:
+
+  - Support for multiple modes (ie different screens)
+  - Fully realized game mechanic
+  - Two single player levels (?)
+  - One multiplayer (2 player) level
+  - Title screen
+  - Game controller / keyboard / mouse setup screen
+  - Controller support
+  - Keymap support(?)
+  - Level editor (separate program)
+  - Level saver
+  - Level loader
+  - Model loader (models come from MayaLT)
+  - Model viewer (separate program)
+  - Abstract away OpenGL in wrappers
+  - More fully understand lighting model
+  - Cel shading
+  - Comic patter inside the game (ie, can put speech bubbles on things)
+  - Comic screen
+  - Game stuff (to be added as I design the game mechanic)
+
+
   See ../../README.md for project details.
 */
 
@@ -112,7 +137,7 @@ void shutdown() {
 int main(int argc, char* args[]) {
   initialize();
 
-  sound_system->createStream("Sound/Baseball_Theme.mp3", FMOD_DEFAULT, 0, &audio_stream);
+  sound_system->createStream("Sound/Bias_Groove.mp3", FMOD_DEFAULT, 0, &audio_stream);
 
   // Sound disabled for the moment.
   // sound_system->playSound(audio_stream, NULL, false, 0);

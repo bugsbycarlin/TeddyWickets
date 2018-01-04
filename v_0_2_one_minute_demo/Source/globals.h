@@ -12,8 +12,10 @@
 #include <string>
 
 // Screen variables
-const int k_screen_width = 1024;
-const int k_screen_height = 768;
+const int k_screen_width = 1440;
+const int k_screen_height = 900;
+const float k_aspect_ratio = k_screen_width / (1.0 * k_screen_height);
+const float k_default_zoom = 11.0f;
 
 // Bumper
 const float k_bumper_height = 0.5f;
@@ -38,6 +40,7 @@ enum  {
 
 // Game variables
 const float k_default_speed_ramping = 2.0f;
+const float k_default_minimum_speed = 1.25f;
 const float k_up_shot_angle = 60.0f * 3.141592f / 180.0f;
 
 /*

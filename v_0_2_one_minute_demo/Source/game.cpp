@@ -15,10 +15,11 @@ Game::Game() {
   quit = false;
   game_mode = k_drop_mode;
   mousedown = false;
+  zoom = k_default_zoom;
   drag_x = 0;
   drag_y = 0;
   default_speed_ramping = k_default_speed_ramping;
-  simulation_speed = 1.0f;
+  simulation_speed = k_default_minimum_speed;
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -70,7 +71,7 @@ void Game::update() {
   unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   physics->update(simulation_speed * (current_time - last_time) / 1000.0f);
   last_time = current_time;
-  if (simulation_speed > 1.0f) {
+  if (simulation_speed > k_default_minimum_speed) {
     simulation_speed *= 0.98f;
   }
 
@@ -174,6 +175,12 @@ void Game::handleKeys(unsigned char key) {
     quit = true;
   }
 
+  if (key == 'z') {
+    zoom += 1.0f;
+  } else if (key == 'x') {
+    zoom -= 1.0f;
+  }  
+
   if (game_mode == k_prep_mode) {
     if (key == 'a') {
       character->setShotRotation(character->shot_rotation + 3.14159 / 20, true);
@@ -265,10 +272,10 @@ void Game::render() {
   // glOrtho(-50, 50, -50, 50, -50, 50);
 
   // 2. weirdly reasonable ortho
-  glOrtho(-13.33, 13.33, -10, 10, -100, 100);
-
+  glOrtho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
+  
   // 3. normal perspective
-  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+  //gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 
   // Simple Opengl Lighting
   glEnable(GL_LIGHTING);
