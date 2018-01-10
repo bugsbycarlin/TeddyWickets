@@ -7,11 +7,11 @@
 
   This is a one minute playable demo of the game. Changes are:
 
-  - Support for multiple modes (ie different screens)
+  +- Support for multiple modes (ie different screens)
+  +- Title screen
   - Fully realized game mechanic
   - Two single player levels (?)
   - One multiplayer (2 player) level
-  - Title screen
   - Game controller / keyboard / mouse setup screen
   - Controller support
   - Keymap support(?)
