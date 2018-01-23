@@ -50,19 +50,23 @@ void Title::update() {
 
 // Handle keyboard input
 void Title::handleKeys(SDL_Event e) {
-  if (e.key.keysym.sym==SDLK_DOWN || e.key.keysym.sym==SDLK_UP) {
-    if (selection != 1) {
-      selection = 1;
-    } else {
+  if (e.key.keysym.sym == SDLK_DOWN) {
+    selection += 1;
+    if (selection > 2) {
+      selection = 0;
+    }
+  } else if (e.key.keysym.sym == SDLK_UP) {
+    selection -= 1;
+    if (selection < 0) {
       selection = 2;
     }
   }
 
-  if (e.key.keysym.sym==SDLK_p) {
+  if (e.key.keysym.sym == SDLK_p) {
     quit = true;
   }
 
-  if (e.key.keysym.sym==SDLK_RETURN) {
+  if (e.key.keysym.sym == SDLK_RETURN) {
     current_screen = k_1p_game_screen;
   }
 }
@@ -78,6 +82,8 @@ void Title::render() {
   // Clear color buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  glColor3f(1.0f, 1.0f, 1.0f);
+
   Start2DDraw();
 
   // title screen render
@@ -89,37 +95,26 @@ void Title::render() {
   glTexCoord2d(1.0, 0.0); glVertex2d(k_screen_width, 0.0);
   glEnd();
 
-  if (selection == 1) {
-    textures->setTexture("one_player_selected");
+  // title text render
+  title->render();
+
+  if (selection == 0) {
+    one_player_selected->render();
   } else {
-    textures->setTexture("one_player_unselected");
+    one_player_unselected->render();
   }
-  int one_p_x = 530;
-  int one_p_y = 500;
-  int one_p_width = 420;
-  int one_p_height = 100;
-  glBegin(GL_QUADS);
-  glTexCoord2d(0.0, 0.0); glVertex2d(one_p_x + 0, one_p_y + 0);
-  glTexCoord2d(0.0, 1.0); glVertex2d(one_p_x + 0, one_p_y + one_p_height);
-  glTexCoord2d(1.0, 1.0); glVertex2d(one_p_x + one_p_width, one_p_y + one_p_height);
-  glTexCoord2d(1.0, 0.0); glVertex2d(one_p_x + one_p_width, one_p_y + 0);
-  glEnd();
+
+  if (selection == 1) {
+    two_player_selected->render();
+  } else {
+    two_player_unselected->render();
+  }
 
   if (selection == 2) {
-    textures->setTexture("two_player_selected");
+    control_setup_selected->render();
   } else {
-    textures->setTexture("two_player_unselected");
+    control_setup_unselected->render();
   }
-  int two_p_x = 530;
-  int two_p_y = 650;
-  int two_p_width = 420;
-  int two_p_height = 100;
-  glBegin(GL_QUADS);
-  glTexCoord2d(0.0, 0.0); glVertex2d(two_p_x + 0, two_p_y + 0);
-  glTexCoord2d(0.0, 1.0); glVertex2d(two_p_x + 0, two_p_y + two_p_height);
-  glTexCoord2d(1.0, 1.0); glVertex2d(two_p_x + two_p_width, two_p_y + two_p_height);
-  glTexCoord2d(1.0, 0.0); glVertex2d(two_p_x + two_p_width, two_p_y + 0);
-  glEnd();
 
   End2DDraw();
 }
@@ -129,12 +124,16 @@ bool Title::initialize() {
 
   textures = new Textures();
 
-  textures->addTexture("title_screen", "title_screen_draft.png");
+  textures->addTexture("title_screen", "title_screen_draft_3.png");
 
-  textures->addTexture("one_player_unselected", "one_player_unselected.png");
-  textures->addTexture("one_player_selected", "one_player_selected.png");
-  textures->addTexture("two_player_unselected", "two_player_unselected.png");
-  textures->addTexture("two_player_selected", "two_player_selected.png");
+  title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 135, 206, 235, 200, 100);
+
+  one_player_selected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 135, 206, 235, 800, 450);
+  one_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 206, 206, 206, 800, 450);
+  two_player_selected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 135, 206, 235, 800, 550);
+  two_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 206, 206, 206, 800, 550);
+  control_setup_selected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 135, 206, 235, 800, 650);
+  control_setup_unselected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 206, 206, 206, 800, 650);
 
   // glFrontFace(GL_CW);
   // glEnable(GL_CULL_FACE);
@@ -160,5 +159,14 @@ bool Title::initialize() {
 void Title::shutdown() {
   // To do: release the image files.
   delete textures;
+
+  title->shutdown();
+
+  one_player_selected->shutdown();
+  one_player_unselected->shutdown();
+  two_player_selected->shutdown();
+  two_player_unselected->shutdown();
+  control_setup_selected->shutdown();
+  control_setup_unselected->shutdown();
 }
 

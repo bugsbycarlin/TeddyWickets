@@ -18,8 +18,8 @@
   - Level editor (separate program)
   - Level saver
   - Level loader
-  - Model loader (models come from MayaLT)
-  - Model viewer (separate program)
+  +- Model loader (models come from MayaLT)
+  +- Model viewer (separate program)
   - Abstract away OpenGL in wrappers
   - More fully understand lighting model
   - Cel shading
@@ -98,6 +98,12 @@ bool initialize() {
   context = SDL_GL_CreateContext(window);
   if (context == NULL) {
     printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
+    return false;
+  }
+
+  // Initialize SDL2_ttf for fonts
+  if (TTF_Init() < 0) {
+    printf("Warning: Unable to initialize SDL2_ttf for fonts: %s\n", TTF_GetError());
     return false;
   }
 

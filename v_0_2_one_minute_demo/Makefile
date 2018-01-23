@@ -1,4 +1,5 @@
 .PHONY: TeddyWickets
+.PHONY: ModelViewer
 
 TeddyWickets:
 		g++ -w \
@@ -11,14 +12,17 @@ TeddyWickets:
 		./Source/point.cpp \
 		./Source/surface.cpp \
 		./Source/character.cpp \
+		./Source/model.cpp \
 		./Source/bumper.cpp \
 		./Source/wicket.cpp \
 		./Source/textures.cpp \
+		./Source/textbox.cpp \
 		-std=c++11 \
 		-o TeddyWickets \
 		-framework OpenGL \
 		-framework SDL2 \
 		-framework SDL2_image \
+		-framework SDL2_ttf \
 		-I Source/bullet_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \
@@ -33,11 +37,12 @@ ModelViewer:
 		./Source/model_viewer_main.cpp \
 		./Source/globals.cpp \
 		./Source/screen.cpp \
-		./Source/viewer.cpp \
+		./Source/model_viewer.cpp \
+		./Source/model.cpp \
 		./Source/point.cpp \
 		./Source/textures.cpp \
 		-std=c++11 \
-		-o TeddyWickets \
+		-o ModelViewer \
 		-framework OpenGL \
 		-framework SDL2 \
 		-framework SDL2_image \

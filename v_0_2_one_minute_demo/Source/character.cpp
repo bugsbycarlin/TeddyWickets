@@ -17,6 +17,8 @@ Character::Character(Physics* physics, Textures* textures, Point* position) {
   this->physics = physics;
   this->textures = textures;
 
+  this->model = new Model(textures, "teddy_bear_draft_2.obj");
+
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
   default_shot_power = k_default_shot_power;
@@ -46,7 +48,19 @@ void Character::render(int game_mode) {
   glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
-  // draw the main ball, using the transform from physics.
+  btScalar transform_matrix[16];
+  btTransform transform = physics->getTransform(identity);
+  transform.getOpenGLMatrix(transform_matrix);
+  glPushMatrix();
+  glMultMatrixf((GLfloat*)transform_matrix);
+
+  glPushMatrix();
+  glScalef(k_model_scale, k_model_scale, k_model_scale);
+  glRotatef(-90.0f,0.0f, 0.0f, 1.0f);
+  model->render();
+  glPopMatrix();
+
+  /*// draw the main ball, using the transform from physics.
   // this gets rotation as well as position.
   textures->setTexture("bear_face");
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -101,7 +115,7 @@ void Character::render(int game_mode) {
   // tail
   glTranslatef(0, 0.62, -0.15);
   gluSphere(ball, 0.17, 20, 20);
-  glTranslatef(0, -0.62, 0.15);
+  glTranslatef(0, -0.62, 0.15);*/
 
   // Tutorial info
   if (game_mode == k_prep_mode && shot_rotation == default_shot_rotation) {
@@ -178,7 +192,7 @@ void Character::setShotRotation(float value, bool recompute_trajectory) {
     btTransform current_transform = physics->getTransform(identity);
     for (int i = 0; i < 300; i++) {
       physics->update(1.0f / 60.f);
-      if (i % 5 == 0) future_positions.push_front(btTransform(physics->getTransform(identity)));
+      if (i > 0 && i % 5 == 0) future_positions.push_front(btTransform(physics->getTransform(identity)));
     }
     physics->setTransform(identity, current_transform);
     physics->stop(identity);

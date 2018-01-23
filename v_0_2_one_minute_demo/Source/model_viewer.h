@@ -3,56 +3,53 @@
   Teddy Wickets
   Copyright 2017 - Matthew Carlin
 
-  Title class shows the title screen.
+  Model Viewer class views 3d models in close up.
 */
 
-#ifndef TEDDY_WICKETS_TITLE_H_
-#define TEDDY_WICKETS_TITLE_H_
+#ifndef TEDDY_WICKETS_MODEL_VIEWER_H_
+#define TEDDY_WICKETS_MODEL_VIEWER_H_
 
 // SDL, for window, user input, and media
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
-#include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2/SDL_opengl.h>
 
 // OpenGL, for drawing everything
 #include <OpenGL/GLU.h>
+
+// Fmod for sound
+#include "fmod.hpp"
 
 // Standard libraries
 #include <math.h>
 #include <stdio.h>
 #include <chrono>
 #include <cstdlib>
+#include <list>
 #include <string>
-
-// Fmod for sound
-#include "fmod.hpp"
 
 // Teddy Wickets includes
 #include "globals.h"
+#include "model.h"
 #include "screen.h"
-#include "textbox.h"
 #include "textures.h"
 
-class Title: public Screen {
+class ModelViewer: public Screen {
  public:
-  int selection;
-
   Textures* textures;
 
-  TextBox* title;
+  float rotation;
 
-  TextBox* one_player_selected;
-  TextBox* one_player_unselected;
-  TextBox* two_player_selected;
-  TextBox* two_player_unselected;
-  TextBox* control_setup_selected;
-  TextBox* control_setup_unselected;
+  float zoom;
 
-  unsigned long start_time;
-  unsigned long last_time;
+  bool mousedown;
+  int drag_x;
+  int drag_y;
+  float pre_drag_rotation;
 
-  Title();
+  Model* model;
+
+  ModelViewer();
 
   void loop(SDL_Window* window, FMOD::System *sound_system);
 
@@ -60,7 +57,7 @@ class Title: public Screen {
 
   void render();
 
-  void handleKeys(SDL_Event e);
+  void handleKeys(unsigned char key);
   void handleMouse(SDL_Event e);
 
   bool initialize();

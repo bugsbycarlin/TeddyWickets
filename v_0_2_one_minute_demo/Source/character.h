@@ -14,6 +14,7 @@
 #include <list>
 
 #include "globals.h"
+#include "model.h"
 #include "physics.h"
 #include "point.h"
 #include "textures.h"
@@ -27,6 +28,7 @@ class Character {
 
     Physics* physics;
     Textures* textures;
+    Model* model;
 
     float default_shot_rotation;
     float shot_rotation;

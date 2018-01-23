@@ -28,9 +28,16 @@ const float k_bumper_width = 0.5;
 const float k_default_shot_rotation = -0.78f;
 const float k_default_shot_power = 20.0f;
 const float k_character_drop_height = 1.5f;
+const float k_model_scale = 0.3614f;
 
 // Textures
 const std::string k_texture_root_path = "Art/";
+
+// Models
+const std::string k_model_root_path = "Models/";
+
+// Fonts
+const std::string k_font_root_path = "Fonts/";
 
 // Screen modes
 enum {
@@ -38,6 +45,7 @@ enum {
   k_comic_screen = 1,
   k_1p_game_screen = 2,
   k_2p_game_screen = 3,
+  k_model_viewer_screen = 200,
 };
 
 // Game modes
