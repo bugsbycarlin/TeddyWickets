@@ -9,6 +9,10 @@
 
   +- Support for multiple modes (ie different screens)
   +- Title screen
+  +- Model loader (models come from MayaLT)
+  +- Model viewer (separate program)
+  +- Add font support with SDL2_ttf
+
   - Fully realized game mechanic
   - Two single player levels (?)
   - One multiplayer (2 player) level
@@ -18,8 +22,7 @@
   - Level editor (separate program)
   - Level saver
   - Level loader
-  +- Model loader (models come from MayaLT)
-  +- Model viewer (separate program)
+
   - Abstract away OpenGL in wrappers
   - More fully understand lighting model
   - Cel shading

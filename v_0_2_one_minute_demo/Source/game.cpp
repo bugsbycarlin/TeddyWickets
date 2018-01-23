@@ -169,11 +169,11 @@ void Game::handleKeys(unsigned char key) {
 
   if (game_mode == k_prep_mode) {
     if (key == 'a') {
-      character->setShotRotation(character->shot_rotation + 3.14159 / 20, true);
+      character->setShotRotation(character->shot_rotation + M_PI / 20, true);
     }
 
     if (key == 'd') {
-      character->setShotRotation(character->shot_rotation - 3.14159 / 20, true);
+      character->setShotRotation(character->shot_rotation - M_PI / 20, true);
     }
 
     if (key == 'w') {

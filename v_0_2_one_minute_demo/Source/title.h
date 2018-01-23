@@ -37,8 +37,11 @@
 class Title: public Screen {
  public:
   int selection;
+  int mode;
 
   Textures* textures;
+
+  TextBox* bugsby_presents;
 
   TextBox* title;
 

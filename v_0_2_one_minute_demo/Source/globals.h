@@ -11,6 +11,7 @@
 
 #include <OpenGL/GLU.h>
 
+#include <math.h>
 #include <string>
 
 // Screen variables
@@ -48,6 +49,12 @@ enum {
   k_model_viewer_screen = 200,
 };
 
+// Title screen modes
+enum {
+  k_title_presents_mode = 0,
+  k_title_title_mode = 1
+};
+
 // Game modes
 enum  {
   k_drop_mode = 0,
@@ -59,10 +66,16 @@ enum  {
 // Game variables
 const float k_default_speed_ramping = 2.0f;
 const float k_default_minimum_speed = 1.25f;
-const float k_up_shot_angle = 60.0f * 3.141592f / 180.0f;
+const float k_up_shot_angle = 60.0f * M_PI / 180.0f;
 
 void Start2DDraw();
 void End2DDraw();
+
+void fadeInOut(float start, float finish, float timeDiff);
+void fadeIn(float start, float finish, float timeDiff);
+void fadeOut(float start, float finish, float timeDiff);
+void blackout();
+
 
 /*
 
