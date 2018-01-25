@@ -69,7 +69,13 @@ void Title::handleKeys(SDL_Event e) {
     }
 
     if (e.key.keysym.sym == SDLK_RETURN) {
-      current_screen = k_1p_game_screen;
+      if (selection == 0) {
+        current_screen = k_1p_game_screen;
+      } else if (selection == 1) {
+        current_screen = k_1p_game_screen;
+      } else if (selection == 2) {
+        current_screen = k_control_setup_screen;
+      }
     }
   }
 
@@ -141,18 +147,19 @@ bool Title::initialize() {
 
   textures = new Textures();
 
-  textures->addTexture("title_screen", "title_screen_draft_3.png");
+  textures->addTexture("title_screen", "title_screen_draft_5.png");
 
   //bugsby_presents = new TextBox("cartoon_blocks.ttf", 90, "Bugsby Presents", 255, 255, 255, 420, 350);
   bugsby_presents = new TextBox("cartoon_blocks.ttf", 90, "Bugsby Presents", 255, 255, 255, 780, 770);
 
-  title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 135, 206, 235, 200, 100);
+  //title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 135, 206, 235, 200, 100);
+  title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 53, 62, 89, 200, 100);
 
-  one_player_selected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 135, 206, 235, 800, 450);
+  one_player_selected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 53, 62, 89, 800, 450);
   one_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 206, 206, 206, 800, 450);
-  two_player_selected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 135, 206, 235, 800, 550);
+  two_player_selected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 53, 62, 89, 800, 550);
   two_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 206, 206, 206, 800, 550);
-  control_setup_selected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 135, 206, 235, 800, 650);
+  control_setup_selected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 53, 62, 89, 800, 650);
   control_setup_unselected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 206, 206, 206, 800, 650);
 
   // glFrontFace(GL_CW);
@@ -177,7 +184,6 @@ bool Title::initialize() {
 }
 
 void Title::shutdown() {
-  // To do: release the image files.
   delete textures;
 
   title->shutdown();

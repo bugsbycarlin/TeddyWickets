@@ -46,6 +46,7 @@ enum {
   k_comic_screen = 1,
   k_1p_game_screen = 2,
   k_2p_game_screen = 3,
+  k_control_setup_screen = 4,
   k_model_viewer_screen = 200,
 };
 
@@ -63,6 +64,12 @@ enum  {
   k_action_mode = 3
 };
 
+// Controller Config screen modes
+enum {
+  k_control_view_mode = 0,
+  k_control_config_mode = 1
+};
+
 // Game variables
 const float k_default_speed_ramping = 2.0f;
 const float k_default_minimum_speed = 1.25f;
@@ -75,6 +82,21 @@ void fadeInOut(float start, float finish, float timeDiff);
 void fadeIn(float start, float finish, float timeDiff);
 void fadeOut(float start, float finish, float timeDiff);
 void blackout();
+
+
+
+/*
+
+
+  Random colors:
+
+  Sky blue: 135, 206, 235
+  Muted dark blue: 53, 62, 89
+  Silver Mist: 191, 200, 205
+
+
+*/
+
 
 
 /*

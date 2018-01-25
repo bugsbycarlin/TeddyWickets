@@ -41,6 +41,7 @@
 
 #include "game.h"
 #include "title.h"
+#include "control_setup.h"
 
 // The window
 SDL_Window* window;
@@ -77,7 +78,7 @@ bool initializeOpenGL() {
 
 bool initialize() {
   // Initialize SDL
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER) < 0) {
     printf("SDL could not initialize. SDL Error: %s\n", SDL_GetError());
     return false;
   }
@@ -159,8 +160,10 @@ int main(int argc, char* args[]) {
   SDL_StartTextInput();
 
   int current_screen;
-  if (argc > 1 && (std::string(args[1]) == "title" || std::string(args[1]) == "Title")) {
+  if (argc > 1 && (std::string(args[1]) == "title" || std::string(args[1]) == "Title" || std::string(args[1]) == "T")) {
     current_screen = k_title_screen;
+  } else if (argc > 1 && (std::string(args[1]) == "controllers" || std::string(args[1]) == "Controllers" || std::string(args[1]) == "C")) {
+    current_screen = k_control_setup_screen;
   } else {
     current_screen = k_1p_game_screen;
   }
@@ -179,6 +182,8 @@ int main(int argc, char* args[]) {
         screen = new Title();
       } else if (current_screen == k_1p_game_screen) {
         screen = new Game();
+      } else if (current_screen == k_control_setup_screen) {
+        screen = new ControlSetup();
       }
 
       if (!screen->initialize()) {
