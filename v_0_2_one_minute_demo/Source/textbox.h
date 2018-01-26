@@ -38,9 +38,14 @@ class TextBox {
   int x;
   int y;
 
+  int countdown;
+  SDL_Color permanent_color;
+
   TextBox(std::string font_name, int font_size, std::string text, Uint8 R, Uint8 G, Uint8 B, int x, int y);
 
   void setText(std::string text);
+  void setColor(Uint8 R, Uint8 G, Uint8 B);
+  void setTemporaryColor(Uint8 R, Uint8 G, Uint8 B);
 
   void render();
 

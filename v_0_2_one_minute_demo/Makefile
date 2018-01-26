@@ -7,6 +7,7 @@ TeddyWickets:
 		./Source/globals.cpp \
 		./Source/screen.cpp \
 		./Source/title.cpp \
+		./Source/control_map.cpp \
 		./Source/control_setup.cpp \
 		./Source/game.cpp \
 		./Source/physics.cpp \

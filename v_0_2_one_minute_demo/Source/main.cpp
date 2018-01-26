@@ -39,6 +39,7 @@
 #include "fmod.hpp"
 #include "fmod_errors.h"
 
+#include "globals.h"
 #include "game.h"
 #include "title.h"
 #include "control_setup.h"

@@ -12,6 +12,7 @@
 #include <OpenGL/GLU.h>
 
 #include <math.h>
+#include <cstdlib>
 #include <string>
 
 // Screen variables
@@ -82,8 +83,6 @@ void fadeInOut(float start, float finish, float timeDiff);
 void fadeIn(float start, float finish, float timeDiff);
 void fadeOut(float start, float finish, float timeDiff);
 void blackout();
-
-
 
 /*
 

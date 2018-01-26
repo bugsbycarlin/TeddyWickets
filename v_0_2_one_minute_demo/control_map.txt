@@ -1,0 +1,16 @@
+player_1_up:P0 Dpad Up
+player_1_down:P0 Dpad Down
+player_1_left:P0 Dpad Left
+player_1_right:P0 Dpad Right
+player_1_shoot_accept:P0 Button 0
+player_1_cancel_switch:P0 Button 1
+player_1_special:P0 Button 4
+player_1_view_taunt:P0 Button 3
+player_2_up:P0 Dpad Up
+player_2_down:P0 Dpad Down
+player_2_left:P0 Dpad Left
+player_2_right:P0 Dpad Right
+player_2_shoot_accept:P0 Button 0
+player_2_cancel_switch:P0 Button 1
+player_2_special:P0 Button 4
+player_2_view_taunt:P0 Button 3
