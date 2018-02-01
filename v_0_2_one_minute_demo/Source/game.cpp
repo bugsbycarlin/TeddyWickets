@@ -10,7 +10,7 @@
 // Game constructor
 Game::Game() {
   quit = false;
-  game_mode = k_drop_mode;
+  game_mode = k_bear_select_mode;
   mousedown = false;
   zoom = k_default_zoom;
   drag_x = 0;
@@ -18,6 +18,8 @@ Game::Game() {
   default_speed_ramping = k_default_speed_ramping;
   simulation_speed = k_default_minimum_speed;
   current_screen = k_1p_game_screen;
+
+  bear_choice = 0;
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -30,8 +32,8 @@ void Game::loop(SDL_Window* window, FMOD::System *sound_system) {
     // User requests quit
     if (e.type == SDL_QUIT) {
       quit = true;
-    } else if (e.type == SDL_TEXTINPUT) {
-      handleKeys(e.text.text[0]);
+    } else if (e.type == SDL_KEYDOWN) {
+      handleKeys(e);
     } else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONUP || e.type == SDL_MOUSEBUTTONDOWN) {
       handleMouse(e);
     }
@@ -57,6 +59,10 @@ void Game::update() {
   last_time = current_time;
   if (simulation_speed > k_default_minimum_speed) {
     simulation_speed *= 0.98f;
+  }
+
+  if(game_mode == k_bear_select_mode) {
+    return;
   }
 
   // Update bumpers to see if they need lighting up
@@ -156,37 +162,57 @@ void Game::shoot() {
 }
 
 // Handle keyboard input
-void Game::handleKeys(unsigned char key) {
-  if (key == 'p') {
+void Game::handleKeys(SDL_Event e) {
+  if (e.key.keysym.sym == SDLK_p) {
     quit = true;
   }
 
-  if (key == 'z') {
+  if (game_mode == k_bear_select_mode) {
+     // bear_name_text = new TextBox("cartoon_blocks.ttf", 50, bear_pretty_names[bear_choices[bear_choice]], 53, 62, 89, 362, 93);
+  //bear_description_text = new TextBox("cartoon_blocks.ttf", 40, bear_descriptions[bear_choices[bear_choice]], 53, 62, 89, 362, 149);
+    if (e.key.keysym.sym == SDLK_DOWN) {
+      bear_choice += 3;
+      if (bear_choice > 8) bear_choice -= 9;
+    } else if (e.key.keysym.sym == SDLK_UP) {
+      bear_choice -= 3;
+      if (bear_choice < 0) bear_choice += 9;
+    } else if (e.key.keysym.sym == SDLK_LEFT) {
+      bear_choice -= 1;
+      if ((bear_choice + 3) % 3 == 2) bear_choice += 3;
+    } else if (e.key.keysym.sym == SDLK_RIGHT) {
+      bear_choice += 1;
+      if (bear_choice % 3 == 0) bear_choice -= 3;
+    }
+
+    return;
+  }
+
+  if (e.key.keysym.sym == SDLK_z) {
     zoom += 1.0f;
-  } else if (key == 'x') {
+  } else if (e.key.keysym.sym == SDLK_x) {
     zoom -= 1.0f;
   }  
 
   if (game_mode == k_prep_mode) {
-    if (key == 'a') {
+    if (e.key.keysym.sym == SDLK_a) {
       character->setShotRotation(character->shot_rotation + M_PI / 20, true);
     }
 
-    if (key == 'd') {
+    if (e.key.keysym.sym == SDLK_d) {
       character->setShotRotation(character->shot_rotation - M_PI / 20, true);
     }
 
-    if (key == 'w') {
+    if (e.key.keysym.sym == SDLK_w) {
       character->up_shot = true;
       character->setShotRotation(character->shot_rotation, true);
     }
 
-    if (key == 's') {
+    if (e.key.keysym.sym == SDLK_s) {
       character->up_shot = false;
       character->setShotRotation(character->shot_rotation, true);
     }
 
-    if (key == 'm') {
+    if (e.key.keysym.sym == SDLK_m) {
       game_mode = k_power_mode;
       character->shot_power = 0;
       shot_rising = true;
@@ -195,11 +221,11 @@ void Game::handleKeys(unsigned char key) {
   }
 
   if (game_mode == k_power_mode) {
-    if (key == 'm') {
+    if (e.key.keysym.sym == SDLK_m) {
       shoot();
     }
 
-    if (key == 'c') {
+    if (e.key.keysym.sym == SDLK_c) {
       game_mode = k_prep_mode;
     }
   }
@@ -246,6 +272,11 @@ void Game::render() {
 
   // Clear color buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  if (game_mode == k_bear_select_mode) {
+    renderBearSelectMode();
+    return;
+  }
 
   renderBackground();
 
@@ -373,6 +404,60 @@ void Game::renderBackground() {
   glTexCoord2d(1.0, 1.0); glVertex2d(k_screen_width, k_screen_height);
   glTexCoord2d(1.0, 0.0); glVertex2d(k_screen_width, 0.0);
   glEnd();
+
+  End2DDraw();
+}
+
+void Game::renderBearSelectMode() {
+  // Clear color buffer
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  Start2DDraw();
+
+  choose_your_bears_text->render();
+  player_1_choose_text->render();
+  player_2_choose_text->render();
+  bear_name_text->render();
+  bear_description_text->render();
+
+  for (int i = 0; i < bear_choices.size(); i++) {
+    textures->setTexture(bear_choices[i] + "_box");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3), k_bear_choice_y + k_bear_choice_margin * (i / 3));
+    glTexCoord2d(0.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3), k_bear_choice_y + k_bear_choice_margin * (i / 3) + k_selection_box_size);
+    glTexCoord2d(1.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (i / 3) + k_selection_box_size);
+    glTexCoord2d(1.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (i / 3));
+    glEnd();
+  }
+
+  textures->setTexture("bear_selection_box");
+  glBegin(GL_QUADS);
+  glTexCoord2d(0.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3), k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3));
+  glTexCoord2d(0.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3), k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3) + k_selection_box_size);
+  glTexCoord2d(1.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3) + k_selection_box_size);
+  glTexCoord2d(1.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3));
+  glEnd();
+
+  for (int j = 0; j < 3; j++) {
+    textures->setTexture("unfilled_bear_selection_box");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_1_choices_x, k_bear_choice_y + k_bear_choice_margin * j);
+    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_1_choices_x, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
+    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
+    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j);
+    glEnd();
+  }
+
+  for (int j = 0; j < 3; j++) {
+    textures->setTexture("unfilled_bear_selection_box");
+    glBegin(GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_2_choices_x, k_bear_choice_y + k_bear_choice_margin * j);
+    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_2_choices_x, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
+    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
+    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j);
+    glEnd();
+  }
 
   End2DDraw();
 }
@@ -652,6 +737,34 @@ bool Game::initializeTextures() {
   textures->addTexture("m_shot_info", "M_Again_Set_Power_And_Take_Shot.png");
 
   textures->addTexture("wicket", "barber_pole.png");
+
+  //////
+
+  textures->addTexture("unfilled_bear_selection_box", "unfilled_bear_selection_box.png");
+  textures->addTexture("unavailable_bear_selection_box", "unavailable_bear_selection_box.png");
+  textures->addTexture("unknown_bear_selection_box", "unknown_bear_selection_box.png");
+  textures->addTexture("bear_selection_box", "bear_selection_box.png");
+
+  textures->addTexture("lil_jon_box", "lil_jon_box.png");
+  textures->addTexture("mortimer_box", "mortimer_box.png");
+  textures->addTexture("gluke_box", "gluke_box.png");
+  textures->addTexture("mags_box", "mags_box.png");
+  textures->addTexture("bob_smith_box", "bob_smith_box.png");
+  textures->addTexture("lord_lonsdale_box", "lord_lonsdale_box.png");
+  textures->addTexture("hpf_swinnerton_dyer_box", "hpf_swinnerton_dyer_box.png");
+  textures->addTexture("jeff_bridges_box", "jeff_bridges_box.png");
+  textures->addTexture("grim_box", "grim_box.png");
+
+  ///////
+
+  choose_your_bears_text = new TextBox("cartoon_blocks.ttf", 60, "Choose your bears", 53, 62, 89, 44, 22);
+  player_1_choose_text = new TextBox("cartoon_blocks.ttf", 60, "Player 1", 53, 62, 89, 44, 128);
+  player_2_choose_text = new TextBox("cartoon_blocks.ttf", 60, "Player 2", 53, 62, 89, 1147, 128);
+  bear_name_text = new TextBox("cartoon_blocks.ttf", 50, bear_pretty_names[bear_choices[bear_choice]], 53, 62, 89, 362, 93);
+  bear_description_text = new TextBox("cartoon_blocks.ttf", 40, bear_descriptions[bear_choices[bear_choice]], 53, 62, 89, 362, 149);
+
+  ///////
+
 
   // glFrontFace(GL_CW);
   // glEnable(GL_CULL_FACE);

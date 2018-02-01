@@ -5,20 +5,24 @@
 
   Currently working on V0.2 - One Minute Demo
 
-  This is a one minute playable demo of the game. Changes are:
+  This is a short playable demo of the game. Changes are:
 
   +- Support for multiple modes (ie different screens)
   +- Title screen
   +- Model loader (models come from MayaLT)
   +- Model viewer (separate program)
   +- Add font support with SDL2_ttf
+  +- Controller support
+  +- Keymapping / controller mapping
+  +- Game controller / keyboard setup screen
+  
 
+  - bear selection mode in the 2p game
+  - Remove mouse support
   - Fully realized game mechanic
   - Two single player levels (?)
   - One multiplayer (2 player) level
-  - Game controller / keyboard / mouse setup screen
-  - Controller support
-  - Keymap support(?)
+  
   - Level editor (separate program)
   - Level saver
   - Level loader

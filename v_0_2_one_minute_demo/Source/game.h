@@ -35,6 +35,7 @@
 #include "physics.h"
 #include "screen.h"
 #include "surface.h"
+#include "textbox.h"
 #include "textures.h"
 #include "wicket.h"
 
@@ -67,6 +68,63 @@ class Game: public Screen {
   unsigned long start_time;
   unsigned long last_time;
 
+  // Bear select stuff
+  TextBox* choose_your_bears_text;
+  TextBox* player_1_choose_text;
+  TextBox* player_2_choose_text;
+  TextBox* bear_name_text;
+  TextBox* bear_description_text;
+
+  int bear_choice;
+
+  std::map<int, std::string> bear_choices = {
+    {0, "lil_jon"},
+    {1, "mortimer"},
+    {2, "gluke"},
+    {3, "mags"},
+    {4, "bob_smith"},
+    {5, "lord_lonsdale"},
+    {6, "hpf_swinnerton_dyer"},
+    {7, "jeff_bridges"},
+    {8, "grim"}
+  };
+
+  std::map<std::string, std::string> bear_pretty_names = {
+    {"lil_jon", "Lil' Jon"},
+    {"mortimer", "Mortimer"},
+    {"gluke", "Gluke"},
+    {"mags", "Mags"},
+    {"bob_smith", "Bob Smith"},
+    {"lord_lonsdale", "Lord Lonsdale"},
+    {"hpf_swinnerton_dyer", "H.P.F. Swinnerton-Dyer"},
+    {"jeff_bridges", "Jeff Bridges"},
+    {"grim", "Grim"}
+  };
+
+  std::map<std::string, std::string> bear_descriptions = {
+    {"lil_jon", "Extra bouncy"},
+    {"mortimer", "Changes the trajectory of other bears"},
+    {"gluke", "Can teleport randomly"},
+    {"mags", "Magnetically attracted to wickets"},
+    {"bob_smith", "Other nearby bears get sad and slow down"},
+    {"lord_lonsdale", "Sticks in the ground on a high shot"},
+    {"hpf_swinnerton_dyer", "Uses crampons to stop on a dime"},
+    {"jeff_bridges", "Leaves a deadly digital trail"},
+    {"grim", "Knocks other bears out of commission"}
+  };
+
+  // std::vector<Point*> bear_choice_positions = {
+  //   new Point(362, 206, 0),
+  //   new Point(590, 206, 0),
+  //   new Point(823, 206, 0),
+  //   new Point(362, 437, 0),
+  //   new Point(590, 437, 0),
+  //   new Point(823, 437, 0),
+  //   new Point(362, 668, 0),
+  //   new Point(590, 668, 0),
+  //   new Point(823, 668, 0),
+  // };
+
   Game();
 
   void loop(SDL_Window* window, FMOD::System *sound_system);
@@ -77,10 +135,11 @@ class Game: public Screen {
   void shoot();
 
   void render();
-  void renderDesign();
   void renderBackground();
+  void renderBearSelectMode();
+  void renderDesign();
 
-  void handleKeys(unsigned char key);
+  void handleKeys(SDL_Event e);
   void handleMouse(SDL_Event e);
 
   bool initialize();

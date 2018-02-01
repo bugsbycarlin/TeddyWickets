@@ -59,10 +59,11 @@ enum {
 
 // Game modes
 enum  {
-  k_drop_mode = 0,
-  k_prep_mode = 1,
-  k_power_mode = 2,
-  k_action_mode = 3
+  k_bear_select_mode = 0,
+  k_drop_mode = 1,
+  k_prep_mode = 2,
+  k_power_mode = 3,
+  k_action_mode = 4
 };
 
 // Controller Config screen modes
@@ -75,6 +76,16 @@ enum {
 const float k_default_speed_ramping = 2.0f;
 const float k_default_minimum_speed = 1.25f;
 const float k_up_shot_angle = 60.0f * M_PI / 180.0f;
+
+
+// Visual variables
+const int k_selection_box_size = 206;
+const int k_bear_choice_x = 372;
+const int k_bear_choice_y = 206;
+const int k_bear_choice_margin = 232;
+const int k_player_1_choices_x = 44;
+const int k_player_2_choices_x = 1147;
+
 
 void Start2DDraw();
 void End2DDraw();
