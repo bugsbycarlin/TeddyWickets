@@ -365,6 +365,35 @@ void Game::render() {
 
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
+  // this code makes a sun
+  // float fraction = (int(last_time - start_time) % k_sun_period) / (float)k_sun_period;
+  // printf("Sun %0.2f\n", fraction);
+  // GLfloat light_position[] = {1.0f * (float)cos(fraction * 2 * M_PI), -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
+  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  // if (fraction > 0.5f) {
+  //   GLfloat light_diffuse[] = {0.25, 0.25, 0.25, 1.0};
+  //   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  // } else {
+  //   GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  //   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  // }
+
+  // from fraction of the way around the sky, starting on the left and moving clockwise.
+  // A good value is 0.08. This is sort of like 9AM sun if the left is the east.
+  // float fraction = 0.08f;
+  // GLfloat light_position[] = {3.0f + 1.0f * (float)cos(fraction * 2 * M_PI), -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
+  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+  // from fraction of the way around the sky, starting on the left and moving clockwise, but pulled toward me, shining from kind of behind me.
+  float fraction = 0.18f;
+  GLfloat light_position[] = {0.5f + 1.0f * (float)cos(fraction * 2 * M_PI), -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+
+  // straight from the left
+  // GLfloat light_position[] = {-1.0, 1.0, 0.0, 0.0};
+  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
     (*surface)->render();
@@ -874,20 +903,31 @@ bool Game::initializeLighting() {
   // Simple Opengl Lighting
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-  GLfloat global_ambient[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat global_ambient[] = {0.8, 0.8, 0.8, 1.0};
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
   glEnable(GL_NORMALIZE);
   glEnable(GL_RESCALE_NORMAL);
 
   GLfloat light_ambient[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat light_diffuse[] = {0.9, 0.9, 0.9, 1.0};
   GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_position[] = {-1.0, 0.0, 1.0, 0.0};
+
   glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+  // position is defined after the camera, per render.
+
+  // Common material
+  GLfloat material_ambient[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat material_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat shininess[] = {5.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {

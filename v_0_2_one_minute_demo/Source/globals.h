@@ -87,6 +87,9 @@ const int k_bear_choice_margin = 232;
 const int k_player_1_choices_x = 44;
 const int k_player_2_choices_x = 1147;
 
+// Experimental visual
+const int k_sun_period = 50000;
+
 void Start2DDraw();
 void End2DDraw();
 

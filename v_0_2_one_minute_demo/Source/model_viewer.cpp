@@ -137,6 +137,16 @@ void ModelViewer::render() {
   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
+  // Common material
+  GLfloat material_ambient[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat material_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat shininess[] = {5.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
   glMatrixMode(GL_MODELVIEW);

@@ -28,9 +28,9 @@ TextBox::TextBox(std::string font_name, int font_size, std::string text, Uint8 R
   texture = new GLuint[1];
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
 }
 
 void TextBox::setText(std::string text) {
@@ -41,9 +41,9 @@ void TextBox::setText(std::string text) {
   texture = new GLuint[1];
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
 }
 
 void TextBox::setColor(Uint8 R, Uint8 G, Uint8 B) {
@@ -54,9 +54,9 @@ void TextBox::setColor(Uint8 R, Uint8 G, Uint8 B) {
   texture = new GLuint[1];
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
 }
 
 void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
@@ -69,9 +69,9 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
   texture = new GLuint[1];
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
 }
 
 void TextBox::render() {
@@ -92,9 +92,9 @@ void TextBox::render() {
       texture = new GLuint[1];
       glGenTextures(1, texture);
       glBindTexture(GL_TEXTURE_2D, texture[0]);
-      glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
     }
   }
 }
