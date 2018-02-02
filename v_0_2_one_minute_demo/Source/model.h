@@ -44,6 +44,12 @@ class Model {
     std::map<std::string, int> texture_keys;
     std::map<int, std::string> texture_map;
 
+
+    // Display list global counter
+    static int next_display_list_index;
+
+    int display_list_index;
+
     Model(Textures* textures, std::string model_file_name);
 
     void render();

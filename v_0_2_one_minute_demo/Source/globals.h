@@ -60,10 +60,11 @@ enum {
 // Game modes
 enum  {
   k_bear_select_mode = 0,
-  k_drop_mode = 1,
-  k_prep_mode = 2,
-  k_power_mode = 3,
-  k_action_mode = 4
+  k_lets_go_mode = 1,
+  k_drop_mode = 2,
+  k_prep_mode = 3,
+  k_power_mode = 4,
+  k_action_mode = 5
 };
 
 // Controller Config screen modes
@@ -86,7 +87,6 @@ const int k_bear_choice_margin = 232;
 const int k_player_1_choices_x = 44;
 const int k_player_2_choices_x = 1147;
 
-
 void Start2DDraw();
 void End2DDraw();
 
@@ -103,7 +103,7 @@ void blackout();
   Sky blue: 135, 206, 235
   Muted dark blue: 53, 62, 89
   Silver Mist: 191, 200, 205
-
+  Selection box: 140, 98, 57
 
 */
 

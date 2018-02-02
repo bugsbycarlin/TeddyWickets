@@ -67,6 +67,9 @@ class Game: public Screen {
 
   unsigned long start_time;
   unsigned long last_time;
+  unsigned long mark_time;
+  unsigned long framerate_time;
+  int frames_since_last;
 
   // Bear select stuff
   TextBox* choose_your_bears_text;
@@ -74,6 +77,7 @@ class Game: public Screen {
   TextBox* player_2_choose_text;
   TextBox* bear_name_text;
   TextBox* bear_description_text;
+  TextBox* go_text;
 
   int bear_choice;
 
@@ -88,6 +92,8 @@ class Game: public Screen {
     {7, "jeff_bridges"},
     {8, "grim"}
   };
+
+  std::map<int, int> available_bear_choices;
 
   std::map<std::string, std::string> bear_pretty_names = {
     {"lil_jon", "Lil' Jon"},
@@ -113,17 +119,8 @@ class Game: public Screen {
     {"grim", "Knocks other bears out of commission"}
   };
 
-  // std::vector<Point*> bear_choice_positions = {
-  //   new Point(362, 206, 0),
-  //   new Point(590, 206, 0),
-  //   new Point(823, 206, 0),
-  //   new Point(362, 437, 0),
-  //   new Point(590, 437, 0),
-  //   new Point(823, 437, 0),
-  //   new Point(362, 668, 0),
-  //   new Point(590, 668, 0),
-  //   new Point(823, 668, 0),
-  // };
+  std::vector<std::string> player_1_bears;
+  std::vector<std::string> player_2_bears;
 
   Game();
 

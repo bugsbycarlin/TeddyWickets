@@ -7,11 +7,15 @@
 
 #include "model.h"
 
+int Model::next_display_list_index = 1;
+
 Model::Model(Textures* textures, std::string model_file_name) {
   this->textures = textures;
 
   std::string line;
   std::smatch match;
+
+  this->display_list_index = -1;
 
   std::string material = model_file_name;
   material.replace(material.length() - 3, 3, "mtl");
@@ -200,51 +204,11 @@ Model::Model(Textures* textures, std::string model_file_name) {
       current_normals = {};
       current_faces = {};
 
-      // vertex_counter = 1;
-      // texture_coord_counter = 1;
-      // normal_counter = 1;
-
       component_name = "";
     }
   }
 
   model_file.close();
-
-  // for (const auto &component_pair : vertices) {
-  //   printf("component name: %s\n", component_pair.first.c_str());
-  //   printf("number of vertices: %d\n", component_pair.second.size());
-  //   for (const auto &vertex_pair : component_pair.second) {
-  //     printf("Vertex %d\n", vertex_pair.first);
-  //     Point* p = (Point*) vertex_pair.second;
-  //     printf("Values: %f %f %f\n", p->x, p->y, p->z);
-  //   }
-  // }
-
-  // for (const auto &component_pair : faces) {
-  //   std::string component_name = component_pair.first.c_str();
-  //   printf("component name: %s\n", component_name.c_str());
-  //   std::list<std::map<int, int>> current_faces = faces[component_name];
-  //   for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-  //     if (face->size() == 12) {
-  //       printf("FOUR POINT FACE\n");
-  //       printf("%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",
-  //         face->operator[](1),
-  //         face->operator[](2),
-  //         face->operator[](3),
-  //         face->operator[](4),
-  //         face->operator[](5),
-  //         face->operator[](6),
-  //         face->operator[](7),
-  //         face->operator[](8),
-  //         face->operator[](9),
-  //         face->operator[](10),
-  //         face->operator[](11),
-  //         face->operator[](12));
-  //     } else if (face->size() == 9) {
-  //       printf("THREE POINT FACE\n");
-  //     }
-  //   }
-  // }
 }
 
 void Model::render() {
@@ -258,48 +222,57 @@ void Model::render() {
   //gluSphere(ball, 0.75f, 20, 20);
 
   //printf("Rendering\n");
-  for (auto component_pointer = component_names.begin(); component_pointer != component_names.end(); ++component_pointer) {
-    std::string component_name = component_pointer->c_str();
-    std::list<std::map<int, int>> current_faces = faces[component_name];
+  if (display_list_index == -1) {
+    display_list_index = next_display_list_index;
+    next_display_list_index++;
 
-    //printf("Component %s\n", component_name.c_str());
+    glNewList(display_list_index, GL_COMPILE);
+    for (auto component_pointer = component_names.begin(); component_pointer != component_names.end(); ++component_pointer) {
+      std::string component_name = component_pointer->c_str();
+      std::list<std::map<int, int>> current_faces = faces[component_name];
 
-    std::map<int, Point*> current_vertices = vertices[component_name];
-    std::map<int, Point*> current_texture_coords = texture_coords[component_name];
-    std::map<int, Point*> current_normals = normals[component_name];
+      //printf("Component %s\n", component_name.c_str());
 
-    for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-      //printf("faaace %d\n", face->size());
-      int num_faces = -1;
-      if (face->size() == 1) {
-        // printf("Face\n");
-        // printf("Face is %d\n", face->operator[](0));
-        // printf("Texture map is %s\n", texture_map[face->operator[](0)].c_str());
-        textures->setTexture(texture_map[face->operator[](0)]);
-        continue;
-      }
-      else if (face->size() == 12) {
-        num_faces = 4;
-        glBegin(GL_QUADS);
-      } else if (face->size() == 9) {
-        num_faces = 3;
-        glBegin(GL_TRIANGLES);
-      }
-      
-      for(int i = 0; i < num_faces; i++) {
-        int start = 3*i + 1;
+      std::map<int, Point*> current_vertices = vertices[component_name];
+      std::map<int, Point*> current_texture_coords = texture_coords[component_name];
+      std::map<int, Point*> current_normals = normals[component_name];
 
-        Point* vertex = current_vertices[face->operator[](start)];
-        Point* texture = current_texture_coords[face->operator[](start+1)];
-        Point* normal = current_normals[face->operator[](start+2)];
-
-        glNormal3f(normal->x, normal->y, normal->z);
-        glTexCoord2f(texture->x, -texture->y);
-        glVertex3f(vertex->x, vertex->y, vertex->z);
+      for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
+        //printf("faaace %d\n", face->size());
+        int num_faces = -1;
+        if (face->size() == 1) {
+          // printf("Face\n");
+          // printf("Face is %d\n", face->operator[](0));
+          // printf("Texture map is %s\n", texture_map[face->operator[](0)].c_str());
+          textures->setTexture(texture_map[face->operator[](0)]);
+          continue;
+        }
+        else if (face->size() == 12) {
+          num_faces = 4;
+          glBegin(GL_QUADS);
+        } else if (face->size() == 9) {
+          num_faces = 3;
+          glBegin(GL_TRIANGLES);
+        }
         
+        for(int i = 0; i < num_faces; i++) {
+          int start = 3*i + 1;
+
+          Point* vertex = current_vertices[face->operator[](start)];
+          Point* texture = current_texture_coords[face->operator[](start+1)];
+          Point* normal = current_normals[face->operator[](start+2)];
+
+          glNormal3f(normal->x, normal->y, normal->z);
+          glTexCoord2f(texture->x, -texture->y);
+          glVertex3f(vertex->x, vertex->y, vertex->z);
+          
+        }
+        glEnd();
       }
-      glEnd();
     }
+    glEndList();
+  } else {
+    glCallList(display_list_index);
   }
 
 }
