@@ -27,7 +27,7 @@ const float k_physics_bumper_height = 4.0f;
 const float k_bumper_width = 0.5;
 
 // Character
-const float k_default_shot_rotation = -0.78f;
+const float k_default_shot_rotation = 2.36f;
 const float k_default_shot_power = 20.0f;
 const float k_character_drop_height = 1.5f;
 const float k_model_scale = 0.3614f;

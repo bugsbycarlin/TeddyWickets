@@ -84,6 +84,7 @@ void Game::update() {
 
   if (current_time - framerate_time > 1000.0f) {
     printf("Framerate: %d\n", frames_since_last);
+    printf("Ball: %0.2f, %0.2f, %0.2f\n", character->position->x, character->position->y, character->position->z);
     framerate_time = current_time;
     frames_since_last = 0;
   } else {
@@ -352,29 +353,13 @@ void Game::render() {
   // 3. normal perspective
   //gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 
-  // Simple Opengl Lighting
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  GLfloat ambient[] = {0.5, 0.5, 0.5, 1.0};
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-  glEnable(GL_NORMALIZE);
-  glEnable(GL_RESCALE_NORMAL);
 
-  GLfloat light_ambient[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_position[] = {-1.0, 0.0, 1.0, 0.0};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(character->position->x - 15, character->position->y - 15, 10,
+  gluLookAt(character->position->x + 15, character->position->y + 15, 10,
             character->position->x, character->position->y, 0,
             0, 0, 1);
 
@@ -447,6 +432,17 @@ void Game::render() {
     glTexCoord2d(1.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 30, power_y + 150 - 140 * portion);
     glEnd();
   }
+
+  // render coordinates
+  int coord_x = 40;
+  int coord_y = k_screen_height - 79 - 40;
+  textures->setTexture("coordinates");
+  glBegin(GL_QUADS);
+  glTexCoord2d(0.0, 0.0); glVertex2d(coord_x + 0.0, coord_y + 0.0);
+  glTexCoord2d(0.0, 1.0); glVertex2d(coord_x + 0.0, coord_y + 79);
+  glTexCoord2d(1.0, 1.0); glVertex2d(coord_x + 93, coord_y + 79);
+  glTexCoord2d(1.0, 0.0); glVertex2d(coord_x + 93, coord_y + 0.0);
+  glEnd();
 
   End2DDraw();
 }
@@ -554,32 +550,32 @@ bool Game::initializeGamePieces() {
 
   // first test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(0, -6, 0),
-    new Point(-3, -6, 0),
+    new Point(0, 6, 0),
+    new Point(3, 6, 0),
     4.0));
 
   // second test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(-21, 0, -4),
-    new Point(-21, -3, -4),
+    new Point(21, 0, -4),
+    new Point(21, 3, -4),
     4.0));
 
   // third test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(-54, 0, -8),
-    new Point(-54, -3, -8),
+    new Point(54, 0, -8),
+    new Point(54, 3, -8),
     4.0));
 
   // fourth test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(-48, -9, -8),
-    new Point(-51, -9, -8),
+    new Point(48, 9, -8),
+    new Point(51, 9, -8),
     4.0));
 
   // fifth test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(-45, 45, 0),
-    new Point(-45, 48, 0),
+    new Point(45, -45, 0),
+    new Point(45, -48, 0),
     4.0));
 
   // surfaces segment 1 (slide down)
@@ -588,46 +584,46 @@ bool Game::initializeGamePieces() {
     for (int y = 0; y < 3; y++) {
       surfaces.push_front(new Surface(physics, textures,
         false,
-        new Point(0 - 6 * k, 0 - 6 * y, height_array[k+1]),
-        new Point(6 - 6 * k, 0 - 6 * y, height_array[k]),
-        new Point(6 - 6 * k, 6 - 6 * y, height_array[k]),
-        new Point(0 - 6 * k, 6 - 6 * y, height_array[k+1])));
+        new Point(0 + 6 * k, 0 + 6 * y, height_array[k+1]),
+        new Point(-6 + 6 * k, 0 + 6 * y, height_array[k]),
+        new Point(-6 + 6 * k, -6 + 6 * y, height_array[k]),
+        new Point(0 + 6 * k, -6 + 6 * y, height_array[k+1])));
     }
   }
 
   // bumper segment 1
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(6, -12, 0),
-    new Point(-6, -12, 0),
-    new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-6, -12, 0),
-    new Point(-18, -12, -4),
-    new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-18, -12, -4),
-    new Point(-30, -12, -4),
-    new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-30, -12, -4),
-    new Point(-42, -12, -8),
-    new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(6, 6, 0),
-    new Point(-6, 6, 0),
+    new Point(-6, 12, 0),
+    new Point(6, 12, 0),
     new Point(0, -k_bumper_width, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-6, 6, 0),
-    new Point(-18, 6, -4),
+    new Point(6, 12, 0),
+    new Point(18, 12, -4),
     new Point(0, -k_bumper_width, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-18, 6, -4),
-    new Point(-30, 6, -4),
+    new Point(18, 12, -4),
+    new Point(30, 12, -4),
     new Point(0, -k_bumper_width, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-30, 6, -4),
-    new Point(-42, 6, -8),
+    new Point(30, 12, -4),
+    new Point(42, 12, -8),
     new Point(0, -k_bumper_width, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(-6, -6, 0),
+    new Point(6, -6, 0),
+    new Point(0, k_bumper_width, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(6, -6, 0),
+    new Point(18, -6, -4),
+    new Point(0, k_bumper_width, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(18, -6, -4),
+    new Point(30, -6, -4),
+    new Point(0, k_bumper_width, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(30, -6, -4),
+    new Point(42, -6, -8),
+    new Point(0, k_bumper_width, 0)));
 
   // mountain segment 1
   int first_x = 10 + rand() % static_cast<int>(20 + 1);
@@ -636,10 +632,10 @@ bool Game::initializeGamePieces() {
     int new_y = 25 + rand() % static_cast<int>(25 + 1);
     surfaces.push_front(new Surface(physics, textures,
       true,
-      new Point(0 - 6 * k, 0 - (6 * 2) - new_y, height_array[k+1] - 70),
-      new Point(6 - 6 * k + first_x, 0 - (6 * 2) - last_y, height_array[k] - 70),
-      new Point(6 - 6 * k, 0 - (6 * 2), height_array[k]),
-      new Point(0 - 6 * k, 0 - (6 * 2), height_array[k+1])));
+      new Point(0 + 6 * k, 0 + (6 * 2) + new_y, height_array[k+1] - 70),
+      new Point(-6 + 6 * k - first_x, 0 + (6 * 2) + last_y, height_array[k] - 70),
+      new Point(-6 + 6 * k, 0 + (6 * 2), height_array[k]),
+      new Point(0 + 6 * k, 0 + (6 * 2), height_array[k+1])));
     last_y = new_y;
     first_x = 0;
   }
@@ -649,32 +645,32 @@ bool Game::initializeGamePieces() {
     for (int y = 0; y < 3; y++) {
       surfaces.push_front(new Surface(physics, textures,
         false,
-        new Point(-48 - 6 * x, 0 - 6 * y, -8),
-        new Point(-42 - 6 * x, 0 - 6 * y, -8),
-        new Point(-42 - 6 * x, 6 - 6 * y, -8),
-        new Point(-48 - 6 * x, 6 - 6 * y, -8)));
+        new Point(48 + 6 * x, 0 + 6 * y, -8),
+        new Point(42 + 6 * x, 0 + 6 * y, -8),
+        new Point(42 + 6 * x, -6 + 6 * y, -8),
+        new Point(48 + 6 * x, -6 + 6 * y, -8)));
     }
   }
 
   // bumper segment 2 (corner)
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-60, -12, -8),
-    new Point(-42, -12, -8),
-    new Point(0, k_bumper_width, 0)));
+    new Point(60, 12, -8),
+    new Point(42, 12, -8),
+    new Point(0, -k_bumper_width, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-60, -12, -8),
-    new Point(-60, 6, -8),
-    new Point(k_bumper_width, 0.0, 0)));
+    new Point(60, 12, -8),
+    new Point(60, -6, -8),
+    new Point(-k_bumper_width, 0.0, 0)));
 
   // mountain segment 2
   for (int k = 0; k < 3; k++) {
     int new_y = 25 + rand() % static_cast<int>(25 + 1);
     surfaces.push_front(new Surface(physics, textures,
       true,
-      new Point(-48 - 6 * k, 0 - (6 * 2) - new_y, -8 - 70),
-      new Point(-42 - 6 * k, 0 - (6 * 2) - last_y, -8 - 70),
-      new Point(-42 - 6 * k, 0 - (6 * 2), -8),
-      new Point(-48 - 6 * k, 0 - (6 * 2), -8)));
+      new Point(48 + 6 * k, 0 + (6 * 2) + new_y, -8 - 70),
+      new Point(42 + 6 * k, 0 + (6 * 2) + last_y, -8 - 70),
+      new Point(42 + 6 * k, 0 + (6 * 2), -8),
+      new Point(48 + 6 * k, 0 + (6 * 2), -8)));
     last_y = new_y;
   }
 
@@ -682,20 +678,20 @@ bool Game::initializeGamePieces() {
   int last_x = 25 + rand() % static_cast<int>(25 + 1);
   surfaces.push_front(new Surface(physics, textures,
     true,
-    new Point(-60 - last_x, 0 - (6 * 2) - last_y, -8 - 70),
-    new Point(-60, 0 - (6 * 2) - last_y, -8 - 70),
-    new Point(-60, 0 - (6 * 2), -8),
-    new Point(-60, 0 - (6 * 2), -8)));
+    new Point(60 + last_x, 0 + (6 * 2) + last_y, -8 - 70),
+    new Point(60, 0 + (6 * 2) + last_y, -8 - 70),
+    new Point(60, 0 + (6 * 2), -8),
+    new Point(60, 0 + (6 * 2), -8)));
 
   // mountain segment 3
   for (int k = 0; k < 3; k++) {
     int new_x = 25 + rand() % static_cast<int>(25 + 1);
     surfaces.push_front(new Surface(physics, textures,
       true,
-      new Point(-48 - 6 * 2 - new_x, -6 + 6 * k, -8 - 70),
-      new Point(-48 - 6 * 2 - last_x, -12 + 6 * k - last_y, -8 - 70),
-      new Point(-48 - 6 * 2, -12 + 6 * k, -8),
-      new Point(-48 - 6 * 2, -6 + 6 * k, -8)));
+      new Point(48 + 6 * 2 + new_x, 6 - 6 * k, -8 - 70),
+      new Point(48 + 6 * 2 + last_x, 12 - 6 * k + last_y, -8 - 70),
+      new Point(48 + 6 * 2, 12 - 6 * k, -8),
+      new Point(48 + 6 * 2, 6 - 6 * k, -8)));
     last_x = new_x;
     last_y = 0;
   }
@@ -706,56 +702,56 @@ bool Game::initializeGamePieces() {
     for (int x = 0; x < 3; x++) {
       surfaces.push_front(new Surface(physics, textures,
         false,
-        new Point(-48 - 6 * x, 6 + 6 * k, height_array2[k]),
-        new Point(-42 - 6 * x, 6 + 6 * k, height_array2[k]),
-        new Point(-42 - 6 * x, 12 + 6 * k, height_array2[k+1]),
-        new Point(-48 - 6 * x, 12 + 6 * k, height_array2[k+1])));
+        new Point(48 + 6 * x, -6 - 6 * k, height_array2[k]),
+        new Point(42 + 6 * x, -6 - 6 * k, height_array2[k]),
+        new Point(42 + 6 * x, -12 - 6 * k, height_array2[k+1]),
+        new Point(48 + 6 * x, -12 - 6 * k, height_array2[k+1])));
     }
   }
 
   // bumper segment 3
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-60, 6, -8),
-    new Point(-60, 18, -4),
-    new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-60, 18, -4),
-    new Point(-60, 30, -4),
-    new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-60, 30, -4),
-    new Point(-60, 42, 0),
-    new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-60, 42, 0),
-    new Point(-60, 54, 0),
-    new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
-    new Point(-42, 6, -8),
-    new Point(-42, 18, -4),
+    new Point(60, -6, -8),
+    new Point(60, -18, -4),
     new Point(-k_bumper_width, 0.0, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-42, 18, -4),
-    new Point(-42, 30, -4),
+    new Point(60, -18, -4),
+    new Point(60, -30, -4),
     new Point(-k_bumper_width, 0.0, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-42, 30, -4),
-    new Point(-42, 42, 0),
+    new Point(60, -30, -4),
+    new Point(60, -42, 0),
     new Point(-k_bumper_width, 0.0, 0)));
   bumpers.push_front(new Bumper(physics, textures,
-    new Point(-42, 42, 0),
-    new Point(-42, 54, 0),
+    new Point(60, -42, 0),
+    new Point(60, -54, 0),
     new Point(-k_bumper_width, 0.0, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(42, -6, -8),
+    new Point(42, -18, -4),
+    new Point(k_bumper_width, 0.0, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(42, -18, -4),
+    new Point(42, -30, -4),
+    new Point(k_bumper_width, 0.0, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(42, -30, -4),
+    new Point(42, -42, 0),
+    new Point(k_bumper_width, 0.0, 0)));
+  bumpers.push_front(new Bumper(physics, textures,
+    new Point(42, -42, 0),
+    new Point(42, -54, 0),
+    new Point(k_bumper_width, 0.0, 0)));
 
   // mountain segment 4
   for (int k = 0; k < 8; k++) {
     int new_x = 25 + rand() % static_cast<int>(25 + 1);
     surfaces.push_front(new Surface(physics, textures,
       true,
-      new Point(-48 - 6 * 2 - new_x, 12 + 6 * k, height_array2[k+1] - 70),
-      new Point(-48 - 6 * 2 - last_x, 6 + 6 * k, height_array2[k] - 70),
-      new Point(-48 - 6 * 2, 6 + 6 * k, height_array2[k]),
-      new Point(-48 - 6 * 2, 12 + 6 * k, height_array2[k+1])));
+      new Point(48 + 6 * 2 + new_x, -12 - 6 * k, height_array2[k+1] - 70),
+      new Point(48 + 6 * 2 + last_x, -6 - 6 * k, height_array2[k] - 70),
+      new Point(48 + 6 * 2, -6 - 6 * k, height_array2[k]),
+      new Point(48 + 6 * 2, -12 - 6 * k, height_array2[k+1])));
     last_x = new_x;
   }
 
@@ -799,6 +795,8 @@ bool Game::initializeTextures() {
   glEnable(GL_TEXTURE_2D);
 
   textures = new Textures();
+
+  textures->addTexture("coordinates", "coordinates.png");
 
   textures->addTexture("tiles", "tiles4.png");
 
@@ -873,10 +871,23 @@ bool Game::initializeTextures() {
 
 // To do: lighting here instead of per render
 bool Game::initializeLighting() {
-  glViewport(0, 0, k_screen_width, k_screen_height);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(45.0f, k_screen_width/(1.0 * k_screen_height), 0.1f, 1000.0f);
+  // Simple Opengl Lighting
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  GLfloat global_ambient[] = {0.5, 0.5, 0.5, 1.0};
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+  glEnable(GL_NORMALIZE);
+  glEnable(GL_RESCALE_NORMAL);
+
+  GLfloat light_ambient[] = {0.0, 0.0, 0.0, 1.0};
+  GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat light_position[] = {-1.0, 0.0, 1.0, 0.0};
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {
