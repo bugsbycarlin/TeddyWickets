@@ -12,10 +12,11 @@
 // SDL, for window, user input, and media
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
-#include <SDL2/SDL_opengl.h>
+//#include <SDL2/SDL_opengl.h>
 
 // OpenGL, for drawing everything
-#include <OpenGL/GLU.h>
+//#include <OpenGL/gl3.h>
+//#include <OpenGL/GLU.h>
 
 // Standard libraries
 #include <math.h>
@@ -30,6 +31,7 @@
 
 // Teddy Wickets includes
 #include "bumper.h"
+#include "cel_shader.h"
 #include "character.h"
 #include "globals.h"
 #include "physics.h"
@@ -50,6 +52,7 @@ class Game: public Screen {
 
   Physics* physics;
   Textures* textures;
+  CelShader* cel_shader;
 
   Character* character;
 

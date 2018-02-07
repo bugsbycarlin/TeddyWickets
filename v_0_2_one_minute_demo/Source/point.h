@@ -9,7 +9,10 @@
 #ifndef TEDDY_WICKETS_POINT_H_
 #define TEDDY_WICKETS_POINT_H_
 
-#include <SDL2/SDL_opengl.h>
+//#include <SDL2/SDL_opengl.h>
+//#include <OpenGL/gl3.h>
+
+#include "globals.h"
 
 class Point {
  public:

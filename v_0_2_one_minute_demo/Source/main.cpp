@@ -15,7 +15,9 @@
   +- Controller support
   +- Keymapping / controller mapping
   +- Game controller / keyboard setup screen
+  +- Improved lighting model
   
+  - Cel shading and outlining
 
   - bear selection mode in the 2p game
   - Remove mouse support
@@ -28,8 +30,9 @@
   - Level loader
 
   - Abstract away OpenGL in wrappers
-  - More fully understand lighting model
-  - Cel shading
+  - Use autoptr
+  - Do basic memory profiling to check for leaks
+  
   - Comic patter inside the game (ie, can put speech bubbles on things)
   - Comic screen
   - Game stuff (to be added as I design the game mechanic)
@@ -82,15 +85,31 @@ bool initializeOpenGL() {
 }
 
 bool initialize() {
+  // Use OpenGL 4.1
+  //SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+  // SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  // SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  // SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  // SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER) < 0) {
     printf("SDL could not initialize. SDL Error: %s\n", SDL_GetError());
     return false;
   }
 
-  // Use OpenGL 2.1
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
   // Create window
   window = SDL_CreateWindow("Teddy Wickets",
@@ -109,6 +128,11 @@ bool initialize() {
     printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
     return false;
   }
+
+  int version = 0;
+  SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &version);
+  printf("Major Version: %d\n", version);
+
 
   // Initialize SDL2_ttf for fonts
   if (TTF_Init() < 0) {

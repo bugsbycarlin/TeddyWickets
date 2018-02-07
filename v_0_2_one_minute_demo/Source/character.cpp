@@ -7,7 +7,7 @@
 
 #include "character.h"
 
-Character::Character(Physics* physics, Textures* textures, Point* position) {
+Character::Character(Physics* physics, Textures* textures, CelShader* cel_shader, Point* position) {
   this->position = position;
 
   ball = gluNewQuadric();
@@ -16,8 +16,9 @@ Character::Character(Physics* physics, Textures* textures, Point* position) {
 
   this->physics = physics;
   this->textures = textures;
+  this->cel_shader = cel_shader;
 
-  this->model = new Model(textures, "teddy_bear_draft_2.obj");
+  this->model = new Model(textures, cel_shader, "teddy_bear_draft_2.obj");
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
@@ -108,27 +109,27 @@ void Character::render(int game_mode) {
   glTranslatef(0, -0.62, 0.15);*/
 
   // Tutorial info
-  if (game_mode == k_prep_mode && shot_rotation == default_shot_rotation) {
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+  // if (game_mode == k_prep_mode && shot_rotation == default_shot_rotation) {
+  //   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-    textures->setTexture("left_turn_info");
+  //   textures->setTexture("left_turn_info");
 
-    glBegin(GL_QUADS);
-      glTexCoord2f(0, 1); glVertex3f(3.2, 3.2, -6);
-      glTexCoord2f(0, 0); glVertex3f(3.2, 3.2, 6);
-      glTexCoord2f(1, 0); glVertex3f(11.6, -5.3, 6);
-      glTexCoord2f(1, 1); glVertex3f(11.6, -5.3, -6);
-    glEnd();
+  //   glBegin(GL_QUADS);
+  //     glTexCoord2f(0, 1); glVertex3f(3.2, 3.2, -6);
+  //     glTexCoord2f(0, 0); glVertex3f(3.2, 3.2, 6);
+  //     glTexCoord2f(1, 0); glVertex3f(11.6, -5.3, 6);
+  //     glTexCoord2f(1, 1); glVertex3f(11.6, -5.3, -6);
+  //   glEnd();
 
-    textures->setTexture("right_turn_info");
+  //   textures->setTexture("right_turn_info");
 
-    glBegin(GL_QUADS);
-      glTexCoord2f(1, 1); glVertex3f(-1, 5.3, -6);
-      glTexCoord2f(1, 0); glVertex3f(-1, 5.3, 6);
-      glTexCoord2f(0, 0); glVertex3f(-9.5, -3.2, 6);
-      glTexCoord2f(0, 1); glVertex3f(-9.5, -3.2, -6);
-    glEnd();
-  }
+  //   glBegin(GL_QUADS);
+  //     glTexCoord2f(1, 1); glVertex3f(-1, 5.3, -6);
+  //     glTexCoord2f(1, 0); glVertex3f(-1, 5.3, 6);
+  //     glTexCoord2f(0, 0); glVertex3f(-9.5, -3.2, 6);
+  //     glTexCoord2f(0, 1); glVertex3f(-9.5, -3.2, -6);
+  //   glEnd();
+  // }
 
   glPopMatrix();
 

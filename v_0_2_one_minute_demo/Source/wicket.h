@@ -9,7 +9,7 @@
 #ifndef TEDDY_WICKETS_WICKET_H_
 #define TEDDY_WICKETS_WICKET_H_
 
-#include <OpenGL/GLU.h>
+//#include <OpenGL/GLU.h>
 
 #include "physics.h"
 #include "point.h"

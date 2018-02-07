@@ -30,17 +30,21 @@ Game::Game() {
     {8, 1}
   };
 
-  // choose bears
-  game_mode = k_bear_select_mode;
-  // player_1_bears = {};
-  // player_2_bears = {};
-  // bear_choice = 0;
+  bool choose = false;
 
-  // or default while programming
-  game_mode = k_drop_mode;
-  bear_choice = 0;
-  player_1_bears = {"lil_jon", "mortimer", "gluke"};
-  player_2_bears = {"mags", "bob_smith", "lord_lonsdale"};
+  if(choose) {
+    // choose bears
+    game_mode = k_bear_select_mode;
+    player_1_bears = {};
+    player_2_bears = {};
+    bear_choice = 0;
+  } else {
+    // or default while programming
+    game_mode = k_drop_mode;
+    bear_choice = 0;
+    player_1_bears = {"lil_jon", "mortimer", "gluke"};
+    player_2_bears = {"mags", "bob_smith", "lord_lonsdale"};
+  }
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -574,7 +578,7 @@ void Game::renderBearSelectMode() {
 
 // This huge method puts all the crap on the game board.
 bool Game::initializeGamePieces() {
-  character = new Character(physics, textures, new Point(0, 0, k_character_drop_height));
+  character = new Character(physics, textures, cel_shader, new Point(0, 0, k_character_drop_height));
   physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
 
   // first test wicket
@@ -817,6 +821,9 @@ bool Game::initialize() {
   last_time = start_time;
   framerate_time = start_time;
 
+  printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
+  printf("OpenGL Shading Language Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
   return true;
 }
 
@@ -886,6 +893,9 @@ bool Game::initializeTextures() {
   glShadeModel(GL_SMOOTH);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glEnable(GL_LINE_SMOOTH);
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -928,6 +938,9 @@ bool Game::initializeLighting() {
   glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+
+  // Cel Shader
+  cel_shader = new CelShader();
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {

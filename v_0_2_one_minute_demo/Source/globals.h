@@ -9,6 +9,9 @@
 #ifndef TEDDY_WICKETS_GLOBALS_H_
 #define TEDDY_WICKETS_GLOBALS_H_
 
+//#include <SDL2/SDL_opengl.h>
+//#include <OpenGL/gl3.h>
+#include <OpenGL/gl.h>
 #include <OpenGL/GLU.h>
 
 #include <math.h>
@@ -20,6 +23,7 @@ const int k_screen_width = 1440;
 const int k_screen_height = 900;
 const float k_aspect_ratio = k_screen_width / (1.0 * k_screen_height);
 const float k_default_zoom = 11.0f;
+//const float k_default_zoom = 4.0f;
 
 // Bumper
 const float k_bumper_height = 0.5f;
@@ -40,6 +44,10 @@ const std::string k_model_root_path = "Models/";
 
 // Fonts
 const std::string k_font_root_path = "Fonts/";
+
+// Shaders
+const std::string k_shader_root_path = "Shaders/";
+const GLint k_cel_shader_id = 17;
 
 // Screen modes
 enum {

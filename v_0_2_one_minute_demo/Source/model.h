@@ -17,7 +17,7 @@
 #ifndef TEDDY_WICKETS_MODEL_H_
 #define TEDDY_WICKETS_MODEL_H_
 
-#include <OpenGL/GLU.h>
+//#include <OpenGL/GLU.h>
 
 #include <stdio.h>
 #include <cstdlib>
@@ -27,6 +27,7 @@
 #include <regex>
 #include <string>
 
+#include "cel_shader.h"
 #include "globals.h"
 #include "point.h"
 #include "textures.h"
@@ -34,6 +35,7 @@
 class Model {
  public:
     Textures* textures;
+    CelShader* cel_shader;
 
     std::list<std::string> component_names;
     std::map<std::string, std::map<int, Point*>> vertices;
@@ -48,9 +50,13 @@ class Model {
     // Display list global counter
     static int next_display_list_index;
 
+    float outlineColor[3] = {0.0f, 0.0f, 0.0f};
+    float outlineWidth = 10.0f;
+    bool outline = true;
+
     int display_list_index;
 
-    Model(Textures* textures, std::string model_file_name);
+    Model(Textures* textures, CelShader* cel_shader, std::string model_file_name);
 
     void render();
 };

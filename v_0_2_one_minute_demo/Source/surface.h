@@ -10,7 +10,7 @@
 #define TEDDY_WICKETS_SURFACE_H_
 
 #include <stdio.h>
-#include <OpenGL/GLU.h>
+//#include <OpenGL/GLU.h>
 #include <cstdlib>
 
 #include "physics.h"

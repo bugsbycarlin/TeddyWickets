@@ -15,6 +15,7 @@ TeddyWickets:
 		./Source/surface.cpp \
 		./Source/character.cpp \
 		./Source/model.cpp \
+		./Source/cel_shader.cpp \
 		./Source/bumper.cpp \
 		./Source/wicket.cpp \
 		./Source/textures.cpp \

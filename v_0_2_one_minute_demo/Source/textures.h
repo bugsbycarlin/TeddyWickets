@@ -11,9 +11,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
-#include <SDL2/SDL_opengl.h>
+//#include <SDL2/SDL_opengl.h>
 
-#include <OpenGL/GLU.h>
+//#include <OpenGL/gl3.h>
+//#include <OpenGL/GLU.h>
 
 #include <stdio.h>
 #include <cstdlib>

@@ -9,10 +9,11 @@
 #ifndef TEDDY_WICKETS_CHARACTER_H_
 #define TEDDY_WICKETS_CHARACTER_H_
 
-#include <OpenGL/GLU.h>
+//#include <OpenGL/GLU.h>
 
 #include <list>
 
+#include "cel_shader.h"
 #include "globals.h"
 #include "model.h"
 #include "physics.h"
@@ -28,6 +29,7 @@ class Character {
 
     Physics* physics;
     Textures* textures;
+    CelShader* cel_shader;
     Model* model;
 
     float default_shot_rotation;
@@ -40,7 +42,7 @@ class Character {
 
     std::list<btTransform> future_positions = { };
 
-    Character(Physics* physics, Textures* textures, Point* position);
+    Character(Physics* physics, Textures* textures, CelShader* cel_shader, Point* position);
 
     void updateFromPhysics();
 

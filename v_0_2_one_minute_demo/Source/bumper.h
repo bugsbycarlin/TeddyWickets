@@ -9,7 +9,7 @@
 #ifndef TEDDY_WICKETS_BUMPER_H_
 #define TEDDY_WICKETS_BUMPER_H_
 
-#include <OpenGL/GLU.h>
+//#include <OpenGL/GLU.h>
 
 #include "globals.h"
 #include "physics.h"
