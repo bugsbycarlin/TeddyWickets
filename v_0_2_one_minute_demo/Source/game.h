@@ -12,11 +12,6 @@
 // SDL, for window, user input, and media
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
-//#include <SDL2/SDL_opengl.h>
-
-// OpenGL, for drawing everything
-//#include <OpenGL/gl3.h>
-//#include <OpenGL/GLU.h>
 
 // Standard libraries
 #include <math.h>

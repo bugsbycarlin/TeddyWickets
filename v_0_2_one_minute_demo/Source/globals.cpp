@@ -1,3 +1,10 @@
+/*
+
+  Teddy Wickets
+  Copyright 2017 - Matthew Carlin
+
+*/
+
 #include "globals.h"
 
 // This method sets up the screen for a 2D drawing phase
@@ -43,15 +50,15 @@ void fadeInOut(float start, float finish, float timeDiff) {
   glEnd();
   glPopAttrib();
 }
-  
+
 void fadeIn(float start, float finish, float timeDiff) {
   if (timeDiff < finish) {
     fadeInOut(start, finish + finish - start, timeDiff);
   }
 }
-  
+
 void fadeOut(float start, float finish, float timeDiff) {
-  if (timeDiff < finish - start and 0 < timeDiff) {
+  if (timeDiff < finish - start && 0 < timeDiff) {
     fadeInOut(0, 1, (timeDiff / (2.0 * (finish - start)) + 0.5));
   }
 }

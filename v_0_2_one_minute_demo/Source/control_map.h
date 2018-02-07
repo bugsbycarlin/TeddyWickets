@@ -14,12 +14,6 @@
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
 
-//#include <SDL2/SDL_opengl.h>
-
-// OpenGL, for drawing everything
-//#include <OpenGL/gl3.h>
-//#include <OpenGL/GLU.h>
-
 // Standard libraries
 #include <stdio.h>
 #include <cstdlib>
@@ -37,7 +31,7 @@ class ControlMap {
   // Control map and default control map
   std::map<std::string, std::string> control_map;
   std::map<std::string, std::string> default_control_map;
-  std::list<std::string> ordered_list_of_controls;
+  std::list<std::string> ordered_controls;
   std::map<std::string, std::string> new_control_map;
 
   ControlMap();
@@ -47,7 +41,6 @@ class ControlMap {
 
   std::string translateControllerEvent(SDL_Event e);
   std::string translateKeyEvent(SDL_Event e);
-
 };
 
 #endif

@@ -85,14 +85,15 @@ bool initializeOpenGL() {
 }
 
 bool initialize() {
+  // I don't understand setting the version yet. Leaving all of these attempts in here for now.
   // Use OpenGL 4.1
-  //SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  // SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
   // SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
   // SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -191,7 +192,10 @@ int main(int argc, char* args[]) {
   int current_screen;
   if (argc > 1 && (std::string(args[1]) == "title" || std::string(args[1]) == "Title" || std::string(args[1]) == "T")) {
     current_screen = k_title_screen;
-  } else if (argc > 1 && (std::string(args[1]) == "controllers" || std::string(args[1]) == "Controllers" || std::string(args[1]) == "C")) {
+  } else if (argc > 1 &&
+    (std::string(args[1]) == "controllers" ||
+    std::string(args[1]) == "Controllers" ||
+    std::string(args[1]) == "C")) {
     current_screen = k_control_setup_screen;
   } else {
     current_screen = k_1p_game_screen;
@@ -200,7 +204,7 @@ int main(int argc, char* args[]) {
   Screen* screen = NULL;
 
   bool quit = false;
-  while(!quit) {
+  while (!quit) {
     if (screen == NULL || screen->current_screen != current_screen) {
       if (screen != NULL) {
         current_screen = screen->current_screen;

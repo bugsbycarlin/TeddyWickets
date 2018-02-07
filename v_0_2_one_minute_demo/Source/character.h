@@ -9,8 +9,6 @@
 #ifndef TEDDY_WICKETS_CHARACTER_H_
 #define TEDDY_WICKETS_CHARACTER_H_
 
-//#include <OpenGL/GLU.h>
-
 #include <list>
 
 #include "cel_shader.h"

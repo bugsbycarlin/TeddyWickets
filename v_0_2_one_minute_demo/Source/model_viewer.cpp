@@ -13,11 +13,11 @@ ModelViewer::ModelViewer() {
 
   zoom = k_default_zoom / 2.0f;
   rotation = 0;
-  
+
   mousedown = false;
   drag_x = 0;
   drag_y = 0;
-  
+
   current_screen = k_model_viewer_screen;
 }
 
@@ -115,9 +115,9 @@ void ModelViewer::render() {
 
   // 2. weirdly reasonable ortho
   glOrtho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
-  
+
   // 3. normal perspective
-  //gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 
   // Simple Opengl Lighting
   glEnable(GL_LIGHTING);

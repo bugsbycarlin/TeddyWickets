@@ -17,8 +17,6 @@
 #ifndef TEDDY_WICKETS_MODEL_H_
 #define TEDDY_WICKETS_MODEL_H_
 
-//#include <OpenGL/GLU.h>
-
 #include <stdio.h>
 #include <cstdlib>
 #include <fstream>

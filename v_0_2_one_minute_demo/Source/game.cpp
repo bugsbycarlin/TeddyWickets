@@ -30,9 +30,9 @@ Game::Game() {
     {8, 1}
   };
 
-  bool choose = false;
+  bool choose = true;
 
-  if(choose) {
+  if (choose) {
     // choose bears
     game_mode = k_bear_select_mode;
     player_1_bears = {};
@@ -96,14 +96,16 @@ void Game::update() {
   }
 
   if (game_mode == k_lets_go_mode) {
-    if(current_time - mark_time > 2000.0f) {
+    if (current_time - mark_time > 2000.0f) {
       game_mode = k_drop_mode;
     } else {
-      go_text->setColor(rand() % static_cast<int>(250 + 1), rand() % static_cast<int>(250 + 1), rand() % static_cast<int>(250 + 1));
+      go_text->setColor(rand() % static_cast<int>(250 + 1),
+        rand() % static_cast<int>(250 + 1),
+        rand() % static_cast<int>(250 + 1));
     }
   }
 
-  if(game_mode == k_bear_select_mode) {
+  if (game_mode == k_bear_select_mode) {
     return;
   }
 
@@ -254,7 +256,7 @@ void Game::handleKeys(SDL_Event e) {
     zoom += 1.0f;
   } else if (e.key.keysym.sym == SDLK_x) {
     zoom -= 1.0f;
-  }  
+  }
 
   if (game_mode == k_prep_mode) {
     if (e.key.keysym.sym == SDLK_a) {
@@ -353,9 +355,9 @@ void Game::render() {
 
   // 2. weirdly reasonable ortho
   glOrtho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
-  
+
   // 3. normal perspective
-  //gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 
 
 
@@ -372,7 +374,8 @@ void Game::render() {
   // this code makes a sun
   // float fraction = (int(last_time - start_time) % k_sun_period) / (float)k_sun_period;
   // printf("Sun %0.2f\n", fraction);
-  // GLfloat light_position[] = {1.0f * (float)cos(fraction * 2 * M_PI), -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
+  // GLfloat light_position[] = {1.0f * (float)cos(fraction * 2 * M_PI),
+  //   -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
   // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
   // if (fraction > 0.5f) {
   //   GLfloat light_diffuse[] = {0.25, 0.25, 0.25, 1.0};
@@ -385,12 +388,15 @@ void Game::render() {
   // from fraction of the way around the sky, starting on the left and moving clockwise.
   // A good value is 0.08. This is sort of like 9AM sun if the left is the east.
   // float fraction = 0.08f;
-  // GLfloat light_position[] = {3.0f + 1.0f * (float)cos(fraction * 2 * M_PI), -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
+  // GLfloat light_position[] = {3.0f + 1.0f * (float)cos(fraction * 2 * M_PI),
+  //   -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
   // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-  // from fraction of the way around the sky, starting on the left and moving clockwise, but pulled toward me, shining from kind of behind me.
+  // from fraction of the way around the sky, starting on the left and moving clockwise,
+  // but pulled toward me, shining from kind of behind me.
   float fraction = 0.18f;
-  GLfloat light_position[] = {0.5f + 1.0f * (float)cos(fraction * 2 * M_PI), -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
+  GLfloat light_position[] = {0.5f + 1.0f * (float)cos(fraction * 2 * M_PI),
+    -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
 
@@ -512,30 +518,34 @@ void Game::renderBearSelectMode() {
 
     for (int i = 0; i < bear_choices.size(); i++) {
       textures->setTexture(bear_choices[i] + "_box");
+      float m = k_bear_choice_x + k_bear_choice_margin * (i % 3);
+      float n = k_bear_choice_y + k_bear_choice_margin * (i / 3);
       glBegin(GL_QUADS);
-      glTexCoord2d(0.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3), k_bear_choice_y + k_bear_choice_margin * (i / 3));
-      glTexCoord2d(0.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3), k_bear_choice_y + k_bear_choice_margin * (i / 3) + k_selection_box_size);
-      glTexCoord2d(1.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (i / 3) + k_selection_box_size);
-      glTexCoord2d(1.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (i / 3));
+      glTexCoord2d(0.0, 0.0); glVertex2d(m, n);
+      glTexCoord2d(0.0, 1.0); glVertex2d(m, n + k_selection_box_size);
+      glTexCoord2d(1.0, 1.0); glVertex2d(m + k_selection_box_size, n + k_selection_box_size);
+      glTexCoord2d(1.0, 0.0); glVertex2d(m + k_selection_box_size, n);
       glEnd();
 
       if (available_bear_choices[i] != 1) {
         textures->setTexture("unavailable_bear_selection_box");
         glBegin(GL_QUADS);
-        glTexCoord2d(0.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3), k_bear_choice_y + k_bear_choice_margin * (i / 3));
-        glTexCoord2d(0.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3), k_bear_choice_y + k_bear_choice_margin * (i / 3) + k_selection_box_size);
-        glTexCoord2d(1.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (i / 3) + k_selection_box_size);
-        glTexCoord2d(1.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (i % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (i / 3));
+        glTexCoord2d(0.0, 0.0); glVertex2d(m, n);
+        glTexCoord2d(0.0, 1.0); glVertex2d(m, n + k_selection_box_size);
+        glTexCoord2d(1.0, 1.0); glVertex2d(m + k_selection_box_size, n + k_selection_box_size);
+        glTexCoord2d(1.0, 0.0); glVertex2d(m + k_selection_box_size, n);
         glEnd();
       }
     }
 
     textures->setTexture("bear_selection_box");
+    float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
+    float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
     glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3), k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3));
-    glTexCoord2d(0.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3), k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3) + k_selection_box_size);
-    glTexCoord2d(1.0, 1.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3) + k_selection_box_size);
-    glTexCoord2d(1.0, 0.0); glVertex2d(k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3) + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3));
+    glTexCoord2d(0.0, 0.0); glVertex2d(m, n);
+    glTexCoord2d(0.0, 1.0); glVertex2d(m, n + k_selection_box_size);
+    glTexCoord2d(1.0, 1.0); glVertex2d(m + k_selection_box_size, n + k_selection_box_size);
+    glTexCoord2d(1.0, 0.0); glVertex2d(m + k_selection_box_size, n);
     glEnd();
   } else if (game_mode == k_lets_go_mode) {
     go_text->render();
@@ -547,11 +557,12 @@ void Game::renderBearSelectMode() {
     } else {
       textures->setTexture(player_1_bears[j] + "_box");
     }
+    float n = k_bear_choice_y + k_bear_choice_margin * j;
     glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_1_choices_x, k_bear_choice_y + k_bear_choice_margin * j);
-    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_1_choices_x, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
-    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
-    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j);
+    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_1_choices_x, n);
+    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_1_choices_x, n + k_selection_box_size);
+    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, n + k_selection_box_size);
+    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, n);
     glEnd();
   }
 
@@ -561,11 +572,12 @@ void Game::renderBearSelectMode() {
     } else {
       textures->setTexture(player_2_bears[j] + "_box");
     }
+    float n = k_bear_choice_y + k_bear_choice_margin * j;
     glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_2_choices_x, k_bear_choice_y + k_bear_choice_margin * j);
-    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_2_choices_x, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
-    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j + k_selection_box_size);
-    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, k_bear_choice_y + k_bear_choice_margin * j);
+    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_2_choices_x, n);
+    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_2_choices_x, n + k_selection_box_size);
+    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, n + k_selection_box_size);
+    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, n);
     glEnd();
   }
 
@@ -877,12 +889,18 @@ bool Game::initializeTextures() {
 
   ///////
 
-  choose_your_bears_text = new TextBox("cartoon_blocks.ttf", 60, "Choose your bears", 53, 62, 89, 44, 22);
-  player_1_choose_text = new TextBox("cartoon_blocks.ttf", 60, "Player 1", 140, 98, 57, 44, 128);
-  player_2_choose_text = new TextBox("cartoon_blocks.ttf", 60, "Player 2", 53, 62, 89, 1147, 128);
-  bear_name_text = new TextBox("cartoon_blocks.ttf", 50, bear_pretty_names[bear_choices[bear_choice]], 53, 62, 89, 362, 93);
-  bear_description_text = new TextBox("cartoon_blocks.ttf", 40, bear_descriptions[bear_choices[bear_choice]], 53, 62, 89, 362, 149);
-  go_text = new TextBox("cartoon_blocks.ttf", 200, "let's go!", 53, 62, 89, k_bear_choice_x, k_bear_choice_y);
+  choose_your_bears_text = new TextBox("cartoon_blocks.ttf", 60,
+    "Choose your bears", 53, 62, 89, 44, 22);
+  player_1_choose_text = new TextBox("cartoon_blocks.ttf", 60,
+    "Player 1", 140, 98, 57, 44, 128);
+  player_2_choose_text = new TextBox("cartoon_blocks.ttf", 60,
+    "Player 2", 53, 62, 89, 1147, 128);
+  bear_name_text = new TextBox("cartoon_blocks.ttf", 50,
+    bear_pretty_names[bear_choices[bear_choice]], 53, 62, 89, 362, 93);
+  bear_description_text = new TextBox("cartoon_blocks.ttf", 40,
+    bear_descriptions[bear_choices[bear_choice]], 53, 62, 89, 362, 149);
+  go_text = new TextBox("cartoon_blocks.ttf", 200,
+    "let's go!", 53, 62, 89, k_bear_choice_x, k_bear_choice_y);
 
   ///////
 

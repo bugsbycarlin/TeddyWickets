@@ -10,7 +10,7 @@
 ControlMap::ControlMap() {
   default_control_map = {};
   control_map = {};
-  ordered_list_of_controls = {
+  ordered_controls = {
     "player_1_up",
     "player_1_down",
     "player_1_left",
@@ -59,14 +59,14 @@ ControlMap::ControlMap() {
 
     std::string line;
     std::smatch match;
-    while(getline(key_map_file, line)) {
+    while (getline(key_map_file, line)) {
       if (std::regex_search(line, match, key_map_regex)) {
         printf("Found key map: %s to %s\n", match.str(1).c_str(), match.str(2).c_str());
         control_map[match.str(1)] = match.str(2);
       }
     }
 
-    key_map_file.close(); 
+    key_map_file.close();
   }
 }
 
@@ -85,7 +85,7 @@ void ControlMap::swapMapsAndSave() {
   std::ofstream key_map_file;
   key_map_file.open("control_map.txt");
 
-  for (auto item = ordered_list_of_controls.begin(); item != ordered_list_of_controls.end(); ++item) {
+  for (auto item = ordered_controls.begin(); item != ordered_controls.end(); ++item) {
     std::string output = *item + ":" + control_map[*item] + "\n";
     key_map_file << output;
   }
@@ -97,13 +97,17 @@ std::string ControlMap::translateControllerEvent(SDL_Event e) {
   if (e.type == SDL_JOYBUTTONDOWN) {
     return prefix + std::to_string(e.jbutton.which) + " Button " + std::to_string(e.jbutton.button);
   } else if (e.type == SDL_JOYAXISMOTION && e.jaxis.axis < 4) {
-    if (e.jaxis.axis % 2 == 0 && e.jaxis.value < -3200) { // stick left
+    if (e.jaxis.axis % 2 == 0 && e.jaxis.value < -3200) {
+      // stick left
       return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Left";
-    } else if (e.jaxis.axis % 2 == 0 && e.jaxis.value > 3200) { // stick right
+    } else if (e.jaxis.axis % 2 == 0 && e.jaxis.value > 3200) {
+      // stick right
       return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Right";
-    } else if (e.jaxis.axis % 2 == 1 && e.jaxis.value < -3200) { // stick up
+    } else if (e.jaxis.axis % 2 == 1 && e.jaxis.value < -3200) {
+      // stick up
       return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Up";
-    } else if (e.jaxis.axis % 2 == 1 && e.jaxis.value > 3200) { // stick down
+    } else if (e.jaxis.axis % 2 == 1 && e.jaxis.value > 3200) {
+      // stick down
       return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Down";
     }
   } else if (e.type == SDL_JOYHATMOTION) {
@@ -123,7 +127,7 @@ std::string ControlMap::translateControllerEvent(SDL_Event e) {
 
 std::string ControlMap::translateKeyEvent(SDL_Event e) {
   std::string short_name = "Unknown";
-  switch(e.key.keysym.sym) {
+  switch (e.key.keysym.sym) {
     case SDLK_UP : short_name = "Up"; break;
     case SDLK_DOWN : short_name = "Down"; break;
     case SDLK_RIGHT : short_name = "Right"; break;
@@ -177,8 +181,6 @@ std::string ControlMap::translateKeyEvent(SDL_Event e) {
     case SDLK_x : short_name = "X"; break;
     case SDLK_y : short_name = "Y"; break;
     case SDLK_z : short_name = "Z"; break;
-
-
   }
   return "Key " + short_name;
 }

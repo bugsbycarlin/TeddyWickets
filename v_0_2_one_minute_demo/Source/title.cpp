@@ -82,7 +82,6 @@ void Title::handleKeys(SDL_Event e) {
   if (e.key.keysym.sym == SDLK_p) {
     quit = true;
   }
-
 }
 
 // Handle mouse input
@@ -100,8 +99,6 @@ void Title::render() {
   Start2DDraw();
 
   if (mode == k_title_presents_mode) {
-    //glEnable(GL_LIGHTING);
-    //glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
     bugsby_presents->render();
     fadeIn(0.0f, 2.0f, ((last_time - start_time) / 1000.0f));
     fadeOut(3.0f, 4.0f, ((last_time - start_time) / 1000.0f) - 3.0f);
@@ -149,10 +146,8 @@ bool Title::initialize() {
 
   textures->addTexture("title_screen", "title_screen_draft_5.png");
 
-  //bugsby_presents = new TextBox("cartoon_blocks.ttf", 90, "Bugsby Presents", 255, 255, 255, 420, 350);
   bugsby_presents = new TextBox("cartoon_blocks.ttf", 90, "Bugsby Presents", 255, 255, 255, 780, 770);
 
-  //title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 135, 206, 235, 200, 100);
   title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 53, 62, 89, 200, 100);
 
   one_player_selected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 53, 62, 89, 800, 450);

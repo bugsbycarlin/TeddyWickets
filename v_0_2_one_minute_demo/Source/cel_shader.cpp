@@ -24,7 +24,7 @@ CelShader::CelShader() {
   }
 
   std::string vertex_shader_string = "";
-  while(getline(vertex_shader_file, line)) {
+  while (getline(vertex_shader_file, line)) {
     vertex_shader_string += line + "\n";
   }
 
@@ -44,7 +44,7 @@ CelShader::CelShader() {
   }
 
   std::string fragment_shader_string = "";
-  while(getline(fragment_shader_file, line)) {
+  while (getline(fragment_shader_file, line)) {
     fragment_shader_string += line + "\n";
   }
 
@@ -71,7 +71,7 @@ CelShader::CelShader() {
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
 
-  //glGetObjectParameteriv(vertex_shader, GL_OBJECT_COMPILE_STATUS, &status);
+  // glGetObjectParameteriv(vertex_shader, GL_OBJECT_COMPILE_STATUS, &status);
   glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &status);
   if (!status) {
     char log[500];
@@ -100,7 +100,7 @@ CelShader::CelShader() {
     exit(1);
   }
 
-  //glUseProgram(program);
+  // glUseProgram(program);
 }
 
 void CelShader::setShader() {

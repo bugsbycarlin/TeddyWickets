@@ -47,7 +47,7 @@ void Character::render(int game_mode) {
 
   glPushMatrix();
   glScalef(k_model_scale, k_model_scale, k_model_scale);
-  glRotatef(-90.0f,0.0f, 0.0f, 1.0f);
+  glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
   model->render();
   glPopMatrix();
 

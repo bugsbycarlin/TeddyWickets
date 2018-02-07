@@ -28,7 +28,10 @@ void ControlSetup::loop(SDL_Window* window, FMOD::System *sound_system) {
       handleKeys(e);
     } else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONUP || e.type == SDL_MOUSEBUTTONDOWN) {
       handleMouse(e);
-    } else if (e.type == SDL_JOYBUTTONDOWN || e.type == SDL_JOYAXISMOTION || e.type == SDL_JOYHATMOTION || e.type == SDL_JOYBALLMOTION) {
+    } else if (e.type == SDL_JOYBUTTONDOWN ||
+        e.type == SDL_JOYAXISMOTION ||
+        e.type == SDL_JOYHATMOTION ||
+        e.type == SDL_JOYBALLMOTION) {
       handleController(e);
     }
   }
@@ -51,29 +54,12 @@ void ControlSetup::update() {
 void ControlSetup::handleKeys(SDL_Event e) {
   std::string value = control_map->translateKeyEvent(e);
   printf("%s\n", value.c_str());
-  // if (mode == k_title_title_mode) {
-  //   if (e.key.keysym.sym == SDLK_DOWN) {
-  //     selection += 1;
-  //     if (selection > 2) {
-  //       selection = 0;
-  //     }
-  //   } else if (e.key.keysym.sym == SDLK_UP) {
-  //     selection -= 1;
-  //     if (selection < 0) {
-  //       selection = 2;
-  //     }
-  //   }
-
-  //   if (e.key.keysym.sym == SDLK_RETURN) {
-  //     current_screen = k_1p_game_screen;
-  //   }
-  // }
 
   if (mode == k_control_view_mode && e.key.keysym.sym == SDLK_RETURN) {
     mode = k_control_config_mode;
     setEmptyTextToMap();
     control_map->new_control_map = {};
-    control_iterator = control_map->ordered_list_of_controls.begin();
+    control_iterator = control_map->ordered_controls.begin();
     action_map[*control_iterator]->setText("Press Key");
   } else if (mode == k_control_view_mode && e.key.keysym.sym == SDLK_ESCAPE) {
     current_screen = k_title_screen;
@@ -86,20 +72,19 @@ void ControlSetup::handleKeys(SDL_Event e) {
     action_map[*control_iterator]->setText(value);
     control_map->new_control_map[*control_iterator] = value;
     ++control_iterator;
-    if (control_iterator == control_map->ordered_list_of_controls.end()) {
+    if (control_iterator == control_map->ordered_controls.end()) {
       control_map->swapMapsAndSave();
       mode = k_control_view_mode;
     } else {
       action_map[*control_iterator]->setText("Press Key");
     }
   } else if (mode == k_control_view_mode) {
-    for (auto item = control_map->ordered_list_of_controls.begin(); item != control_map->ordered_list_of_controls.end(); ++item) {
+    for (auto item = control_map->ordered_controls.begin(); item != control_map->ordered_controls.end(); ++item) {
       if (control_map->control_map[*item] == value) {
         action_map[*item]->setTemporaryColor(237, 28, 36);
       }
     }
   }
-
 }
 
 // Handle controller input
@@ -111,14 +96,14 @@ void ControlSetup::handleController(SDL_Event e) {
     action_map[*control_iterator]->setText(value);
     control_map->new_control_map[*control_iterator] = value;
     ++control_iterator;
-    if (control_iterator == control_map->ordered_list_of_controls.end()) {
+    if (control_iterator == control_map->ordered_controls.end()) {
       control_map->swapMapsAndSave();
       mode = k_control_view_mode;
     } else {
       action_map[*control_iterator]->setText("Press Key");
     }
   } else if (mode == k_control_view_mode) {
-    for (auto item = control_map->ordered_list_of_controls.begin(); item != control_map->ordered_list_of_controls.end(); ++item) {
+    for (auto item = control_map->ordered_controls.begin(); item != control_map->ordered_controls.end(); ++item) {
       if (control_map->control_map[*item] == value) {
         action_map[*item]->setTemporaryColor(237, 28, 36);
       }
@@ -197,7 +182,7 @@ bool ControlSetup::initialize() {
   control_map = new ControlMap();
 
   textures->addTexture("control_setup_screen", "control_setup_screen.png");
-  
+
   int x_shift = 56;
   int y_shift = -2;
 
@@ -279,7 +264,7 @@ bool ControlSetup::initialize() {
         printf("Opened joystick %d\n", i);
       } else {
         printf("Could not open joystick %i: %s\n", i, SDL_GetError());
-      }    
+      }
     }
   }
 

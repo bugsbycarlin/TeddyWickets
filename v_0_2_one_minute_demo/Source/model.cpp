@@ -39,7 +39,7 @@ Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_n
   std::regex texture_map_regex("map_Kd ([a-zA-Z0-9\._]+)");
 
   std::string last_texture_name = "";
-  while(getline(material_file, line)) {
+  while (getline(material_file, line)) {
     if (std::regex_search(line, match, new_material_regex)) {
       printf("Matched material: %s\n", match.str(1).c_str());
       last_texture_name = match.str(1);
@@ -92,7 +92,7 @@ Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_n
   int texture_coord_counter = 1;
   int normal_counter = 1;
 
-  while(getline(model_file, line)) {
+  while (getline(model_file, line)) {
     if (std::regex_search(line, match, vertex_regex)) {
       float v1 = ::atof(match.str(1).c_str());
       float v2 = ::atof(match.str(2).c_str());
@@ -132,32 +132,20 @@ Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_n
     } else if (std::regex_search(line, match, texture_regex)) {
       float t1 = ::atof(match.str(1).c_str());
       float t2 = ::atof(match.str(2).c_str());
-      // printf("Matched texture coords: %s\n", line.c_str());
-      // printf("%f\n", t1);
-      // printf("%f\n", t2);
       current_texture_coords[texture_coord_counter] = new Point(t1, t2, 0);
       texture_coord_counter += 1;
     } else if (std::regex_search(line, match, normal_regex)) {
       float n1 = ::atof(match.str(1).c_str());
       float n2 = ::atof(match.str(2).c_str());
       float n3 = ::atof(match.str(3).c_str());
-      // printf("Matched normal coords: %s\n", line.c_str());
-      // printf("%f\n", n1);
-      // printf("%f\n", n2);
-      // printf("%f\n", n3);
       current_normals[normal_counter] = new Point(n1, n2, n3);
       normal_counter += 1;
     } else if (std::regex_search(line, match, material_regex)) {
-      //printf("Matched a material: %s\n", line.c_str());
-      //printf("Material name is %s\n", match.str(1).c_str());
       std::string name = texture_names[match.str(1)];
-      //printf("Texture num is %d\n", texture_keys[name]);
-      //printf("Texture name is %s\n", texture_map[texture_keys[name]].c_str());
       std::map<int, int> face = {};
       face[0] = texture_keys[name];
       current_faces.push_back(face);
     } else if (std::regex_search(line, match, four_point_face_regex)) {
-      //printf("Matched a 4 point face: %s\n", line.c_str());
       std::map<int, int> face = {};
       face[1] = ::atoi(match.str(1).c_str());
       face[2] = ::atoi(match.str(2).c_str());
@@ -173,7 +161,6 @@ Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_n
       face[12] = ::atoi(match.str(12).c_str());
       current_faces.push_back(face);
     } else if (std::regex_search(line, match, three_point_face_regex)) {
-      //printf("Matched a 3 point face: %s\n", line.c_str());
       std::map<int, int> face = {};
       face[1] = ::atoi(match.str(1).c_str());
       face[2] = ::atoi(match.str(2).c_str());
@@ -186,8 +173,6 @@ Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_n
       face[9] = ::atoi(match.str(9).c_str());
       current_faces.push_back(face);
     } else if (std::regex_search(line, match, component_name_regex)) {
-      // printf("Matched component name: %s\n", line.c_str());
-      // printf("%s\n", match.str(1).c_str());
       look_for_new_component = true;
       component_name = match.str(1);
     }
@@ -217,16 +202,9 @@ Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_n
 }
 
 void Model::render() {
-  //GLUquadric* ball = gluNewQuadric();
-  //gluQuadricTexture(ball, GL_TRUE);
-  //gluQuadricNormals(ball, GLU_SMOOTH);
-
-  //textures->setTexture("bear_face");
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-  glRotatef(90.0f,1.0f, 0.0f, 0.0f);
-  //gluSphere(ball, 0.75f, 20, 20);
+  glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 
-  //printf("Rendering\n");
   if (display_list_index == -1) {
     display_list_index = next_display_list_index;
     next_display_list_index++;
@@ -235,35 +213,28 @@ void Model::render() {
     cel_shader->setShader();
     bool fill_model = true;
     if (fill_model) {
-      for (auto component_pointer = component_names.begin(); component_pointer != component_names.end(); ++component_pointer) {
-        std::string component_name = component_pointer->c_str();
+      for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+        std::string component_name = component->c_str();
         std::list<std::map<int, int>> current_faces = faces[component_name];
-
-        //printf("Component %s\n", component_name.c_str());
 
         std::map<int, Point*> current_vertices = vertices[component_name];
         std::map<int, Point*> current_texture_coords = texture_coords[component_name];
         std::map<int, Point*> current_normals = normals[component_name];
 
         for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-          //printf("faaace %d\n", face->size());
           int num_faces = -1;
           if (face->size() == 1) {
-            // printf("Face\n");
-            // printf("Face is %d\n", face->operator[](0));
-            // printf("Texture map is %s\n", texture_map[face->operator[](0)].c_str());
             textures->setTexture(texture_map[face->operator[](0)]);
             continue;
-          }
-          else if (face->size() == 12) {
+          } else if (face->size() == 12) {
             num_faces = 4;
             glBegin(GL_QUADS);
           } else if (face->size() == 9) {
             num_faces = 3;
             glBegin(GL_TRIANGLES);
           }
-          
-          for(int i = 0; i < num_faces; i++) {
+
+          for (int i = 0; i < num_faces; i++) {
             int start = 3*i + 1;
 
             Point* vertex = current_vertices[face->operator[](start)];
@@ -273,7 +244,6 @@ void Model::render() {
             glNormal3f(normal->x, normal->y, normal->z);
             glTexCoord2f(texture->x, -texture->y);
             glVertex3f(vertex->x, vertex->y, vertex->z);
-            
           }
           glEnd();
         }
@@ -288,44 +258,38 @@ void Model::render() {
       glEnable(GL_CULL_FACE);
       glPolygonMode(GL_BACK, GL_LINE);
       glLineWidth(outlineWidth);
-      //glDisable(GL_TEXTURE_2D);
       glDisable(GL_LIGHTING);
 
       glCullFace(GL_FRONT);
       glDepthFunc(GL_LEQUAL);
-      //glDisable(GL_DEPTH_TEST);
- 
-      glColor3fv(&outlineColor[0]);
-      //glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 
-      for (auto component_pointer = component_names.begin(); component_pointer != component_names.end(); ++component_pointer) {
-        std::string component_name = component_pointer->c_str();
+      glColor3fv(&outlineColor[0]);
+
+      for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+        std::string component_name = component->c_str();
         std::list<std::map<int, int>> current_faces = faces[component_name];
 
         std::map<int, Point*> current_vertices = vertices[component_name];
 
-        //glBegin(GL_TRIANGLES);
         for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
           int num_faces = -1;
           if (face->size() == 1) {
             continue;
-          }
-          else if (face->size() == 12) {
+          } else if (face->size() == 12) {
             num_faces = 4;
             glBegin(GL_QUADS);
           } else if (face->size() == 9) {
             num_faces = 3;
             glBegin(GL_TRIANGLES);
           }
-          
-          for(int i = 0; i < num_faces; i++) {
+
+          for (int i = 0; i < num_faces; i++) {
             int start = 3*i + 1;
             Point* vertex = current_vertices[face->operator[](start)];
             glVertex3f(vertex->x, vertex->y, vertex->z);
           }
           glEnd();
         }
-        //glEnd();
       }
 
       glPopAttrib();
@@ -333,23 +297,20 @@ void Model::render() {
 
     bool use_this_instead = false;
     if (outline && use_this_instead) {
-
       glPushAttrib(GL_ALL_ATTRIB_BITS);
       glEnable(GL_CULL_FACE);
-      //glPolygonMode(GL_BACK, GL_LINE);
-      //glLineWidth(outlineWidth);
-      //glDisable(GL_TEXTURE_2D);
+      // glPolygonMode(GL_BACK, GL_LINE);
+      // glLineWidth(outlineWidth);
+      // glDisable(GL_TEXTURE_2D);
       glDisable(GL_LIGHTING);
 
       glCullFace(GL_FRONT);
       glDepthFunc(GL_LEQUAL);
-      //glDisable(GL_DEPTH_TEST);
- 
-      //glColor3fv(&outlineColor[0]);
+
       glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 
-      for (auto component_pointer = component_names.begin(); component_pointer != component_names.end(); ++component_pointer) {
-        std::string component_name = component_pointer->c_str();
+      for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+        std::string component_name = component->c_str();
         std::list<std::map<int, int>> current_faces = faces[component_name];
 
         std::map<int, Point*> current_vertices = vertices[component_name];
@@ -361,16 +322,15 @@ void Model::render() {
           if (face->size() == 1) {
             textures->setTexture(texture_map[face->operator[](0)]);
             continue;
-          }
-          else if (face->size() == 12) {
+          } else if (face->size() == 12) {
             num_faces = 4;
             glBegin(GL_QUADS);
           } else if (face->size() == 9) {
             num_faces = 3;
             glBegin(GL_TRIANGLES);
           }
-          
-          for(int i = 0; i < num_faces; i++) {
+
+          for (int i = 0; i < num_faces; i++) {
             int start = 3*i + 1;
 
             Point* vertex = current_vertices[face->operator[](start)];
@@ -380,7 +340,6 @@ void Model::render() {
             glNormal3f(normal->x, normal->y, normal->z);
             glTexCoord2f(texture->x, -texture->y);
             glVertex3f(vertex->x + 0.15 * normal->x, vertex->y + 0.15 * normal->y, vertex->z + 0.15 * normal->z);
-            
           }
           glEnd();
         }

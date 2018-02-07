@@ -99,7 +99,7 @@ int Physics::addBumper(Point* start, Point* end, Point* normal) {
   return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 1.25f);
 }
 
-// Add a surface (eg a wall or a floor) object to the physics system 
+// Add a surface (eg a wall or a floor) object to the physics system.
 int Physics::addSurface(Point* p1, Point* p2, Point* p3, Point* p4) {
   btTriangleMesh *mesh = new btTriangleMesh();
   mesh->addTriangle(btVector3(p1->x, p1->y, p1->z),
@@ -118,7 +118,7 @@ int Physics::addSurface(Point* p1, Point* p2, Point* p3, Point* p4) {
   return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
 }
 
-// Add a wicket object to the physics system. This involves adding two poles. 
+// Add a wicket object to the physics system. This involves adding two poles.
 // Currently, for simplicity I just return the identity of the second pole.
 int Physics::addWicket(Point* pole_1_position, Point* pole_2_position, float height) {
   // pole radius

@@ -102,7 +102,7 @@ int main(int argc, char* args[]) {
 
   screen->initialize();
 
-  while(!screen->quit) {
+  while (!screen->quit) {
     screen->loop(window, NULL);
   }
 
