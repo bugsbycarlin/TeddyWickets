@@ -89,9 +89,6 @@ void Title::handleMouse(SDL_Event e) {
 }
 
 void Title::render() {
-  // Simple viewport.
-  glViewport(0, 0, k_screen_width, k_screen_height);
-
   // Clear color buffer
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -135,7 +132,7 @@ void Title::render() {
 }
 
 bool Title::initialize() {
-  glEnable(GL_TEXTURE_2D);
+  teddy_gl->initializeBasic();
 
   textures = new Textures();
 
@@ -151,21 +148,6 @@ bool Title::initialize() {
   two_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 206, 206, 206, 800, 550);
   control_setup_selected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 53, 62, 89, 800, 650);
   control_setup_unselected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 206, 206, 206, 800, 650);
-
-  // glFrontFace(GL_CW);
-  // glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_SMOOTH);
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    printf("Error initializing textures! %s\n", gluErrorString(error));
-    return false;
-  }
 
   start_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   last_time = start_time;

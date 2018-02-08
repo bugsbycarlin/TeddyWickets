@@ -95,6 +95,29 @@ void TeddyGL::blackout() {
   glPopAttrib();
 }
 
+void TeddyGL::initializeBasic() {
+
+  // glFrontFace(GL_CW);
+  // glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+  glShadeModel(GL_SMOOTH);
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  glEnable(GL_TEXTURE_2D);
+
+  // Simple viewport.
+  glViewport(0, 0, k_screen_width, k_screen_height);
+
+  GLenum error = glGetError();
+  if (error != GL_NO_ERROR) {
+    printf("Error initializing GL config! %s\n", gluErrorString(error));
+    exit(1);
+  }
+}
+
 void TeddyGL::initializeLighting() {
   // Simple Opengl Lighting
   glEnable(GL_LIGHTING);

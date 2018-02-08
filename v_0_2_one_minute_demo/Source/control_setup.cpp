@@ -116,9 +116,6 @@ void ControlSetup::handleMouse(SDL_Event e) {
 }
 
 void ControlSetup::render() {
-  // Simple viewport.
-  glViewport(0, 0, k_screen_width, k_screen_height);
-
   // Clear color buffer
   glClearColor(0.97f, 0.97f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -170,7 +167,7 @@ void ControlSetup::setEmptyTextToMap() {
 }
 
 bool ControlSetup::initialize() {
-  glEnable(GL_TEXTURE_2D);
+  teddy_gl->initializeBasic();
 
   textures = new Textures();
 
@@ -221,21 +218,6 @@ bool ControlSetup::initialize() {
   action_map["player_2_view_taunt"] = player_2_view_taunt;
 
   setTextToMap();
-
-  // glFrontFace(GL_CW);
-  // glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_SMOOTH);
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    printf("Error initializing textures! %s\n", gluErrorString(error));
-    return false;
-  }
 
   printf("Initializing controllers.\n");
 

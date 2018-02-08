@@ -38,8 +38,8 @@ class TeddyGL {
   void fadeOut(float start, float finish, float timeDiff);
   void blackout();
 
+  void initializeBasic();
   void initializeLighting();
-
   void initializeCelShading();
   void startCelShading();
   void stopCelShading();
