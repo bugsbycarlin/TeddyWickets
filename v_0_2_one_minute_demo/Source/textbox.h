@@ -21,6 +21,7 @@
 
 // Teddy Wickets includes
 #include "globals.h"
+#include "teddy_gl.h"
 
 class TextBox {
  public:

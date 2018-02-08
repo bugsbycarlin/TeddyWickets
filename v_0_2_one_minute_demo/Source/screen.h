@@ -17,12 +17,17 @@
 // Fmod for sound
 #include "fmod.hpp"
 
+#include "globals.h"
+#include "teddy_gl.h"
+
 class Screen {
  public:
   Screen();
 
   int current_screen;
   bool quit;
+
+  //TeddyGL* teddy_gl;
 
   virtual void loop(SDL_Window* window, FMOD::System *sound_system);
 

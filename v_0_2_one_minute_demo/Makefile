@@ -4,6 +4,7 @@
 TeddyWickets:
 		g++ -w \
 		./Source/main.cpp \
+		./Source/teddy_gl.cpp \
 		./Source/globals.cpp \
 		./Source/screen.cpp \
 		./Source/title.cpp \

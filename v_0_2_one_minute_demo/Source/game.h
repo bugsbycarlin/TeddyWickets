@@ -29,6 +29,7 @@
 #include "cel_shader.h"
 #include "character.h"
 #include "globals.h"
+#include "teddy_gl.h"
 #include "physics.h"
 #include "screen.h"
 #include "surface.h"

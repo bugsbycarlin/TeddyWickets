@@ -9,12 +9,6 @@
 #ifndef TEDDY_WICKETS_GLOBALS_H_
 #define TEDDY_WICKETS_GLOBALS_H_
 
-// Various forms of OpenGL
-// #include <SDL2/SDL_opengl.h>
-// #include <OpenGL/gl3.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/GLU.h>
-
 #include <math.h>
 #include <cstdlib>
 #include <string>
@@ -48,7 +42,7 @@ const std::string k_font_root_path = "Fonts/";
 
 // Shaders
 const std::string k_shader_root_path = "Shaders/";
-const GLint k_cel_shader_id = 17;
+const int k_cel_shader_id = 17;
 
 // Screen modes
 enum {
@@ -99,13 +93,6 @@ const int k_player_2_choices_x = 1147;
 // Experimental visual
 const int k_sun_period = 50000;
 
-void Start2DDraw();
-void End2DDraw();
-
-void fadeInOut(float start, float finish, float timeDiff);
-void fadeIn(float start, float finish, float timeDiff);
-void fadeOut(float start, float finish, float timeDiff);
-void blackout();
 
 /*
 

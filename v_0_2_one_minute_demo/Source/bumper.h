@@ -10,6 +10,7 @@
 #define TEDDY_WICKETS_BUMPER_H_
 
 #include "globals.h"
+#include "teddy_gl.h"
 #include "physics.h"
 #include "point.h"
 #include "textures.h"

@@ -105,12 +105,7 @@ void Title::render() {
   } else if (mode == k_title_title_mode) {
     // title screen render
     textures->setTexture("title_screen");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(0.0, k_screen_height);
-    glTexCoord2d(1.0, 1.0); glVertex2d(k_screen_width, k_screen_height);
-    glTexCoord2d(1.0, 0.0); glVertex2d(k_screen_width, 0.0);
-    glEnd();
+    teddy_gl->drawRectangle(0, 0, k_screen_width, k_screen_height);
 
     // title text render
     title->render();

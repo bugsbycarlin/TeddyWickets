@@ -431,35 +431,20 @@ void Game::render() {
   // render shot prep infographic
   if (game_mode == k_prep_mode) {
     textures->setTexture("m_prep_info");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(info_x + 0.0, info_y + 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(info_x + 0.0, info_y + 400);
-    glTexCoord2d(1.0, 1.0); glVertex2d(info_x + 400, info_y + 400);
-    glTexCoord2d(1.0, 0.0); glVertex2d(info_x + 400, info_y + 0.0);
-    glEnd();
+    teddy_gl->drawRectangle(info_x, info_y, 400, 400);
   }
 
   // render power mode
   if (game_mode == k_power_mode) {
     // render power mode infographic
     textures->setTexture("m_shot_info");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(info_x + 0.0, info_y + 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(info_x + 0.0, info_y + 400);
-    glTexCoord2d(1.0, 1.0); glVertex2d(info_x + 400, info_y + 400);
-    glTexCoord2d(1.0, 0.0); glVertex2d(info_x + 400, info_y + 0.0);
-    glEnd();
+    teddy_gl->drawRectangle(info_x, info_y, 400, 400);
 
     // render power gauge outline
     int power_x = 974;
     int power_y = 20;
     textures->setTexture("shot_power_outline");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(power_x + 0.0, power_y + 0.0);
-    glTexCoord2d(0.0, 1.0); glVertex2d(power_x + 0.0, power_y + 150);
-    glTexCoord2d(1.0, 1.0); glVertex2d(power_x + 30, power_y + 150);
-    glTexCoord2d(1.0, 0.0); glVertex2d(power_x + 30, power_y + 0.0);
-    glEnd();
+    teddy_gl->drawRectangle(power_x, power_y, 30, 150);
 
     // render power gauge fill
     float portion = character->shot_power / character->default_shot_power;
@@ -476,12 +461,7 @@ void Game::render() {
   int coord_x = 40;
   int coord_y = k_screen_height - 79 - 40;
   textures->setTexture("coordinates");
-  glBegin(GL_QUADS);
-  glTexCoord2d(0.0, 0.0); glVertex2d(coord_x + 0.0, coord_y + 0.0);
-  glTexCoord2d(0.0, 1.0); glVertex2d(coord_x + 0.0, coord_y + 79);
-  glTexCoord2d(1.0, 1.0); glVertex2d(coord_x + 93, coord_y + 79);
-  glTexCoord2d(1.0, 0.0); glVertex2d(coord_x + 93, coord_y + 0.0);
-  glEnd();
+  teddy_gl->drawRectangle(coord_x, coord_y, 93, 79);
 
   End2DDraw();
 }
@@ -491,12 +471,7 @@ void Game::renderBackground() {
 
   // background render
   textures->setTexture("clouds");
-  glBegin(GL_QUADS);
-  glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
-  glTexCoord2d(0.0, 1.0); glVertex2d(0.0, k_screen_height);
-  glTexCoord2d(1.0, 1.0); glVertex2d(k_screen_width, k_screen_height);
-  glTexCoord2d(1.0, 0.0); glVertex2d(k_screen_width, 0.0);
-  glEnd();
+  teddy_gl->drawRectangle(0, 0, k_screen_width, k_screen_height);
 
   End2DDraw();
 }
@@ -520,33 +495,18 @@ void Game::renderBearSelectMode() {
       textures->setTexture(bear_choices[i] + "_box");
       float m = k_bear_choice_x + k_bear_choice_margin * (i % 3);
       float n = k_bear_choice_y + k_bear_choice_margin * (i / 3);
-      glBegin(GL_QUADS);
-      glTexCoord2d(0.0, 0.0); glVertex2d(m, n);
-      glTexCoord2d(0.0, 1.0); glVertex2d(m, n + k_selection_box_size);
-      glTexCoord2d(1.0, 1.0); glVertex2d(m + k_selection_box_size, n + k_selection_box_size);
-      glTexCoord2d(1.0, 0.0); glVertex2d(m + k_selection_box_size, n);
-      glEnd();
+      teddy_gl->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
 
       if (available_bear_choices[i] != 1) {
         textures->setTexture("unavailable_bear_selection_box");
-        glBegin(GL_QUADS);
-        glTexCoord2d(0.0, 0.0); glVertex2d(m, n);
-        glTexCoord2d(0.0, 1.0); glVertex2d(m, n + k_selection_box_size);
-        glTexCoord2d(1.0, 1.0); glVertex2d(m + k_selection_box_size, n + k_selection_box_size);
-        glTexCoord2d(1.0, 0.0); glVertex2d(m + k_selection_box_size, n);
-        glEnd();
+        teddy_gl->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
       }
     }
 
     textures->setTexture("bear_selection_box");
     float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
     float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(m, n);
-    glTexCoord2d(0.0, 1.0); glVertex2d(m, n + k_selection_box_size);
-    glTexCoord2d(1.0, 1.0); glVertex2d(m + k_selection_box_size, n + k_selection_box_size);
-    glTexCoord2d(1.0, 0.0); glVertex2d(m + k_selection_box_size, n);
-    glEnd();
+    teddy_gl->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
   } else if (game_mode == k_lets_go_mode) {
     go_text->render();
   }
@@ -558,12 +518,7 @@ void Game::renderBearSelectMode() {
       textures->setTexture(player_1_bears[j] + "_box");
     }
     float n = k_bear_choice_y + k_bear_choice_margin * j;
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_1_choices_x, n);
-    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_1_choices_x, n + k_selection_box_size);
-    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, n + k_selection_box_size);
-    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_1_choices_x + k_selection_box_size, n);
-    glEnd();
+    teddy_gl->drawRectangle(k_player_1_choices_x, n, k_selection_box_size, k_selection_box_size);
   }
 
   for (int j = 0; j < 3; j++) {
@@ -573,12 +528,7 @@ void Game::renderBearSelectMode() {
       textures->setTexture(player_2_bears[j] + "_box");
     }
     float n = k_bear_choice_y + k_bear_choice_margin * j;
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 0.0); glVertex2d(k_player_2_choices_x, n);
-    glTexCoord2d(0.0, 1.0); glVertex2d(k_player_2_choices_x, n + k_selection_box_size);
-    glTexCoord2d(1.0, 1.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, n + k_selection_box_size);
-    glTexCoord2d(1.0, 0.0); glVertex2d(k_player_2_choices_x + k_selection_box_size, n);
-    glEnd();
+    teddy_gl->drawRectangle(k_player_2_choices_x, n, k_selection_box_size, k_selection_box_size);
   }
 
   if (game_mode == k_lets_go_mode) {

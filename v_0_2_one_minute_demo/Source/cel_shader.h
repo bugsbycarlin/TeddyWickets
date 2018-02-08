@@ -19,6 +19,7 @@
 #include <string>
 
 #include "globals.h"
+#include "teddy_gl.h"
 
 class CelShader {
  public:

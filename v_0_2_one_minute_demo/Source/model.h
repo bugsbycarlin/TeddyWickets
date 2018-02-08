@@ -27,6 +27,7 @@
 
 #include "cel_shader.h"
 #include "globals.h"
+#include "teddy_gl.h"
 #include "point.h"
 #include "textures.h"
 
