@@ -25,7 +25,7 @@ void TeddyGL::drawRectangle(float x, float y, float w, float h) const {
 
 
 // This method sets up the screen for a 2D drawing phase
-void Start2DDraw() {
+void TeddyGL::start2DDraw() const {
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
   glMatrixMode(GL_PROJECTION);
@@ -38,7 +38,7 @@ void Start2DDraw() {
 }
 
 // This method ends the 2D drawing phase
-void End2DDraw() {
+void TeddyGL::end2DDraw() const {
   glEnable(GL_LIGHTING);
   glEnable(GL_DEPTH_TEST);
   glPopMatrix();
@@ -50,7 +50,7 @@ void End2DDraw() {
 
 // The fade functions contain extremely useful and generic code
 // to fade the screen to and from black based on time inputs.
-void fadeInOut(float start, float finish, float timeDiff) {
+void TeddyGL::fadeInOut(float start, float finish, float timeDiff) const {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
   glDisable(GL_CULL_FACE);
   glEnable(GL_BLEND);
@@ -68,19 +68,19 @@ void fadeInOut(float start, float finish, float timeDiff) {
   glPopAttrib();
 }
 
-void fadeIn(float start, float finish, float timeDiff) {
+void TeddyGL::fadeIn(float start, float finish, float timeDiff) const {
   if (timeDiff < finish) {
     fadeInOut(start, finish + finish - start, timeDiff);
   }
 }
 
-void fadeOut(float start, float finish, float timeDiff) {
+void TeddyGL::fadeOut(float start, float finish, float timeDiff) const {
   if (timeDiff < finish - start && 0 < timeDiff) {
     fadeInOut(0, 1, (timeDiff / (2.0 * (finish - start)) + 0.5));
   }
 }
 
-void blackout() {
+void TeddyGL::blackout() const {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
   glDisable(GL_CULL_FACE);
   glEnable(GL_BLEND);

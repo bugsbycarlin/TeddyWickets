@@ -20,8 +20,6 @@ class Point {
 
   Point(float x, float y, float z);
 
-  void vertex();
-
   void add(Point* p2);
 };
 

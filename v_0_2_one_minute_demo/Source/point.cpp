@@ -16,10 +16,6 @@ Point::Point(float x, float y, float z) {
   this->z = z;
 }
 
-void Point::vertex() {
-  glVertex3f(x, y, z);
-}
-
 void Point::add(Point* p2) {
   this->x += p2->x;
   this->y += p2->y;

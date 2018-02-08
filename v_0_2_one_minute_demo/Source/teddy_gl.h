@@ -22,15 +22,15 @@ class TeddyGL {
   TeddyGL();
 
   void drawRectangle(float x, float y, float w, float h) const;
+
+  void start2DDraw() const;
+  void end2DDraw() const;
+
+  void fadeInOut(float start, float finish, float timeDiff) const;
+  void fadeIn(float start, float finish, float timeDiff) const;
+  void fadeOut(float start, float finish, float timeDiff) const;
+  void blackout() const;
 };
-
-void Start2DDraw();
-void End2DDraw();
-
-void fadeInOut(float start, float finish, float timeDiff);
-void fadeIn(float start, float finish, float timeDiff);
-void fadeOut(float start, float finish, float timeDiff);
-void blackout();
 
 extern const TeddyGL* teddy_gl;
 

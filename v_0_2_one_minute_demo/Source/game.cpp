@@ -423,7 +423,7 @@ void Game::render() {
   character->render(game_mode);
 
   // render 2D overlay
-  Start2DDraw();
+  teddy_gl->start2DDraw();
 
   int info_x = 324;
   int info_y = 20;
@@ -463,17 +463,17 @@ void Game::render() {
   textures->setTexture("coordinates");
   teddy_gl->drawRectangle(coord_x, coord_y, 93, 79);
 
-  End2DDraw();
+  teddy_gl->end2DDraw();
 }
 
 void Game::renderBackground() {
-  Start2DDraw();
+  teddy_gl->start2DDraw();
 
   // background render
   textures->setTexture("clouds");
   teddy_gl->drawRectangle(0, 0, k_screen_width, k_screen_height);
 
-  End2DDraw();
+  teddy_gl->end2DDraw();
 }
 
 void Game::renderBearSelectMode() {
@@ -481,7 +481,7 @@ void Game::renderBearSelectMode() {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  Start2DDraw();
+  teddy_gl->start2DDraw();
 
   player_1_choose_text->render();
   player_2_choose_text->render();
@@ -532,10 +532,10 @@ void Game::renderBearSelectMode() {
   }
 
   if (game_mode == k_lets_go_mode) {
-    fadeOut(1.0f, 2.0f, ((last_time - mark_time) / 1000.0f) - 1.0f);
+    teddy_gl->fadeOut(1.0f, 2.0f, ((last_time - mark_time) / 1000.0f) - 1.0f);
   }
 
-  End2DDraw();
+  teddy_gl->end2DDraw();
 }
 
 // This huge method puts all the crap on the game board.
