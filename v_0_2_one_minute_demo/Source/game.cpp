@@ -332,8 +332,7 @@ void Game::handleMouse(SDL_Event e) {
 }
 
 void Game::render() {
-  // Clear color buffer
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  teddy_gl->clearScreen();
 
   if (game_mode == k_bear_select_mode || game_mode == k_lets_go_mode) {
     renderBearSelectMode();
@@ -342,64 +341,14 @@ void Game::render() {
 
   renderBackground();
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  // Set one of these perspectives:
-
-  // 1. this is cool, super zoomed out
-  // glOrtho(-50, 50, -50, 50, -50, 50);
-
-  // 2. weirdly reasonable ortho
-  glOrtho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
-
-  // 3. normal perspective
-  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
-
-
+  teddy_gl->set3d(zoom);
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(character->position->x + 15, character->position->y + 15, 10,
-            character->position->x, character->position->y, 0,
-            0, 0, 1);
+  teddy_gl->standardCamera(character->position->x + 15, character->position->y + 15, 10,
+    character->position->x, character->position->y, 0);
 
-  glColor4f(1.0, 1.0, 1.0, 1.0);
-
-  // this code makes a sun
-  // float fraction = (int(last_time - start_time) % k_sun_period) / (float)k_sun_period;
-  // printf("Sun %0.2f\n", fraction);
-  // GLfloat light_position[] = {1.0f * (float)cos(fraction * 2 * M_PI),
-  //   -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
-  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-  // if (fraction > 0.5f) {
-  //   GLfloat light_diffuse[] = {0.25, 0.25, 0.25, 1.0};
-  //   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  // } else {
-  //   GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
-  //   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  // }
-
-  // from fraction of the way around the sky, starting on the left and moving clockwise.
-  // A good value is 0.08. This is sort of like 9AM sun if the left is the east.
-  // float fraction = 0.08f;
-  // GLfloat light_position[] = {3.0f + 1.0f * (float)cos(fraction * 2 * M_PI),
-  //   -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
-  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-  // from fraction of the way around the sky, starting on the left and moving clockwise,
-  // but pulled toward me, shining from kind of behind me.
-  float fraction = 0.18f;
-  GLfloat light_position[] = {0.5f + 1.0f * (float)cos(fraction * 2 * M_PI),
-    -1.0f * (float)cos(fraction * 2 * M_PI), 1.0f * (float)sin(fraction * 2 * M_PI), 0.0};
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-
-  // straight from the left
-  // GLfloat light_position[] = {-1.0, 1.0, 0.0, 0.0};
-  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  teddy_gl->standardLightPosition();
 
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
