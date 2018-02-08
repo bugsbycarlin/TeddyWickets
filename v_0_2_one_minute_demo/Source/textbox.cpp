@@ -7,7 +7,6 @@
 
 #include "textbox.h"
 
-
 TextBox::TextBox(std::string font_name, int font_size, std::string text, Uint8 R, Uint8 G, Uint8 B, int x, int y) {
   std::string path = k_font_root_path + font_name;
   font = TTF_OpenFont(path.c_str(), font_size);
@@ -25,13 +24,7 @@ TextBox::TextBox(std::string font_name, int font_size, std::string text, Uint8 R
   color = {R, G, B};
 
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = new GLuint[1];
-  glGenTextures(1, texture);
-  glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0,
-    GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
+  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::setText(std::string text) {
@@ -39,13 +32,7 @@ void TextBox::setText(std::string text) {
 
   // might have a memory leak here as I change the texture pointer.
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = new GLuint[1];
-  glGenTextures(1, texture);
-  glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0,
-    GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
+  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::setColor(Uint8 R, Uint8 G, Uint8 B) {
@@ -53,13 +40,7 @@ void TextBox::setColor(Uint8 R, Uint8 G, Uint8 B) {
 
   // might have a memory leak here as I change the texture pointer.
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = new GLuint[1];
-  glGenTextures(1, texture);
-  glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0,
-    GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
+  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
@@ -69,13 +50,7 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
 
   // might have a memory leak here as I change the texture pointer.
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = new GLuint[1];
-  glGenTextures(1, texture);
-  glBindTexture(GL_TEXTURE_2D, texture[0]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0,
-    GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
+  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::render() {
@@ -88,13 +63,7 @@ void TextBox::render() {
     if (countdown == 0) {
       color = permanent_color;
       text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-      texture = new GLuint[1];
-      glGenTextures(1, texture);
-      glBindTexture(GL_TEXTURE_2D, texture[0]);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0,
-        GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
+      texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
     }
   }
 }

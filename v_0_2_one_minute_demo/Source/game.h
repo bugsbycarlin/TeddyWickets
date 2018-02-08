@@ -26,7 +26,6 @@
 
 // Teddy Wickets includes
 #include "bumper.h"
-#include "cel_shader.h"
 #include "character.h"
 #include "globals.h"
 #include "teddy_gl.h"

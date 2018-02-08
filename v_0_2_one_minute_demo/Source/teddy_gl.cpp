@@ -228,3 +228,23 @@ void TeddyGL::startCelShading() {
 void TeddyGL::stopCelShading() {
   glUseProgram(0);
 }
+
+GLuint* TeddyGL::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
+  GLuint* texture = new GLuint[1];
+  glGenTextures(1, texture);
+  glBindTexture(GL_TEXTURE_2D, texture[0]);
+  if (soften) {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+  } else {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glTexImage2D(GL_TEXTURE_2D, 0, 4, text_surface->w, text_surface->h, 0,
+    //   GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
+  }
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
+  return texture;
+}

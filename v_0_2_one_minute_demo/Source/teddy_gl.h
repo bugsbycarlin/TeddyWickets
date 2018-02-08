@@ -43,6 +43,8 @@ class TeddyGL {
   void initializeCelShading();
   void startCelShading();
   void stopCelShading();
+
+  GLuint* makeTexture(int w, int h, const GLvoid * pixels, bool soften);
 };
 
 extern TeddyGL* teddy_gl;
