@@ -25,7 +25,6 @@
 #include <regex>
 #include <string>
 
-#include "cel_shader.h"
 #include "globals.h"
 #include "teddy_gl.h"
 #include "point.h"
@@ -34,7 +33,6 @@
 class Model {
  public:
     Textures* textures;
-    CelShader* cel_shader;
 
     std::list<std::string> component_names;
     std::map<std::string, std::map<int, Point*>> vertices;
@@ -55,7 +53,7 @@ class Model {
 
     int display_list_index;
 
-    Model(Textures* textures, CelShader* cel_shader, std::string model_file_name);
+    Model(Textures* textures, std::string model_file_name);
 
     void render();
 };

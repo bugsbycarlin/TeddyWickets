@@ -11,7 +11,6 @@
 
 #include <list>
 
-#include "cel_shader.h"
 #include "globals.h"
 #include "teddy_gl.h"
 #include "model.h"
@@ -28,7 +27,6 @@ class Character {
 
     Physics* physics;
     Textures* textures;
-    CelShader* cel_shader;
     Model* model;
 
     float default_shot_rotation;
@@ -41,7 +39,7 @@ class Character {
 
     std::list<btTransform> future_positions = { };
 
-    Character(Physics* physics, Textures* textures, CelShader* cel_shader, Point* position);
+    Character(Physics* physics, Textures* textures, Point* position);
 
     void updateFromPhysics();
 

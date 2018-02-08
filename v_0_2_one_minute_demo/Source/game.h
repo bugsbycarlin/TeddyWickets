@@ -48,7 +48,6 @@ class Game: public Screen {
 
   Physics* physics;
   Textures* textures;
-  CelShader* cel_shader;
 
   Character* character;
 
@@ -141,7 +140,6 @@ class Game: public Screen {
   bool initialize();
   bool initializeGamePieces();
   bool initializeTextures();
-  bool initializeLighting();
   void shutdown();
 };
 

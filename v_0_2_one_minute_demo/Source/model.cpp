@@ -9,9 +9,8 @@
 
 int Model::next_display_list_index = 1;
 
-Model::Model(Textures* textures, CelShader* cel_shader, std::string model_file_name) {
+Model::Model(Textures* textures, std::string model_file_name) {
   this->textures = textures;
-  this->cel_shader = cel_shader;
 
   float lineWidth[2];
   glGetFloatv(GL_LINE_WIDTH_RANGE, lineWidth);
@@ -210,7 +209,7 @@ void Model::render() {
     next_display_list_index++;
 
     glNewList(display_list_index, GL_COMPILE);
-    cel_shader->setShader();
+    teddy_gl->startCelShading();
     bool fill_model = true;
     if (fill_model) {
       for (auto component = component_names.begin(); component != component_names.end(); ++component) {
@@ -250,7 +249,7 @@ void Model::render() {
       }
     }
 
-    cel_shader->unsetShader();
+    teddy_gl->stopCelShading();
 
     bool use_this = true;
     if (outline && use_this) {

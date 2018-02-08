@@ -15,24 +15,37 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/GLU.h>
 
+#include <stdio.h>
+#include <cstdlib>
+#include <fstream>
+#include <string>
+
 #include "globals.h"
 
 class TeddyGL {
  public:
   TeddyGL();
 
-  void drawRectangle(float x, float y, float w, float h) const;
+  int cel_shader_program;
 
-  void start2DDraw() const;
-  void end2DDraw() const;
+  void drawRectangle(float x, float y, float w, float h);
 
-  void fadeInOut(float start, float finish, float timeDiff) const;
-  void fadeIn(float start, float finish, float timeDiff) const;
-  void fadeOut(float start, float finish, float timeDiff) const;
-  void blackout() const;
+  void start2DDraw();
+  void end2DDraw();
+
+  void fadeInOut(float start, float finish, float timeDiff);
+  void fadeIn(float start, float finish, float timeDiff);
+  void fadeOut(float start, float finish, float timeDiff);
+  void blackout();
+
+  void initializeLighting();
+
+  void initializeCelShading();
+  void startCelShading();
+  void stopCelShading();
 };
 
-extern const TeddyGL* teddy_gl;
+extern TeddyGL* teddy_gl;
 
 #endif
 

@@ -7,7 +7,7 @@
 
 #include "character.h"
 
-Character::Character(Physics* physics, Textures* textures, CelShader* cel_shader, Point* position) {
+Character::Character(Physics* physics, Textures* textures, Point* position) {
   this->position = position;
 
   ball = gluNewQuadric();
@@ -16,9 +16,8 @@ Character::Character(Physics* physics, Textures* textures, CelShader* cel_shader
 
   this->physics = physics;
   this->textures = textures;
-  this->cel_shader = cel_shader;
 
-  this->model = new Model(textures, cel_shader, "teddy_bear_draft_2.obj");
+  this->model = new Model(textures, "teddy_bear_draft_2.obj");
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;

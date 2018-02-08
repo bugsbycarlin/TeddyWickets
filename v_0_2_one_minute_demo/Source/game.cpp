@@ -540,7 +540,7 @@ void Game::renderBearSelectMode() {
 
 // This huge method puts all the crap on the game board.
 bool Game::initializeGamePieces() {
-  character = new Character(physics, textures, cel_shader, new Point(0, 0, k_character_drop_height));
+  character = new Character(physics, textures, new Point(0, 0, k_character_drop_height));
   physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
 
   // first test wicket
@@ -761,10 +761,7 @@ bool Game::initialize() {
   }
 
   // Initialize Lighting
-  if (!initializeLighting()) {
-    printf("Unable to initialize lighting!\n");
-    return false;
-  }
+  teddy_gl->initializeLighting();
 
   // Initialize Bullet Physics
   physics = new Physics();
@@ -870,49 +867,6 @@ bool Game::initializeTextures() {
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {
     printf("Error initializing textures! %s\n", gluErrorString(error));
-    return false;
-  }
-
-  return true;
-}
-
-// To do: lighting here instead of per render
-bool Game::initializeLighting() {
-  // Simple Opengl Lighting
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  GLfloat global_ambient[] = {0.8, 0.8, 0.8, 1.0};
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-  glEnable(GL_NORMALIZE);
-  glEnable(GL_RESCALE_NORMAL);
-
-  GLfloat light_ambient[] = {0.0, 0.0, 0.0, 1.0};
-  GLfloat light_diffuse[] = {0.9, 0.9, 0.9, 1.0};
-  GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
-
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-
-  // position is defined after the camera, per render.
-
-  // Common material
-  GLfloat material_ambient[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat material_diffuse[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat shininess[] = {5.0};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
-
-  // Cel Shader
-  cel_shader = new CelShader();
-
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    printf("Error initializing lighting! %s\n", gluErrorString(error));
     return false;
   }
 
