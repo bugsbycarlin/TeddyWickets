@@ -46,14 +46,11 @@ void Surface::render() {
   glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
-  glBegin(GL_QUADS);
-
-    glNormal3f(normal->x, normal->y, normal->z);
-
-    glTexCoord2f(0, 0); glVertex3f(p1->x, p1->y, p1->z);
-    glTexCoord2f(1, 0); glVertex3f(p2->x, p2->y, p2->z);
-    glTexCoord2f(1, 1); glVertex3f(p3->x, p3->y, p3->z);
-    glTexCoord2f(0, 1); glVertex3f(p4->x, p4->y, p4->z);
-
-  glEnd();
+  float data[32] = {
+    0, 0, normal->x, normal->y, normal->z, p1->x, p1->y, p1->z,
+    1, 0, normal->x, normal->y, normal->z, p2->x, p2->y, p2->z,
+    1, 1, normal->x, normal->y, normal->z, p3->x, p3->y, p3->z,
+    0, 1, normal->x, normal->y, normal->z, p4->x, p4->y, p4->z,
+  };
+  teddy_gl->face(4, data);
 }

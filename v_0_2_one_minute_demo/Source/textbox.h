@@ -28,7 +28,7 @@ class TextBox {
   SDL_Surface* text_surface;
   TTF_Font* font;
   SDL_Color color;
-  GLuint* texture;
+  int* texture;
 
   std::string text;
   int x;

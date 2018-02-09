@@ -30,7 +30,7 @@ Game::Game() {
     {8, 1}
   };
 
-  bool choose = true;
+  bool choose = false;
 
   if (choose) {
     // choose bears
@@ -395,12 +395,14 @@ void Game::render() {
     // render power gauge fill
     float portion = character->shot_power / character->default_shot_power;
     textures->setTexture("shot_power_fill");
-    glBegin(GL_QUADS);
-    glTexCoord2d(0.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 0.0, power_y + 150 - 140 * portion);
-    glTexCoord2d(0.0, 1.0); glVertex2d(power_x + 0.0, power_y + 150);
-    glTexCoord2d(1.0, 1.0); glVertex2d(power_x + 30, power_y + 150);
-    glTexCoord2d(1.0, 1.0 - 140.0 / 150.0 * portion); glVertex2d(power_x + 30, power_y + 150 - 140 * portion);
-    glEnd();
+    // custom texture scaling for the fill
+    double data[16] = {
+      0.0, 1.0 - 140.0 / 150.0 * portion, power_x + 0.0, power_y + 150 - 140 * portion,
+      0.0, 1.0, power_x + 0.0, power_y + 150.0,
+      1.0, 1.0, power_x + 30.0f, power_y + 150.0,
+      1.0, 1.0 - 140.0 / 150.0 * portion, power_x + 30.0, power_y + 150 - 140 * portion
+    };
+    teddy_gl->face2d(data);
   }
 
   // render coordinates

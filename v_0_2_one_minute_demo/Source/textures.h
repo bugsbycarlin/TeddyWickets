@@ -24,7 +24,7 @@ class Textures {
  public:
   Textures();
 
-  std::map<std::string, GLuint*> texture_map;
+  std::map<std::string, int*> texture_map;
   std::string texture_root;
 
   void addTexture(std::string texture_name, std::string texture_file);

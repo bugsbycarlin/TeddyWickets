@@ -49,7 +49,13 @@ class TeddyGL {
   void standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z);
   void standardLightPosition();
 
-  GLuint* makeTexture(int w, int h, const GLvoid * pixels, bool soften);
+  int* makeTexture(int w, int h, const GLvoid * pixels, bool soften);
+  void setTexture(int* texture);
+
+  void texVert(float t1, float t2, float v1, float v2, float v3);
+  void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
+  void face(int size, float data[]);
+  void face2d(double data[]);
 };
 
 extern TeddyGL* teddy_gl;

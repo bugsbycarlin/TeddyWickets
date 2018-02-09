@@ -27,7 +27,7 @@ void Textures::addTexture(std::string texture_name, std::string texture_file) {
   }
 
   // Use teddy_gl to make a texture
-  GLuint* texture = teddy_gl->makeTexture(image->w, image->h, image->pixels, true);
+  int* texture = teddy_gl->makeTexture(image->w, image->h, image->pixels, true);
 
   // Save the texture id in a map
   texture_map[texture_name] = &texture[0];
@@ -35,5 +35,5 @@ void Textures::addTexture(std::string texture_name, std::string texture_file) {
 
 // Look up the texture id by name in the texture map, and use OpenGL to bind the texture id
 void Textures::setTexture(std::string texture_name) {
-  glBindTexture(GL_TEXTURE_2D, *texture_map[texture_name]);
+  teddy_gl->setTexture(texture_map[texture_name]);
 }

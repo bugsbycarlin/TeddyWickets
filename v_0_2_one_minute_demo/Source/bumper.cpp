@@ -43,57 +43,45 @@ void Bumper::render() {
 
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-  // bumpers have no opengl lighting for now
-  glDisable(GL_LIGHTING);
+  // GROSS
 
-  glBegin(GL_QUADS);
+  float data1[] = {
+    0, 0, 0, 0, 1, start->x, start->y, start->z,
+    4, 0, 0, 0, 1, end->x, end->y, end->z,
+    4, 1, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
+    0, 1, 0, 0, 1, start->x, start->y, start->z + k_bumper_height
+  };
+  teddy_gl->face(4, data1);
 
-    glTexCoord2f(0, 0);
-    glVertex3f(start->x, start->y, start->z);
-    glTexCoord2f(4, 0);
-    glVertex3f(end->x, end->y, end->z);
-    glTexCoord2f(4, 1);
-    glVertex3f(end->x, end->y, end->z + k_bumper_height);
-    glTexCoord2f(0, 1);
-    glVertex3f(start->x, start->y, start->z + k_bumper_height);
+  float data2[] = {
+    0, 0, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z,
+    4, 0, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z,
+    4, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
+    0, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
+  };
+  teddy_gl->face(4, data2);
 
-    glTexCoord2f(0, 0);
-    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z);
-    glTexCoord2f(4, 0);
-    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z);
-    glTexCoord2f(4, 1);
-    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height);
-    glTexCoord2f(0, 1);
-    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height);
+  float data3[] = {
+    0, 0, 0, 0, 1, start->x, start->y, start->z + k_bumper_height,
+    4, 0, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
+    4, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
+    0, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
+  };
+  teddy_gl->face(4, data3);
 
-    glTexCoord2f(0, 0);
-    glVertex3f(start->x, start->y, start->z + k_bumper_height);
-    glTexCoord2f(4, 0);
-    glVertex3f(end->x, end->y, end->z + k_bumper_height);
-    glTexCoord2f(4, 1);
-    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height);
-    glTexCoord2f(0, 1);
-    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height);
+  float data4[] = {
+    0.5, 0, 0, 0, 1, start->x, start->y, start->z,
+    1, 0, 0, 0, 1, start->x, start->y, start->z + k_bumper_height,
+    1, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
+    0.5, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z,
+  };
+  teddy_gl->face(4, data4);
 
-    glTexCoord2f(0.5, 0);
-    glVertex3f(start->x, start->y, start->z);
-    glTexCoord2f(1, 0);
-    glVertex3f(start->x, start->y, start->z + k_bumper_height);
-    glTexCoord2f(1, 1);
-    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height);
-    glTexCoord2f(0.5, 1);
-    glVertex3f(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z);
-
-    glTexCoord2f(0.5, 0);
-    glVertex3f(end->x, end->y, end->z);
-    glTexCoord2f(1, 0);
-    glVertex3f(end->x, end->y, end->z + k_bumper_height);
-    glTexCoord2f(1, 1);
-    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height);
-    glTexCoord2f(0.5, 1);
-    glVertex3f(end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z);
-
-  glEnd();
-
-  glEnable(GL_LIGHTING);
+  float data5[] = {
+    0.5, 0, 0, 0, 1, end->x, end->y, end->z,
+    1, 0, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
+    1, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
+    0.5, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z,
+  };
+  teddy_gl->face(4, data5);
 }

@@ -54,7 +54,7 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
 }
 
 void TextBox::render() {
-  glBindTexture(GL_TEXTURE_2D, *texture);
+  teddy_gl->setTexture(texture);
   teddy_gl->drawRectangle(x, y, text_surface->w, text_surface->h);
 
   if (countdown > 0) {

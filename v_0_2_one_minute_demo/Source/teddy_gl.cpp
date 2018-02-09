@@ -318,7 +318,7 @@ void TeddyGL::stopCelShading() {
   glUseProgram(0);
 }
 
-GLuint* TeddyGL::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
+int* TeddyGL::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
   GLuint* texture = new GLuint[1];
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -335,5 +335,47 @@ GLuint* TeddyGL::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
     //   GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
   }
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
-  return texture;
+  return (int*) texture;
+}
+
+void TeddyGL::setTexture(int* texture) {
+  glBindTexture(GL_TEXTURE_2D, (GLuint) *texture);
+}
+
+void TeddyGL::texVert(float t1, float t2, float v1, float v2, float v3) {
+  glTexCoord2f(t1, t2);
+  glVertex3f(v1, v2, v3);
+}
+
+void TeddyGL::texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3) {
+  glTexCoord2f(t1, t2);
+  glNormal3f(n1, n2, n3);
+  glVertex3f(v1, v2, v3);
+}
+
+void TeddyGL::face(int size, float data[]) {
+  if (size == 4) {
+    glBegin(GL_QUADS);
+  } else if (size == 3) {
+    glBegin(GL_TRIANGLES);
+  }
+
+  for (int i = 0; i < size; i++) {
+    glTexCoord2f(data[8 * i], data[8 * i + 1]);
+    glNormal3f(data[8 * i + 2], data[8 * i + 3], data[8 * i + 4]);
+    glVertex3f(data[8 * i + 5], data[8 * i + 6], data[8 * i + 7]);
+  }
+
+  glEnd();
+}
+
+void TeddyGL::face2d(double data[]) {
+  glBegin(GL_QUADS);
+
+  for (int i = 0; i < 4; i++) {
+    glTexCoord2d(data[4 * i], data[4 * i + 1]);
+    glVertex2d(data[4 * i + 2], data[4 * i + 3]);
+  }
+
+  glEnd();
 }

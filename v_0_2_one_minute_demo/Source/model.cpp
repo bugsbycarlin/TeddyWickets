@@ -209,7 +209,7 @@ void Model::render() {
     next_display_list_index++;
 
     glNewList(display_list_index, GL_COMPILE);
-    teddy_gl->startCelShading();
+    //teddy_gl->startCelShading();
     bool fill_model = true;
     if (fill_model) {
       for (auto component = component_names.begin(); component != component_names.end(); ++component) {
@@ -221,30 +221,34 @@ void Model::render() {
         std::map<int, Point*> current_normals = normals[component_name];
 
         for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-          int num_faces = -1;
+          int num_edges = -1;
           if (face->size() == 1) {
             textures->setTexture(texture_map[face->operator[](0)]);
             continue;
           } else if (face->size() == 12) {
-            num_faces = 4;
-            glBegin(GL_QUADS);
+            num_edges = 4;
           } else if (face->size() == 9) {
-            num_faces = 3;
-            glBegin(GL_TRIANGLES);
+            num_edges = 3;
           }
 
-          for (int i = 0; i < num_faces; i++) {
+          float data[num_edges * 8];
+          for (int i = 0; i < num_edges; i++) {
             int start = 3*i + 1;
 
             Point* vertex = current_vertices[face->operator[](start)];
             Point* texture = current_texture_coords[face->operator[](start+1)];
             Point* normal = current_normals[face->operator[](start+2)];
 
-            glNormal3f(normal->x, normal->y, normal->z);
-            glTexCoord2f(texture->x, -texture->y);
-            glVertex3f(vertex->x, vertex->y, vertex->z);
+            data[8*i] = texture->x;
+            data[8*i+1] = -texture->y;
+            data[8*i+2] = normal->x;
+            data[8*i+3] = normal->y;
+            data[8*i+4] = normal->z;
+            data[8*i+5] = vertex->x;
+            data[8*i+6] = vertex->y;
+            data[8*i+7] = vertex->z;
           }
-          glEnd();
+          teddy_gl->face(num_edges, data);
         }
       }
     }
@@ -271,18 +275,18 @@ void Model::render() {
         std::map<int, Point*> current_vertices = vertices[component_name];
 
         for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-          int num_faces = -1;
+          int num_edges = -1;
           if (face->size() == 1) {
             continue;
           } else if (face->size() == 12) {
-            num_faces = 4;
+            num_edges = 4;
             glBegin(GL_QUADS);
           } else if (face->size() == 9) {
-            num_faces = 3;
+            num_edges = 3;
             glBegin(GL_TRIANGLES);
           }
 
-          for (int i = 0; i < num_faces; i++) {
+          for (int i = 0; i < num_edges; i++) {
             int start = 3*i + 1;
             Point* vertex = current_vertices[face->operator[](start)];
             glVertex3f(vertex->x, vertex->y, vertex->z);
@@ -293,6 +297,8 @@ void Model::render() {
 
       glPopAttrib();
     }
+
+
 
     bool use_this_instead = false;
     if (outline && use_this_instead) {
@@ -317,19 +323,19 @@ void Model::render() {
         std::map<int, Point*> current_normals = normals[component_name];
 
         for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-          int num_faces = -1;
+          int num_edges = -1;
           if (face->size() == 1) {
             textures->setTexture(texture_map[face->operator[](0)]);
             continue;
           } else if (face->size() == 12) {
-            num_faces = 4;
+            num_edges = 4;
             glBegin(GL_QUADS);
           } else if (face->size() == 9) {
-            num_faces = 3;
+            num_edges = 3;
             glBegin(GL_TRIANGLES);
           }
 
-          for (int i = 0; i < num_faces; i++) {
+          for (int i = 0; i < num_edges; i++) {
             int start = 3*i + 1;
 
             Point* vertex = current_vertices[face->operator[](start)];
