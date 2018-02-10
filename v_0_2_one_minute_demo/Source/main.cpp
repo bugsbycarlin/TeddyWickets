@@ -15,11 +15,14 @@
   +- Controller support
   +- Keymapping / controller mapping
   +- Game controller / keyboard setup screen
+  +- bear selection mode in the 2p game
   +- Improved lighting model
+
+  - Abstract away OpenGL in wrappers
   
   - Cel shading and outlining
 
-  - bear selection mode in the 2p game
+
   - Remove mouse support
   - Fully realized game mechanic
   - Two single player levels (?)
@@ -29,7 +32,6 @@
   - Level saver
   - Level loader
 
-  - Abstract away OpenGL in wrappers
   - Use autoptr
   - Do basic memory profiling to check for leaks
   
@@ -47,7 +49,7 @@
 #include "fmod_errors.h"
 
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 #include "game.h"
 #include "title.h"
 #include "control_setup.h"

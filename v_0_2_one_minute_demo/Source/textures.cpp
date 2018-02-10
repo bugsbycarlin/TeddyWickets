@@ -26,8 +26,8 @@ void Textures::addTexture(std::string texture_name, std::string texture_file) {
       printf("IMG_Load failed for %s with error: %s\n", path.c_str(), IMG_GetError());
   }
 
-  // Use teddy_gl to make a texture
-  int* texture = teddy_gl->makeTexture(image->w, image->h, image->pixels, true);
+  // Use graphics to make a texture
+  int* texture = graphics->makeTexture(image->w, image->h, image->pixels, true);
 
   // Save the texture id in a map
   texture_map[texture_name] = &texture[0];
@@ -35,5 +35,5 @@ void Textures::addTexture(std::string texture_name, std::string texture_file) {
 
 // Look up the texture id by name in the texture map, and use OpenGL to bind the texture id
 void Textures::setTexture(std::string texture_name) {
-  teddy_gl->setTexture(texture_map[texture_name]);
+  graphics->setTexture(texture_map[texture_name]);
 }

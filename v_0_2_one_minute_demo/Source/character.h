@@ -12,7 +12,7 @@
 #include <list>
 
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 #include "model.h"
 #include "physics.h"
 #include "point.h"

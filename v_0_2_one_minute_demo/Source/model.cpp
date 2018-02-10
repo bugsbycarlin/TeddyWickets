@@ -7,19 +7,13 @@
 
 #include "model.h"
 
-int Model::next_display_list_index = 1;
-
 Model::Model(Textures* textures, std::string model_file_name) {
   this->textures = textures;
-
-  float lineWidth[2];
-  glGetFloatv(GL_LINE_WIDTH_RANGE, lineWidth);
-  printf("Line min and max are %0.2f and %0.2f\n", lineWidth[0], lineWidth[1]);
 
   std::string line;
   std::smatch match;
 
-  this->display_list_index = -1;
+  this->cache_id = -1;
 
   std::string material = model_file_name;
   material.replace(material.length() - 3, 3, "mtl");
@@ -201,15 +195,12 @@ Model::Model(Textures* textures, std::string model_file_name) {
 }
 
 void Model::render() {
-  glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-  glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+  graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
+  graphics->rotate(90.0f, 1.0f, 0.0f, 0.0f);
 
-  if (display_list_index == -1) {
-    display_list_index = next_display_list_index;
-    next_display_list_index++;
-
-    glNewList(display_list_index, GL_COMPILE);
-    //teddy_gl->startCelShading();
+  if (cache_id == -1) {
+    cache_id = graphics->cacheProgram();
+    graphics->startCelShading();
     bool fill_model = true;
     if (fill_model) {
       for (auto component = component_names.begin(); component != component_names.end(); ++component) {
@@ -248,114 +239,114 @@ void Model::render() {
             data[8*i+6] = vertex->y;
             data[8*i+7] = vertex->z;
           }
-          teddy_gl->face(num_edges, data);
+          graphics->face(num_edges, data);
         }
       }
     }
 
-    teddy_gl->stopCelShading();
+    graphics->stopCelShading();
 
-    bool use_this = true;
-    if (outline && use_this) {
-      glPushAttrib(GL_ALL_ATTRIB_BITS);
-      glEnable(GL_CULL_FACE);
-      glPolygonMode(GL_BACK, GL_LINE);
-      glLineWidth(outlineWidth);
-      glDisable(GL_LIGHTING);
+    // bool use_this = true;
+    // if (outline && use_this) {
+    //   glPushAttrib(GL_ALL_ATTRIB_BITS);
+    //   glEnable(GL_CULL_FACE);
+    //   glPolygonMode(GL_BACK, GL_LINE);
+    //   glLineWidth(outlineWidth);
+    //   glDisable(GL_LIGHTING);
 
-      glCullFace(GL_FRONT);
-      glDepthFunc(GL_LEQUAL);
+    //   glCullFace(GL_FRONT);
+    //   glDepthFunc(GL_LEQUAL);
 
-      glColor3fv(&outlineColor[0]);
+    //   glColor3fv(&outlineColor[0]);
 
-      for (auto component = component_names.begin(); component != component_names.end(); ++component) {
-        std::string component_name = component->c_str();
-        std::list<std::map<int, int>> current_faces = faces[component_name];
+    //   for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+    //     std::string component_name = component->c_str();
+    //     std::list<std::map<int, int>> current_faces = faces[component_name];
 
-        std::map<int, Point*> current_vertices = vertices[component_name];
+    //     std::map<int, Point*> current_vertices = vertices[component_name];
 
-        for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-          int num_edges = -1;
-          if (face->size() == 1) {
-            continue;
-          } else if (face->size() == 12) {
-            num_edges = 4;
-            glBegin(GL_QUADS);
-          } else if (face->size() == 9) {
-            num_edges = 3;
-            glBegin(GL_TRIANGLES);
-          }
+    //     for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
+    //       int num_edges = -1;
+    //       if (face->size() == 1) {
+    //         continue;
+    //       } else if (face->size() == 12) {
+    //         num_edges = 4;
+    //         glBegin(GL_QUADS);
+    //       } else if (face->size() == 9) {
+    //         num_edges = 3;
+    //         glBegin(GL_TRIANGLES);
+    //       }
 
-          for (int i = 0; i < num_edges; i++) {
-            int start = 3*i + 1;
-            Point* vertex = current_vertices[face->operator[](start)];
-            glVertex3f(vertex->x, vertex->y, vertex->z);
-          }
-          glEnd();
-        }
-      }
+    //       for (int i = 0; i < num_edges; i++) {
+    //         int start = 3*i + 1;
+    //         Point* vertex = current_vertices[face->operator[](start)];
+    //         glVertex3f(vertex->x, vertex->y, vertex->z);
+    //       }
+    //       glEnd();
+    //     }
+    //   }
 
-      glPopAttrib();
-    }
+    //   glPopAttrib();
+    // }
 
 
 
-    bool use_this_instead = false;
-    if (outline && use_this_instead) {
-      glPushAttrib(GL_ALL_ATTRIB_BITS);
-      glEnable(GL_CULL_FACE);
-      // glPolygonMode(GL_BACK, GL_LINE);
-      // glLineWidth(outlineWidth);
-      // glDisable(GL_TEXTURE_2D);
-      glDisable(GL_LIGHTING);
+    // bool use_this_instead = false;
+    // if (outline && use_this_instead) {
+    //   glPushAttrib(GL_ALL_ATTRIB_BITS);
+    //   glEnable(GL_CULL_FACE);
+    //   // glPolygonMode(GL_BACK, GL_LINE);
+    //   // glLineWidth(outlineWidth);
+    //   // glDisable(GL_TEXTURE_2D);
+    //   glDisable(GL_LIGHTING);
 
-      glCullFace(GL_FRONT);
-      glDepthFunc(GL_LEQUAL);
+    //   glCullFace(GL_FRONT);
+    //   glDepthFunc(GL_LEQUAL);
 
-      glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    //   glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 
-      for (auto component = component_names.begin(); component != component_names.end(); ++component) {
-        std::string component_name = component->c_str();
-        std::list<std::map<int, int>> current_faces = faces[component_name];
+    //   for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+    //     std::string component_name = component->c_str();
+    //     std::list<std::map<int, int>> current_faces = faces[component_name];
 
-        std::map<int, Point*> current_vertices = vertices[component_name];
-        std::map<int, Point*> current_texture_coords = texture_coords[component_name];
-        std::map<int, Point*> current_normals = normals[component_name];
+    //     std::map<int, Point*> current_vertices = vertices[component_name];
+    //     std::map<int, Point*> current_texture_coords = texture_coords[component_name];
+    //     std::map<int, Point*> current_normals = normals[component_name];
 
-        for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
-          int num_edges = -1;
-          if (face->size() == 1) {
-            textures->setTexture(texture_map[face->operator[](0)]);
-            continue;
-          } else if (face->size() == 12) {
-            num_edges = 4;
-            glBegin(GL_QUADS);
-          } else if (face->size() == 9) {
-            num_edges = 3;
-            glBegin(GL_TRIANGLES);
-          }
+    //     for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
+    //       int num_edges = -1;
+    //       if (face->size() == 1) {
+    //         textures->setTexture(texture_map[face->operator[](0)]);
+    //         continue;
+    //       } else if (face->size() == 12) {
+    //         num_edges = 4;
+    //         glBegin(GL_QUADS);
+    //       } else if (face->size() == 9) {
+    //         num_edges = 3;
+    //         glBegin(GL_TRIANGLES);
+    //       }
 
-          for (int i = 0; i < num_edges; i++) {
-            int start = 3*i + 1;
+    //       for (int i = 0; i < num_edges; i++) {
+    //         int start = 3*i + 1;
 
-            Point* vertex = current_vertices[face->operator[](start)];
-            Point* texture = current_texture_coords[face->operator[](start+1)];
-            Point* normal = current_normals[face->operator[](start+2)];
+    //         Point* vertex = current_vertices[face->operator[](start)];
+    //         Point* texture = current_texture_coords[face->operator[](start+1)];
+    //         Point* normal = current_normals[face->operator[](start+2)];
 
-            glNormal3f(normal->x, normal->y, normal->z);
-            glTexCoord2f(texture->x, -texture->y);
-            glVertex3f(vertex->x + 0.15 * normal->x, vertex->y + 0.15 * normal->y, vertex->z + 0.15 * normal->z);
-          }
-          glEnd();
-        }
-      }
+    //         glNormal3f(normal->x, normal->y, normal->z);
+    //         glTexCoord2f(texture->x, -texture->y);
+    //         glVertex3f(vertex->x + 0.15 * normal->x, vertex->y + 0.15 * normal->y, vertex->z + 0.15 * normal->z);
+    //       }
+    //       glEnd();
+    //     }
+    //   }
 
-      glPopAttrib();
-    }
+    //   glPopAttrib();
+    // }
 
-    glEndList();
+    graphics->endCacheProgram();
   } else {
-    glCallList(display_list_index);
+    graphics->runCacheProgram(cache_id);
   }
 }
 

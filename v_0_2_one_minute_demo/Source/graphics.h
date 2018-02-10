@@ -3,11 +3,11 @@
   Teddy Wickets
   Copyright 2017 - Matthew Carlin
 
-  TeddyGL class abstracts away OpenGL.
+  Graphics class abstracts away OpenGL.
 */
 
-#ifndef TEDDY_WICKETS_TEDDY_GL_H_
-#define TEDDY_WICKETS_TEDDY_GL_H_
+#ifndef TEDDY_WICKETS_graphics_H_
+#define TEDDY_WICKETS_graphics_H_
 
 // Various forms of OpenGL
 // #include <SDL2/SDL_opengl.h>
@@ -22,11 +22,12 @@
 
 #include "globals.h"
 
-class TeddyGL {
+class Graphics {
  public:
-  TeddyGL();
+  Graphics();
 
   int cel_shader_program;
+  int next_display_list_index;
 
   void drawRectangle(float x, float y, float w, float h);
 
@@ -56,9 +57,16 @@ class TeddyGL {
   void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
   void face(int size, float data[]);
   void face2d(double data[]);
+
+  void color(float r, float g, float b, float a);
+  void rotate(float angle, float x, float y, float z);
+
+  int cacheProgram();
+  void endCacheProgram();
+  void runCacheProgram(int id);
 };
 
-extern TeddyGL* teddy_gl;
+extern Graphics* graphics;
 
 #endif
 

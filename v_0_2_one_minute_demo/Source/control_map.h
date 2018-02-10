@@ -25,7 +25,7 @@
 
 // Teddy Wickets includes
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 
 class ControlMap {
  public:

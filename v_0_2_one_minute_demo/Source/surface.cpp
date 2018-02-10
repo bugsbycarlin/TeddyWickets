@@ -52,5 +52,5 @@ void Surface::render() {
     1, 1, normal->x, normal->y, normal->z, p3->x, p3->y, p3->z,
     0, 1, normal->x, normal->y, normal->z, p4->x, p4->y, p4->z,
   };
-  teddy_gl->face(4, data);
+  graphics->face(4, data);
 }

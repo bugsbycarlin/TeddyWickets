@@ -120,10 +120,10 @@ void ControlSetup::render() {
   glClearColor(0.97f, 0.97f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  teddy_gl->start2DDraw();
+  graphics->start2DDraw();
 
   textures->setTexture("control_setup_screen");
-  teddy_gl->drawRectangle(0, 0, k_screen_width, k_screen_height);
+  graphics->drawRectangle(0, 0, k_screen_width, k_screen_height);
 
   if (mode == k_control_view_mode) {
     view_mode_instruction->render();
@@ -149,7 +149,7 @@ void ControlSetup::render() {
   player_2_special->render();
   player_2_view_taunt->render();
 
-  teddy_gl->end2DDraw();
+  graphics->end2DDraw();
 }
 
 void ControlSetup::setTextToMap() {
@@ -167,7 +167,7 @@ void ControlSetup::setEmptyTextToMap() {
 }
 
 bool ControlSetup::initialize() {
-  teddy_gl->initializeBasic();
+  graphics->initializeBasic();
 
   textures = new Textures();
 

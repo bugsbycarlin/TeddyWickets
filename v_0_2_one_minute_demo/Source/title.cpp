@@ -93,16 +93,16 @@ void Title::render() {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  teddy_gl->start2DDraw();
+  graphics->start2DDraw();
 
   if (mode == k_title_presents_mode) {
     bugsby_presents->render();
-    teddy_gl->fadeIn(0.0f, 2.0f, ((last_time - start_time) / 1000.0f));
-    teddy_gl->fadeOut(3.0f, 4.0f, ((last_time - start_time) / 1000.0f) - 3.0f);
+    graphics->fadeIn(0.0f, 2.0f, ((last_time - start_time) / 1000.0f));
+    graphics->fadeOut(3.0f, 4.0f, ((last_time - start_time) / 1000.0f) - 3.0f);
   } else if (mode == k_title_title_mode) {
     // title screen render
     textures->setTexture("title_screen");
-    teddy_gl->drawRectangle(0, 0, k_screen_width, k_screen_height);
+    graphics->drawRectangle(0, 0, k_screen_width, k_screen_height);
 
     // title text render
     title->render();
@@ -125,14 +125,14 @@ void Title::render() {
       control_setup_unselected->render();
     }
 
-    teddy_gl->fadeIn(0.0f, 1.0f, ((last_time - start_time) / 1000.0f) - 4.0f);
+    graphics->fadeIn(0.0f, 1.0f, ((last_time - start_time) / 1000.0f) - 4.0f);
   }
 
-  teddy_gl->end2DDraw();
+  graphics->end2DDraw();
 }
 
 bool Title::initialize() {
-  teddy_gl->initializeBasic();
+  graphics->initializeBasic();
 
   textures = new Textures();
 

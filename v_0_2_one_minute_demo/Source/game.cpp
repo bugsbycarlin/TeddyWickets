@@ -332,7 +332,7 @@ void Game::handleMouse(SDL_Event e) {
 }
 
 void Game::render() {
-  teddy_gl->clearScreen();
+  graphics->clearScreen();
 
   if (game_mode == k_bear_select_mode || game_mode == k_lets_go_mode) {
     renderBearSelectMode();
@@ -341,14 +341,14 @@ void Game::render() {
 
   renderBackground();
 
-  teddy_gl->set3d(zoom);
+  graphics->set3d(zoom);
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
-  teddy_gl->standardCamera(character->position->x + 15, character->position->y + 15, 10,
+  graphics->standardCamera(character->position->x + 15, character->position->y + 15, 10,
     character->position->x, character->position->y, 0);
 
-  teddy_gl->standardLightPosition();
+  graphics->standardLightPosition();
 
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
@@ -369,7 +369,7 @@ void Game::render() {
   character->render(game_mode);
 
   // render 2D overlay
-  teddy_gl->start2DDraw();
+  graphics->start2DDraw();
 
   int info_x = 324;
   int info_y = 20;
@@ -377,20 +377,20 @@ void Game::render() {
   // render shot prep infographic
   if (game_mode == k_prep_mode) {
     textures->setTexture("m_prep_info");
-    teddy_gl->drawRectangle(info_x, info_y, 400, 400);
+    graphics->drawRectangle(info_x, info_y, 400, 400);
   }
 
   // render power mode
   if (game_mode == k_power_mode) {
     // render power mode infographic
     textures->setTexture("m_shot_info");
-    teddy_gl->drawRectangle(info_x, info_y, 400, 400);
+    graphics->drawRectangle(info_x, info_y, 400, 400);
 
     // render power gauge outline
     int power_x = 974;
     int power_y = 20;
     textures->setTexture("shot_power_outline");
-    teddy_gl->drawRectangle(power_x, power_y, 30, 150);
+    graphics->drawRectangle(power_x, power_y, 30, 150);
 
     // render power gauge fill
     float portion = character->shot_power / character->default_shot_power;
@@ -402,26 +402,26 @@ void Game::render() {
       1.0, 1.0, power_x + 30.0f, power_y + 150.0,
       1.0, 1.0 - 140.0 / 150.0 * portion, power_x + 30.0, power_y + 150 - 140 * portion
     };
-    teddy_gl->face2d(data);
+    graphics->face2d(data);
   }
 
   // render coordinates
   int coord_x = 40;
   int coord_y = k_screen_height - 79 - 40;
   textures->setTexture("coordinates");
-  teddy_gl->drawRectangle(coord_x, coord_y, 93, 79);
+  graphics->drawRectangle(coord_x, coord_y, 93, 79);
 
-  teddy_gl->end2DDraw();
+  graphics->end2DDraw();
 }
 
 void Game::renderBackground() {
-  teddy_gl->start2DDraw();
+  graphics->start2DDraw();
 
   // background render
   textures->setTexture("clouds");
-  teddy_gl->drawRectangle(0, 0, k_screen_width, k_screen_height);
+  graphics->drawRectangle(0, 0, k_screen_width, k_screen_height);
 
-  teddy_gl->end2DDraw();
+  graphics->end2DDraw();
 }
 
 void Game::renderBearSelectMode() {
@@ -429,7 +429,7 @@ void Game::renderBearSelectMode() {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  teddy_gl->start2DDraw();
+  graphics->start2DDraw();
 
   player_1_choose_text->render();
   player_2_choose_text->render();
@@ -443,18 +443,18 @@ void Game::renderBearSelectMode() {
       textures->setTexture(bear_choices[i] + "_box");
       float m = k_bear_choice_x + k_bear_choice_margin * (i % 3);
       float n = k_bear_choice_y + k_bear_choice_margin * (i / 3);
-      teddy_gl->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+      graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
 
       if (available_bear_choices[i] != 1) {
         textures->setTexture("unavailable_bear_selection_box");
-        teddy_gl->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+        graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
       }
     }
 
     textures->setTexture("bear_selection_box");
     float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
     float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
-    teddy_gl->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+    graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
   } else if (game_mode == k_lets_go_mode) {
     go_text->render();
   }
@@ -466,7 +466,7 @@ void Game::renderBearSelectMode() {
       textures->setTexture(player_1_bears[j] + "_box");
     }
     float n = k_bear_choice_y + k_bear_choice_margin * j;
-    teddy_gl->drawRectangle(k_player_1_choices_x, n, k_selection_box_size, k_selection_box_size);
+    graphics->drawRectangle(k_player_1_choices_x, n, k_selection_box_size, k_selection_box_size);
   }
 
   for (int j = 0; j < 3; j++) {
@@ -476,14 +476,14 @@ void Game::renderBearSelectMode() {
       textures->setTexture(player_2_bears[j] + "_box");
     }
     float n = k_bear_choice_y + k_bear_choice_margin * j;
-    teddy_gl->drawRectangle(k_player_2_choices_x, n, k_selection_box_size, k_selection_box_size);
+    graphics->drawRectangle(k_player_2_choices_x, n, k_selection_box_size, k_selection_box_size);
   }
 
   if (game_mode == k_lets_go_mode) {
-    teddy_gl->fadeOut(1.0f, 2.0f, ((last_time - mark_time) / 1000.0f) - 1.0f);
+    graphics->fadeOut(1.0f, 2.0f, ((last_time - mark_time) / 1000.0f) - 1.0f);
   }
 
-  teddy_gl->end2DDraw();
+  graphics->end2DDraw();
 }
 
 // This huge method puts all the crap on the game board.
@@ -709,7 +709,7 @@ bool Game::initialize() {
   }
 
   // Initialize Lighting
-  teddy_gl->initializeLighting();
+  graphics->initializeLighting();
 
   // Initialize Bullet Physics
   physics = new Physics();
@@ -735,7 +735,7 @@ bool Game::initialize() {
 }
 
 bool Game::initializeTextures() {
-  teddy_gl->initializeBasic();
+  graphics->initializeBasic();
 
   textures = new Textures();
 

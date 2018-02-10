@@ -26,7 +26,7 @@
 #include <string>
 
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 #include "point.h"
 #include "textures.h"
 
@@ -43,15 +43,11 @@ class Model {
     std::map<std::string, int> texture_keys;
     std::map<int, std::string> texture_map;
 
-
-    // Display list global counter
-    static int next_display_list_index;
-
     float outlineColor[3] = {0.0f, 0.0f, 0.0f};
     float outlineWidth = 10.0f;
     bool outline = true;
 
-    int display_list_index;
+    int cache_id;
 
     Model(Textures* textures, std::string model_file_name);
 

@@ -18,7 +18,7 @@
 #include "fmod.hpp"
 
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 
 class Screen {
  public:
@@ -27,7 +27,7 @@ class Screen {
   int current_screen;
   bool quit;
 
-  //TeddyGL* teddy_gl;
+  //TeddyGL* graphics;
 
   virtual void loop(SDL_Window* window, FMOD::System *sound_system);
 

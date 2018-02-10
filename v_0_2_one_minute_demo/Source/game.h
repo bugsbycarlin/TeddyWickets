@@ -28,7 +28,7 @@
 #include "bumper.h"
 #include "character.h"
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 #include "physics.h"
 #include "screen.h"
 #include "surface.h"

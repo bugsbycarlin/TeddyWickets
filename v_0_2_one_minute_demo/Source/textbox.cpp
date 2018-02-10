@@ -24,7 +24,7 @@ TextBox::TextBox(std::string font_name, int font_size, std::string text, Uint8 R
   color = {R, G, B};
 
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
+  texture = graphics->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::setText(std::string text) {
@@ -32,7 +32,7 @@ void TextBox::setText(std::string text) {
 
   // might have a memory leak here as I change the texture pointer.
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
+  texture = graphics->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::setColor(Uint8 R, Uint8 G, Uint8 B) {
@@ -40,7 +40,7 @@ void TextBox::setColor(Uint8 R, Uint8 G, Uint8 B) {
 
   // might have a memory leak here as I change the texture pointer.
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
+  texture = graphics->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
@@ -50,12 +50,12 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
 
   // might have a memory leak here as I change the texture pointer.
   text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-  texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
+  texture = graphics->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
 }
 
 void TextBox::render() {
-  teddy_gl->setTexture(texture);
-  teddy_gl->drawRectangle(x, y, text_surface->w, text_surface->h);
+  graphics->setTexture(texture);
+  graphics->drawRectangle(x, y, text_surface->w, text_surface->h);
 
   if (countdown > 0) {
     countdown--;
@@ -63,7 +63,7 @@ void TextBox::render() {
     if (countdown == 0) {
       color = permanent_color;
       text_surface = TTF_RenderText_Blended(font, this->text.c_str(), color);
-      texture = teddy_gl->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
+      texture = graphics->makeTexture(text_surface->w, text_surface->h, text_surface->pixels, false);
     }
   }
 }

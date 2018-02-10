@@ -7,14 +7,14 @@
 
 #include "graphics.h"
 
-TeddyGL* graphics = new TeddyGL();
+Graphics* graphics = new Graphics();
 
-TeddyGL::TeddyGL() {
+Graphics::Graphics() {
   this->next_display_list_index = 1;
 }
 
 // This method draws a rectangle
-void TeddyGL::drawRectangle(float x, float y, float w, float h) {
+void Graphics::drawRectangle(float x, float y, float w, float h) {
   glBegin(GL_QUADS);
   glTexCoord2d(0.0, 0.0); glVertex2d(x, y);
   glTexCoord2d(0.0, 1.0); glVertex2d(x, y + h);
@@ -24,7 +24,7 @@ void TeddyGL::drawRectangle(float x, float y, float w, float h) {
 }
 
 // This method sets up the screen for a 2D drawing phase
-void TeddyGL::start2DDraw() {
+void Graphics::start2DDraw() {
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
   glMatrixMode(GL_PROJECTION);
@@ -37,7 +37,7 @@ void TeddyGL::start2DDraw() {
 }
 
 // This method ends the 2D drawing phase
-void TeddyGL::end2DDraw() {
+void Graphics::end2DDraw() {
   glEnable(GL_LIGHTING);
   glEnable(GL_DEPTH_TEST);
   glPopMatrix();
@@ -49,7 +49,7 @@ void TeddyGL::end2DDraw() {
 
 // The fade functions contain extremely useful and generic code
 // to fade the screen to and from black based on time inputs.
-void TeddyGL::fadeInOut(float start, float finish, float timeDiff) {
+void Graphics::fadeInOut(float start, float finish, float timeDiff) {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
   glDisable(GL_CULL_FACE);
   glEnable(GL_BLEND);
@@ -67,19 +67,19 @@ void TeddyGL::fadeInOut(float start, float finish, float timeDiff) {
   glPopAttrib();
 }
 
-void TeddyGL::fadeIn(float start, float finish, float timeDiff) {
+void Graphics::fadeIn(float start, float finish, float timeDiff) {
   if (timeDiff < finish) {
     fadeInOut(start, finish + finish - start, timeDiff);
   }
 }
 
-void TeddyGL::fadeOut(float start, float finish, float timeDiff) {
+void Graphics::fadeOut(float start, float finish, float timeDiff) {
   if (timeDiff < finish - start && 0 < timeDiff) {
     fadeInOut(0, 1, (timeDiff / (2.0 * (finish - start)) + 0.5));
   }
 }
 
-void TeddyGL::blackout() {
+void Graphics::blackout() {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
   glDisable(GL_CULL_FACE);
   glEnable(GL_BLEND);
@@ -95,7 +95,7 @@ void TeddyGL::blackout() {
   glPopAttrib();
 }
 
-void TeddyGL::initializeBasic() {
+void Graphics::initializeBasic() {
 
   // glFrontFace(GL_CW);
   // glEnable(GL_CULL_FACE);
@@ -118,12 +118,12 @@ void TeddyGL::initializeBasic() {
   }
 }
 
-void TeddyGL::clearScreen() {
+void Graphics::clearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor4f(1.0, 1.0, 1.0, 1.0);
 }
 
-void TeddyGL::set3d(float zoom) {
+void Graphics::set3d(float zoom) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
@@ -139,7 +139,7 @@ void TeddyGL::set3d(float zoom) {
   // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 }
 
-void TeddyGL::standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z) {
+void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z) {
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
   glMatrixMode(GL_MODELVIEW);
@@ -149,7 +149,7 @@ void TeddyGL::standardCamera(float cam_x, float cam_y, float cam_z, float target
             0, 0, 1);  
 }
 
-void TeddyGL::standardLightPosition() {
+void Graphics::standardLightPosition() {
   // this code makes a sun
   // but it requires passing in time fraction
   // float fraction = (int(last_time - start_time) % k_sun_period) / (float)k_sun_period;
@@ -184,7 +184,7 @@ void TeddyGL::standardLightPosition() {
   // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 }
 
-void TeddyGL::initializeLighting() {
+void Graphics::initializeLighting() {
   // Simple Opengl Lighting
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
@@ -224,7 +224,7 @@ void TeddyGL::initializeLighting() {
   }
 }
 
-void TeddyGL::initializeCelShading() {
+void Graphics::initializeCelShading() {
   cel_shader_program = k_cel_shader_id;
 
   std::string line;
@@ -310,15 +310,15 @@ void TeddyGL::initializeCelShading() {
   }
 }
 
-void TeddyGL::startCelShading() {
+void Graphics::startCelShading() {
   glUseProgram(cel_shader_program);
 }
 
-void TeddyGL::stopCelShading() {
+void Graphics::stopCelShading() {
   glUseProgram(0);
 }
 
-int* TeddyGL::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
+int* Graphics::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
   GLuint* texture = new GLuint[1];
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -338,22 +338,22 @@ int* TeddyGL::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
   return (int*) texture;
 }
 
-void TeddyGL::setTexture(int* texture) {
+void Graphics::setTexture(int* texture) {
   glBindTexture(GL_TEXTURE_2D, (GLuint) *texture);
 }
 
-void TeddyGL::texVert(float t1, float t2, float v1, float v2, float v3) {
+void Graphics::texVert(float t1, float t2, float v1, float v2, float v3) {
   glTexCoord2f(t1, t2);
   glVertex3f(v1, v2, v3);
 }
 
-void TeddyGL::texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3) {
+void Graphics::texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3) {
   glTexCoord2f(t1, t2);
   glNormal3f(n1, n2, n3);
   glVertex3f(v1, v2, v3);
 }
 
-void TeddyGL::face(int size, float data[]) {
+void Graphics::face(int size, float data[]) {
   if (size == 4) {
     glBegin(GL_QUADS);
   } else if (size == 3) {
@@ -369,7 +369,7 @@ void TeddyGL::face(int size, float data[]) {
   glEnd();
 }
 
-void TeddyGL::face2d(double data[]) {
+void Graphics::face2d(double data[]) {
   glBegin(GL_QUADS);
 
   for (int i = 0; i < 4; i++) {
@@ -380,15 +380,15 @@ void TeddyGL::face2d(double data[]) {
   glEnd();
 }
 
-void TeddyGL::color(float r, float g, float b, float a) {
+void Graphics::color(float r, float g, float b, float a) {
   glColor4f(r, g, b, a);
 }
 
-void TeddyGL::rotate(float angle, float x, float y, float z) {
+void Graphics::rotate(float angle, float x, float y, float z) {
   glRotatef(angle, x, y, z);
 }
 
-int TeddyGL::cacheProgram() {
+int Graphics::cacheProgram() {
   int id = this->next_display_list_index;
   this->next_display_list_index++;
 
@@ -396,10 +396,10 @@ int TeddyGL::cacheProgram() {
   return id;
 }
 
-void TeddyGL::endCacheProgram() {
+void Graphics::endCacheProgram() {
   glEndList();
 }
 
-void TeddyGL::runCacheProgram(int id) {
+void Graphics::runCacheProgram(int id) {
   glCallList(id);
 }

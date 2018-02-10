@@ -18,7 +18,7 @@
 #include <string>
 
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 
 class Textures {
  public:

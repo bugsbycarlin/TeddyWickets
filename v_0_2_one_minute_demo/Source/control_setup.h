@@ -24,7 +24,7 @@
 // Teddy Wickets includes
 #include "control_map.h"
 #include "globals.h"
-#include "teddy_gl.h"
+#include "graphics.h"
 #include "screen.h"
 #include "textbox.h"
 #include "textures.h"

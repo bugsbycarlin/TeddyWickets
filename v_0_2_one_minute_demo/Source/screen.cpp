@@ -8,7 +8,7 @@
 #include "screen.h"
 
 Screen::Screen() {
-  //teddy_gl = new TeddyGL();
+  //graphics = new TeddyGL();
 }
 
 void Screen::loop(SDL_Window* window, FMOD::System *sound_system) {
