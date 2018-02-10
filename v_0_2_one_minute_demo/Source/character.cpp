@@ -10,10 +10,6 @@
 Character::Character(Physics* physics, Textures* textures, Point* position) {
   this->position = position;
 
-  ball = gluNewQuadric();
-  gluQuadricTexture(ball, GL_TRUE);
-  gluQuadricNormals(ball, GLU_SMOOTH);
-
   this->physics = physics;
   this->textures = textures;
 
@@ -40,17 +36,15 @@ void Character::updateFromPhysics() {
 void Character::render(int game_mode) {
   btScalar transform_matrix[16];
   btTransform transform = physics->getTransform(identity);
-  transform.getOpenGLMatrix(transform_matrix);
-  glPushMatrix();
-  glMultMatrixf((GLfloat*)transform_matrix);
-
-  glPushMatrix();
-  glScalef(k_model_scale, k_model_scale, k_model_scale);
-  glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-  model->render();
-  glPopMatrix();
-
-  glPopMatrix();
+  graphics->pushMatrix();
+    transform.getOpenGLMatrix(transform_matrix);
+    graphics->multMatrix(transform_matrix);
+    graphics->pushMatrix();
+      graphics->scale(k_model_scale, k_model_scale, k_model_scale);
+      graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+      model->render();
+    graphics->popMatrix();
+  graphics->popMatrix();
 
   // future positions (to help the player predict the shot)
   if (game_mode == k_prep_mode) {
@@ -60,21 +54,25 @@ void Character::render(int game_mode) {
     for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
       btScalar transform_matrix[16];
       position->getOpenGLMatrix(transform_matrix);
-      glPushMatrix();
-      glMultMatrixf((GLfloat*)transform_matrix);
-      gluSphere(ball, radius * 0.15, 10, 10);
-      glPopMatrix();
+      graphics->pushMatrix();
+      graphics->multMatrix(transform_matrix);
+      graphics->sphere(radius * 0.15);
+      graphics->popMatrix();
     }
 
     // lines between balls
-    glLineWidth(3);
-    glBegin(GL_LINE_STRIP);
+
+    graphics->lineWidth(3);
+    //float line_data[3 * future_positions.size()];
+    std::vector<float> line_data = {};
     for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
       btScalar transform_matrix[16];
       position->getOpenGLMatrix(transform_matrix);
-      glVertex3f(position->getOrigin().getX(), position->getOrigin().getY(), position->getOrigin().getZ());
+      line_data.push_back(position->getOrigin().getX());
+      line_data.push_back(position->getOrigin().getY());
+      line_data.push_back(position->getOrigin().getZ());
     }
-    glEnd();
+    graphics->lineStrip(line_data);
   }
 }
 

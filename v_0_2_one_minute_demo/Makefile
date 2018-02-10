@@ -20,6 +20,7 @@ TeddyWickets:
 		./Source/wicket.cpp \
 		./Source/textures.cpp \
 		./Source/textbox.cpp \
+		./Source/triangle.cpp \
 		-std=c++11 \
 		-o TeddyWickets \
 		-framework OpenGL \
@@ -34,15 +35,16 @@ TeddyWickets:
 		./Libraries/libfmod.dylib \
 		-rpath ./Libraries
 
-
 ModelViewer:
 		g++ -w \
 		./Source/model_viewer_main.cpp \
 		./Source/globals.cpp \
+		./Source/graphics.cpp \
 		./Source/screen.cpp \
 		./Source/model_viewer.cpp \
 		./Source/model.cpp \
 		./Source/point.cpp \
+		./Source/triangle.cpp \
 		./Source/textures.cpp \
 		-std=c++11 \
 		-o ModelViewer \

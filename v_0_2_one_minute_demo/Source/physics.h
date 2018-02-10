@@ -19,6 +19,7 @@
 
 #include "globals.h"
 #include "point.h"
+#include "triangle.h"
 
 struct CollisionPair {
     const btCollisionObject* collision_object_a;
@@ -52,6 +53,7 @@ class Physics {
     int addBumper(Point* start, Point* end, Point* normal);
     int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
     int addBall(float radius, float x_pos, float y_pos, float z_pos);
+    int addMesh(std::list<Triangle*> triangles, Point* position, float rotation);
 
     void update(float time_step);
 

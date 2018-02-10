@@ -9,25 +9,25 @@
 #ifndef TEDDY_WICKETS_WICKET_H_
 #define TEDDY_WICKETS_WICKET_H_
 
+#include <math.h>
+
 #include "physics.h"
 #include "point.h"
+#include "model.h"
 #include "textures.h"
+#include "triangle.h"
 
 class Wicket {
  public:
     int identity;
-
-    GLUquadric* pole;
-    GLUquadric* pole_cap;
-
-    Point* pole_1_position;
-    Point* pole_2_position;
-    float height;
+    Point* position;
+    float rotation;
 
     Physics* physics;
     Textures* textures;
+    Model* model;
 
-    Wicket(Physics* physics, Textures* textures, Point* pole_1_position, Point* pole_2_position, float height);
+    Wicket(Physics* physics, Textures* textures, Point* position, float rotation);
 
     void render();
 };

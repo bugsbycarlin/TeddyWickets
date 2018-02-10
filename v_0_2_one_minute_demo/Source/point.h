@@ -20,6 +20,8 @@ class Point {
 
   Point(float x, float y, float z);
 
+  Point(Point* p);
+
   void add(Point* p2);
 };
 

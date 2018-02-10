@@ -99,92 +99,37 @@ void ModelViewer::handleMouse(SDL_Event e) {
 }
 
 void ModelViewer::render() {
-  // Simple viewport.
-  glViewport(0, 0, k_screen_width, k_screen_height);
+  graphics->clearScreenWithColor(1.0f, 1.0f, 1.0f, 1.0f);
+  
+  graphics->color(0.5f, 1.0f, 1.0f, 1.0f);
 
-  // Clear color buffer
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  // Set one of these perspectives:
-
-  // 1. this is cool, super zoomed out
-  // glOrtho(-50, 50, -50, 50, -50, 50);
-
-  // 2. weirdly reasonable ortho
-  glOrtho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
-
-  // 3. normal perspective
-  // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
-
-  // Simple Opengl Lighting
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  GLfloat ambient[] = {0.5, 0.5, 0.5, 1.0};
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-  glEnable(GL_NORMALIZE);
-  glEnable(GL_RESCALE_NORMAL);
-
-  GLfloat light_ambient[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat light_diffuse[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat light_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat light_position[] = {-1.0, 0.0, 1.0, 0.0};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-  // Common material
-  GLfloat material_ambient[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat material_diffuse[] = {0.8, 0.8, 0.8, 1.0};
-  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat shininess[] = {5.0};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+  graphics->set3d(5.0f);
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(-15, -15, 10,
-            0, 0, 0,
-            0, 0, 1);
+  graphics->standardCamera(15, 15, 10, 0, 0, 0);
 
-  glColor4f(1.0, 1.0, 1.0, 1.0);
+  graphics->standardLightPosition();
 
-  glPushMatrix();
-  glRotatef(rotation, 0.0f, 0.0f, 1.0f);
+  graphics->pushMatrix();
+  graphics->rotate(rotation, 0.0f, 0.0f, 1.0f);
 
   model->render();
 
-  glPopMatrix();
+  graphics->popMatrix();
 }
 
 bool ModelViewer::initialize() {
-  glEnable(GL_TEXTURE_2D);
+  graphics->initializeBasic();
 
   textures = new Textures();
 
   textures->addTexture("bear_face", "bear_test2.png");
+  textures->addTexture("plain", "plain.png");
+  textures->addTexture("barber", "barber_pole.png");
 
-  model = new Model(textures, "teddy_bear_draft_2.obj");
-
-  glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_SMOOTH);
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  glViewport(0, 0, k_screen_width, k_screen_height);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(45.0f, k_screen_width/(1.0 * k_screen_height), 0.1f, 1000.0f);
+  //model = new Model(textures, "teddy_bear_draft_2.obj");
+  model = new Model(textures, "wicket.obj");
 
   return true;
 }

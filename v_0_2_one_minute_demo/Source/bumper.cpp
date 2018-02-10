@@ -41,7 +41,7 @@ void Bumper::render() {
     textures->setTexture("bumper");
   }
 
-  glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+  graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
 
   // GROSS
 

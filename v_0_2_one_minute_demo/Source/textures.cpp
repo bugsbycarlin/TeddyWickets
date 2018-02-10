@@ -35,5 +35,6 @@ void Textures::addTexture(std::string texture_name, std::string texture_file) {
 
 // Look up the texture id by name in the texture map, and use OpenGL to bind the texture id
 void Textures::setTexture(std::string texture_name) {
+  if (texture_name == "") return;
   graphics->setTexture(texture_map[texture_name]);
 }

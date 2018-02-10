@@ -27,8 +27,6 @@ class Screen {
   int current_screen;
   bool quit;
 
-  //TeddyGL* graphics;
-
   virtual void loop(SDL_Window* window, FMOD::System *sound_system);
 
   virtual bool initialize();

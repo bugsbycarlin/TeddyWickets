@@ -89,9 +89,7 @@ void Title::handleMouse(SDL_Event e) {
 }
 
 void Title::render() {
-  // Clear color buffer
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  graphics->clearScreenWithColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   graphics->start2DDraw();
 

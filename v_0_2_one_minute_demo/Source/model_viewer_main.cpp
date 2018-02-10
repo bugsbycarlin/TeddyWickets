@@ -10,34 +10,14 @@
 #include <string>
 
 #include "model_viewer.h"
+#include "globals.h"
+#include "graphics.h"
 
 // The window
 SDL_Window* window;
 
 // The OpenGL context
 SDL_GLContext context;
-
-bool initializeOpenGL() {
-  // Initialize Projection Matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  // Initialize Modelview Matrix
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-
-  // Initialize clear color
-  glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-
-  // Check for error
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    printf("Error initializing OpenGL! %s\n", gluErrorString(error));
-    return false;
-  }
-
-  return true;
-}
 
 bool initialize() {
   // Initialize SDL
@@ -46,9 +26,7 @@ bool initialize() {
     return false;
   }
 
-  // Use OpenGL 2.1
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  graphics->initializeOpenGLVersion();
 
   // Create window
   window = SDL_CreateWindow("Teddy Wickets Model Viewer",
@@ -71,12 +49,6 @@ bool initialize() {
   // Use Vsync
   if (SDL_GL_SetSwapInterval(1) < 0) {
     printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
-    return false;
-  }
-
-  // Initialize OpenGL
-  if (!initializeOpenGL()) {
-    printf("Unable to initialize OpenGL!\n");
     return false;
   }
 }

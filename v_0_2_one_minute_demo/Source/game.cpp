@@ -333,6 +333,7 @@ void Game::handleMouse(SDL_Event e) {
 
 void Game::render() {
   graphics->clearScreen();
+  graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
 
   if (game_mode == k_bear_select_mode || game_mode == k_lets_go_mode) {
     renderBearSelectMode();
@@ -426,8 +427,7 @@ void Game::renderBackground() {
 
 void Game::renderBearSelectMode() {
   // Clear color buffer
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  graphics->clearScreenWithColor(1.0f, 1.0f, 1.0f, 1.0f);
 
   graphics->start2DDraw();
 
@@ -493,33 +493,23 @@ bool Game::initializeGamePieces() {
 
   // first test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(0, 6, 0),
-    new Point(3, 6, 0),
-    4.0));
+    new Point(1.5, 6, 0), 0));
 
   // second test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(21, 0, -4),
-    new Point(21, 3, -4),
-    4.0));
+    new Point(21, 1.5, -4), 0));
 
   // third test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(54, 0, -8),
-    new Point(54, 3, -8),
-    4.0));
+    new Point(54, 1.5, -8), 0));
 
   // fourth test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(48, 9, -8),
-    new Point(51, 9, -8),
-    4.0));
+    new Point(49.5, 9, -8), 0));
 
   // fifth test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(45, -45, 0),
-    new Point(45, -48, 0),
-    4.0));
+    new Point(45, -46.5, 0), 0));
 
   // surfaces segment 1 (slide down)
   int height_array[] = {0, 0, 0, -2, -4, -4, -4, -6, -8};
@@ -727,9 +717,6 @@ bool Game::initialize() {
   start_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   last_time = start_time;
   framerate_time = start_time;
-
-  printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
-  printf("OpenGL Shading Language Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
   return true;
 }

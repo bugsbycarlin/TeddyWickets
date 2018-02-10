@@ -13,10 +13,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 
-// OpenGL, for drawing everything
-#include <OpenGL/gl.h>
-#include <OpenGL/GLU.h>
-
 // Fmod for sound
 #include "fmod.hpp"
 
@@ -30,6 +26,7 @@
 
 // Teddy Wickets includes
 #include "globals.h"
+#include "graphics.h"
 #include "model.h"
 #include "screen.h"
 #include "textures.h"

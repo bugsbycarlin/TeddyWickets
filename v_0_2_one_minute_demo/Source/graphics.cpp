@@ -11,6 +11,10 @@ Graphics* graphics = new Graphics();
 
 Graphics::Graphics() {
   this->next_display_list_index = 1;
+
+  ball = gluNewQuadric();
+  gluQuadricTexture(ball, GL_TRUE);
+  gluQuadricNormals(ball, GLU_SMOOTH);
 }
 
 // This method draws a rectangle
@@ -116,11 +120,39 @@ void Graphics::initializeBasic() {
     printf("Error initializing GL config! %s\n", gluErrorString(error));
     exit(1);
   }
+
+  // Debug info for now
+  printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
+  printf("OpenGL Shading Language Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+}
+
+void Graphics::initializeOpenGLVersion() {
+  // I don't understand setting the version yet. Leaving all of these attempts in here for now.
+  // Use OpenGL 4.1
+  // SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+  // SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  // SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  // SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  // SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+}
+
+void Graphics::clearScreenWithColor(float r, float g, float b, float a) {
+  glClearColor(r, g, b, a);
+  clearScreen();
 }
 
 void Graphics::clearScreen() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glColor4f(1.0, 1.0, 1.0, 1.0);
 }
 
 void Graphics::set3d(float zoom) {
@@ -342,6 +374,17 @@ void Graphics::setTexture(int* texture) {
   glBindTexture(GL_TEXTURE_2D, (GLuint) *texture);
 }
 
+void Graphics::matteMaterial() {
+  GLfloat material_ambient[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat material_diffuse[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat shininess[] = {5.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+}
+
 void Graphics::texVert(float t1, float t2, float v1, float v2, float v3) {
   glTexCoord2f(t1, t2);
   glVertex3f(v1, v2, v3);
@@ -380,12 +423,48 @@ void Graphics::face2d(double data[]) {
   glEnd();
 }
 
+void Graphics::lineWidth(int lineWidth) {
+  glLineWidth(lineWidth);
+}
+
+void Graphics::lineStrip(std::vector<float> line_data) {
+  glBegin(GL_LINE_STRIP);
+  for (int i = 0; i < line_data.size() / 3.0; i++) {
+    glVertex3f(line_data[3 * i], line_data[3 * i + 1], line_data[3 * i + 2]);
+  }
+  glEnd();
+}
+
+void Graphics::sphere(float radius) {
+  gluSphere(ball, radius, 10, 10);
+}
+
 void Graphics::color(float r, float g, float b, float a) {
   glColor4f(r, g, b, a);
 }
 
 void Graphics::rotate(float angle, float x, float y, float z) {
   glRotatef(angle, x, y, z);
+}
+
+void Graphics::translate(float x, float y, float z) {
+  glTranslatef(x, y, z);
+}
+
+void Graphics::scale(float x, float y, float z) {
+  glScalef(x, y, z);
+}
+
+void Graphics::pushMatrix() {
+  glPushMatrix();
+}
+
+void Graphics::popMatrix() {
+  glPopMatrix();
+}
+
+void Graphics::multMatrix(const float* m) {
+  glMultMatrixf((GLfloat*)m);
 }
 
 int Graphics::cacheProgram() {

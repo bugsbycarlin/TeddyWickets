@@ -29,6 +29,7 @@
 #include "graphics.h"
 #include "point.h"
 #include "textures.h"
+#include "triangle.h"
 
 class Model {
  public:
@@ -52,6 +53,8 @@ class Model {
     Model(Textures* textures, std::string model_file_name);
 
     void render();
+
+    std::list<Triangle*> getMeshAsTriangles();
 };
 
 #endif

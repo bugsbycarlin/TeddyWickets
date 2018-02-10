@@ -20,8 +20,6 @@
 
 class Character {
  public:
-    // Ball
-    GLUquadric* ball;
     int identity;
     Point* position;
 

@@ -18,7 +18,9 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <fstream>
+#include <list>
 #include <string>
+#include <vector>
 
 #include "globals.h"
 
@@ -28,6 +30,8 @@ class Graphics {
 
   int cel_shader_program;
   int next_display_list_index;
+
+  GLUquadric* ball;
 
   void drawRectangle(float x, float y, float w, float h);
 
@@ -45,7 +49,10 @@ class Graphics {
   void startCelShading();
   void stopCelShading();
 
+  void initializeOpenGLVersion();
+
   void clearScreen();
+  void clearScreenWithColor(float r, float g, float b, float a);
   void set3d(float zoom);
   void standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z);
   void standardLightPosition();
@@ -53,13 +60,26 @@ class Graphics {
   int* makeTexture(int w, int h, const GLvoid * pixels, bool soften);
   void setTexture(int* texture);
 
+  void matteMaterial();
+
   void texVert(float t1, float t2, float v1, float v2, float v3);
   void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
   void face(int size, float data[]);
   void face2d(double data[]);
 
+  void lineWidth(int line_width);
+  void lineStrip(std::vector<float> line_data);
+
+  void sphere(float radius);
+
   void color(float r, float g, float b, float a);
   void rotate(float angle, float x, float y, float z);
+  void scale(float x, float y, float z);
+  void translate(float x, float y, float z);
+
+  void pushMatrix();
+  void popMatrix();
+  void multMatrix(const float* m);
 
   int cacheProgram();
   void endCacheProgram();

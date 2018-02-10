@@ -36,6 +36,7 @@ Model::Model(Textures* textures, std::string model_file_name) {
     if (std::regex_search(line, match, new_material_regex)) {
       printf("Matched material: %s\n", match.str(1).c_str());
       last_texture_name = match.str(1);
+      texture_names[last_texture_name] = "";
     } else if (std::regex_search(line, match, texture_map_regex)) {
       printf("Matched texture name: %s\n", match.str(1).c_str());
       textures->addTexture(match.str(1), match.str(1));
@@ -192,6 +193,42 @@ Model::Model(Textures* textures, std::string model_file_name) {
   }
 
   model_file.close();
+}
+
+std::list<Triangle*> Model::getMeshAsTriangles() {
+  std::list<Triangle*> mesh = {};
+  for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+    std::string component_name = component->c_str();
+    std::list<std::map<int, int>> current_faces = faces[component_name];
+
+    std::map<int, Point*> current_vertices = vertices[component_name];
+
+    for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
+      int num_edges = -1;
+      if (face->size() == 1) {
+        continue;
+      } else if (face->size() == 12) {
+        num_edges = 4;
+      } else if (face->size() == 9) {
+        num_edges = 3;
+      }
+
+      mesh.push_back(new Triangle(
+        current_vertices[face->operator[](1)],
+        current_vertices[face->operator[](4)],
+        current_vertices[face->operator[](7)])
+      );
+      if (num_edges == 4) {
+        mesh.push_back(new Triangle(
+          current_vertices[face->operator[](1)],
+          current_vertices[face->operator[](7)],
+          current_vertices[face->operator[](10)])
+        );
+      }
+    }
+  }
+
+  return mesh;
 }
 
 void Model::render() {

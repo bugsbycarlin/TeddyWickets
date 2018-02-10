@@ -118,6 +118,30 @@ int Physics::addSurface(Point* p1, Point* p2, Point* p3, Point* p4) {
   return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
 }
 
+
+// Add a whole mesh
+int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rotation) {
+  btTriangleMesh *mesh = new btTriangleMesh();
+  for (auto triangle = triangles.begin(); triangle != triangles.end(); ++triangle) {
+    mesh->addTriangle(btVector3((*triangle)->p1->x, (*triangle)->p1->y, (*triangle)->p1->z),
+      btVector3((*triangle)->p2->x, (*triangle)->p2->y, (*triangle)->p2->z),
+      btVector3((*triangle)->p3->x, (*triangle)->p3->y, (*triangle)->p3->z));
+  }
+  btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+
+  collision_shapes.push_back(shape);
+
+  btTransform transform;
+  transform.setIdentity();
+  transform.setOrigin(btVector3(position->x, position->y, position->z));
+
+  // btQuaternion rotation_quaternion;
+  // rotation_quaternion.setEuler(0, 0, rotation);
+  // transform.setRotation(rotation_quaternion);
+
+  return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
+}
+
 // Add a wicket object to the physics system. This involves adding two poles.
 // Currently, for simplicity I just return the identity of the second pole.
 int Physics::addWicket(Point* pole_1_position, Point* pole_2_position, float height) {

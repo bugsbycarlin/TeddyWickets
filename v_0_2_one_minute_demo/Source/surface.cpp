@@ -32,19 +32,12 @@ void Surface::render() {
   textures->setTexture("tiles");
 
   if (use_grey) {
-    glColor4f(color_r, color_g, color_b, 1.0f);
+    graphics->color(color_r, color_g, color_b, 1.0f);
   } else {
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
   }
 
-  GLfloat material_ambient[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat material_diffuse[] = {0.5, 0.5, 0.5, 1.0};
-  GLfloat material_specular[] = {1.0, 1.0, 1.0, 1.0};
-  GLfloat shininess[] = {5.0};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, material_ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+  graphics->matteMaterial();
 
   float data[32] = {
     0, 0, normal->x, normal->y, normal->z, p1->x, p1->y, p1->z,
