@@ -197,6 +197,7 @@ Model::Model(Textures* textures, std::string model_file_name) {
 
 std::list<Triangle*> Model::getMeshAsTriangles() {
   std::list<Triangle*> mesh = {};
+  int counter = 0;
   for (auto component = component_names.begin(); component != component_names.end(); ++component) {
     std::string component_name = component->c_str();
     std::list<std::map<int, int>> current_faces = faces[component_name];
@@ -213,20 +214,24 @@ std::list<Triangle*> Model::getMeshAsTriangles() {
         num_edges = 3;
       }
 
+      counter += 1;
       mesh.push_back(new Triangle(
         current_vertices[face->operator[](1)],
         current_vertices[face->operator[](4)],
         current_vertices[face->operator[](7)])
       );
       if (num_edges == 4) {
+        counter += 1;
         mesh.push_back(new Triangle(
-          current_vertices[face->operator[](1)],
           current_vertices[face->operator[](7)],
-          current_vertices[face->operator[](10)])
+          current_vertices[face->operator[](10)],
+          current_vertices[face->operator[](1)])
         );
       }
     }
   }
+
+  printf("Mesh loading: Counted %d triangles. Final mesh has %d triangles\n", counter, mesh.size());
 
   return mesh;
 }
@@ -237,7 +242,7 @@ void Model::render() {
 
   if (cache_id == -1) {
     cache_id = graphics->cacheProgram();
-    graphics->startCelShading();
+    //graphics->startCelShading();
     bool fill_model = true;
     if (fill_model) {
       for (auto component = component_names.begin(); component != component_names.end(); ++component) {

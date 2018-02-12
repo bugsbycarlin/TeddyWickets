@@ -260,11 +260,11 @@ void Game::handleKeys(SDL_Event e) {
 
   if (game_mode == k_prep_mode) {
     if (e.key.keysym.sym == SDLK_a) {
-      character->setShotRotation(character->shot_rotation + M_PI / 20, true);
+      character->setShotRotation(character->shot_rotation + M_PI / 50, true);
     }
 
     if (e.key.keysym.sym == SDLK_d) {
-      character->setShotRotation(character->shot_rotation - M_PI / 20, true);
+      character->setShotRotation(character->shot_rotation - M_PI / 50, true);
     }
 
     if (e.key.keysym.sym == SDLK_w) {
@@ -493,23 +493,23 @@ bool Game::initializeGamePieces() {
 
   // first test wicket
   wickets.push_front(new Wicket(physics, textures,
-    new Point(1.5, 6, 0), 0));
+    new Point(0, 0, 0), 0));
 
-  // second test wicket
-  wickets.push_front(new Wicket(physics, textures,
-    new Point(21, 1.5, -4), 0));
+  // // second test wicket
+  // wickets.push_front(new Wicket(physics, textures,
+  //   new Point(21, 1.5, -4), 0));
 
-  // third test wicket
-  wickets.push_front(new Wicket(physics, textures,
-    new Point(54, 1.5, -8), 0));
+  // // third test wicket
+  // wickets.push_front(new Wicket(physics, textures,
+  //   new Point(54, 1.5, -8), 0));
 
-  // fourth test wicket
-  wickets.push_front(new Wicket(physics, textures,
-    new Point(49.5, 9, -8), 0));
+  // // fourth test wicket
+  // wickets.push_front(new Wicket(physics, textures,
+  //   new Point(49.5, 9, -8), 0));
 
-  // fifth test wicket
-  wickets.push_front(new Wicket(physics, textures,
-    new Point(45, -46.5, 0), 0));
+  // // fifth test wicket
+  // wickets.push_front(new Wicket(physics, textures,
+  //   new Point(45, -46.5, 0), 0));
 
   // surfaces segment 1 (slide down)
   int height_array[] = {0, 0, 0, -2, -4, -4, -4, -6, -8};
