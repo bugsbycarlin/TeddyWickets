@@ -34,7 +34,7 @@
 #include "surface.h"
 #include "textbox.h"
 #include "textures.h"
-#include "wicket.h"
+#include "hazard.h"
 
 class Game: public Screen {
  public:
@@ -43,7 +43,7 @@ class Game: public Screen {
   // Game logic
   std::list<Surface*> surfaces = { };
   std::list<Bumper*> bumpers = { };
-  std::list<Wicket*> wickets = { };
+  std::list<Hazard*> hazards = { };
 
   Physics* physics;
   Textures* textures;

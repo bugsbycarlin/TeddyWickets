@@ -361,9 +361,9 @@ void Game::render() {
     (*bumper)->render();
   }
 
-  // render wickets
-  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
-    (*wicket)->render();
+  // render hazards
+  for (auto hazard = hazards.begin(); hazard != hazards.end(); ++hazard) {
+    (*hazard)->render();
   }
 
   // render the character
@@ -491,25 +491,25 @@ bool Game::initializeGamePieces() {
   character = new Character(physics, textures, new Point(0, 0, k_character_drop_height));
   physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
 
-  // first test wicket
-  wickets.push_front(new Wicket(physics, textures,
-    new Point(0, 0, 0), 0));
+  // Ramp
+  hazards.push_front(new Hazard("ramp", physics, textures,
+    new Point(4, 0, 0), -M_PI / 2.0));
 
-  // // second test wicket
-  // wickets.push_front(new Wicket(physics, textures,
-  //   new Point(21, 1.5, -4), 0));
+  // test wicket
+  hazards.push_front(new Hazard("wicket", physics, textures,
+    new Point(21, 1.5, -4), 0));
 
-  // // third test wicket
-  // wickets.push_front(new Wicket(physics, textures,
-  //   new Point(54, 1.5, -8), 0));
+  // test wicket
+  hazards.push_front(new Hazard("wicket", physics, textures,
+    new Point(54, 1.5, -8), 0));
 
-  // // fourth test wicket
-  // wickets.push_front(new Wicket(physics, textures,
-  //   new Point(49.5, 9, -8), 0));
+  // test wicket
+  hazards.push_front(new Hazard("wicket", physics, textures,
+    new Point(49.5, 9, -8), M_PI / 2.0));
 
-  // // fifth test wicket
-  // wickets.push_front(new Wicket(physics, textures,
-  //   new Point(45, -46.5, 0), 0));
+  // test wicket
+  hazards.push_front(new Hazard("wicket", physics, textures,
+    new Point(45, -46.5, 0), 0));
 
   // surfaces segment 1 (slide down)
   int height_array[] = {0, 0, 0, -2, -4, -4, -4, -6, -8};
@@ -750,7 +750,7 @@ bool Game::initializeTextures() {
   textures->addTexture("m_prep_info", "M_Key_Prep_Your_Shot.png");
   textures->addTexture("m_shot_info", "M_Again_Set_Power_And_Take_Shot.png");
 
-  textures->addTexture("wicket", "barber_pole.png");
+  //textures->addTexture("wicket", "barber_pole.png");
 
   //////
 

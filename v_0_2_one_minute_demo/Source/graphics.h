@@ -9,12 +9,15 @@
 #ifndef TEDDY_WICKETS_graphics_H_
 #define TEDDY_WICKETS_graphics_H_
 
+#define GL3_PROTOTYPES 1
+
 // Various forms of OpenGL
 // #include <SDL2/SDL_opengl.h>
 // #include <OpenGL/gl3.h>
 #include <OpenGL/gl.h>
-#include <OpenGL/GLU.h>
+// #include <OpenGL/GLU.h>
 
+#include <math.h>
 #include <stdio.h>
 #include <cstdlib>
 #include <fstream>
@@ -30,8 +33,6 @@ class Graphics {
 
   int cel_shader_program;
   int next_display_list_index;
-
-  GLUquadric* ball;
 
   void drawRectangle(float x, float y, float w, float h);
 
@@ -84,6 +85,9 @@ class Graphics {
   int cacheProgram();
   void endCacheProgram();
   void runCacheProgram(int id);
+
+  void crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3]);
+  void lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);
 };
 
 extern Graphics* graphics;

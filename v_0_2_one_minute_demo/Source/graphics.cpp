@@ -12,9 +12,9 @@ Graphics* graphics = new Graphics();
 Graphics::Graphics() {
   this->next_display_list_index = 1;
 
-  ball = gluNewQuadric();
-  gluQuadricTexture(ball, GL_TRUE);
-  gluQuadricNormals(ball, GLU_SMOOTH);
+  // ball = gluNewQuadric();
+  // gluQuadricTexture(ball, GL_TRUE);
+  // gluQuadricNormals(ball, GLU_SMOOTH);
 }
 
 // This method draws a rectangle
@@ -117,7 +117,7 @@ void Graphics::initializeBasic() {
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {
-    printf("Error initializing GL config! %s\n", gluErrorString(error));
+    printf("Error initializing GL config! %d\n", error);
     exit(1);
   }
 
@@ -133,8 +133,8 @@ void Graphics::initializeOpenGLVersion() {
   // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
   // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
-  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+  // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
   // SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
   // SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
@@ -176,9 +176,9 @@ void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float targe
   // For fun, change the z-value to change the viewing angle of the game.
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(cam_x, cam_y, cam_z,
-            target_x, target_y, target_z,
-            0, 0, 1);  
+  lookAt(cam_x, cam_y, cam_z,
+    target_x, target_y, target_z,
+    0, 0, 1);  
 }
 
 void Graphics::standardLightPosition() {
@@ -251,7 +251,7 @@ void Graphics::initializeLighting() {
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {
-    printf("Error initializing lighting! %s\n", gluErrorString(error));
+    printf("Error initializing lighting! %d\n", error);
     exit(1);
   }
 }
@@ -436,7 +436,7 @@ void Graphics::lineStrip(std::vector<float> line_data) {
 }
 
 void Graphics::sphere(float radius) {
-  gluSphere(ball, radius, 10, 10);
+  // TODO: reimplement if necessary
 }
 
 void Graphics::color(float r, float g, float b, float a) {
@@ -481,4 +481,58 @@ void Graphics::endCacheProgram() {
 
 void Graphics::runCacheProgram(int id) {
   glCallList(id);
+}
+
+// https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
+void Graphics::crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3])
+{
+  res[0] = y1*z2 - y2*z1;
+  res[1] = x2*z1 - x1*z2;
+  res[2] = x1*y2 - x2*y1;
+}
+
+//https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
+void Graphics::lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
+{
+  float f[3];
+
+  // calculating the viewing vector
+  f[0] = lookAtX - eyeX;
+  f[1] = lookAtY - eyeY;
+  f[2] = lookAtZ - eyeZ;
+
+  float fMag = sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2]);
+  float upMag = sqrt(upX*upX + upY*upY + upZ*upZ);
+
+  // normalizing the viewing vector
+  if( fMag != 0)
+  {
+    f[0] = f[0]/fMag;
+    f[1] = f[1]/fMag;
+    f[2] = f[2]/fMag;
+  }
+
+  // normalising the up vector
+  if( upMag != 0 )
+  {
+    upX = upX/upMag;
+    upY = upY/upMag;
+    upZ = upZ/upMag;
+  }
+
+  float s[3], u[3];
+
+  crossProduct(f[0], f[1], f[2], upX, upY, upZ, s);
+  crossProduct(s[0], s[1], s[2], f[0], f[1], f[2], u);
+
+  float M[]=
+  {
+    s[0], u[0], -f[0], 0,
+    s[1], u[1], -f[1], 0,
+    s[2], u[2], -f[2], 0,
+    0, 0, 0, 1
+  };
+
+  glMultMatrixf(M);
+  glTranslatef(-eyeX, -eyeY, -eyeZ); 
 }

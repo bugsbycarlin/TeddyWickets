@@ -17,7 +17,7 @@ TeddyWickets:
 		./Source/character.cpp \
 		./Source/model.cpp \
 		./Source/bumper.cpp \
-		./Source/wicket.cpp \
+		./Source/hazard.cpp \
 		./Source/textures.cpp \
 		./Source/textbox.cpp \
 		./Source/triangle.cpp \

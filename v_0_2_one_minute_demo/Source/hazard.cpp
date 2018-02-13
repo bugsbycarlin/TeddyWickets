@@ -5,29 +5,29 @@
 
 */
 
-#include "wicket.h"
+#include "hazard.h"
 
-Wicket::Wicket(Physics* physics, Textures* textures, Point* position, float rotation) {
+Hazard::Hazard(std::string object_type, Physics* physics, Textures* textures, Point* position, float rotation) {
   this->position = position;
   this->rotation = rotation;
 
   this->physics = physics;
   this->textures = textures;
 
-  this->model = new Model(textures, "wicket.obj");
+  this->object_type = object_type;
+
+  this->model = new Model(textures, object_type + ".obj");
 
   this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, rotation);
 }
 
-void Wicket::render() {
-  textures->setTexture("wicket");
-
+void Hazard::render() {
   graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
 
   graphics->pushMatrix();
   graphics->translate(position->x, position->y, position->z);
   graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
-  graphics->rotate(rotation * 180.0 / M_PI, 0, 0, 1);
+  graphics->rotate(-rotation * 180.0 / M_PI, 0, 0, 1);
   model->render();
   graphics->popMatrix();
 }
