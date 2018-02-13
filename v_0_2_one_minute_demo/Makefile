@@ -57,4 +57,20 @@ ModelViewer:
 		./Libraries/libLinearMath_gmake_x64_release.a \
 		-I Source/fmod_src \
 		./Libraries/libfmod.dylib \
-		-rpath ./Libraries	
+		-rpath ./Libraries
+
+GLTest:
+	  g++ -w \
+		./Source/gl_test_main.cpp \
+		-std=c++11 \
+		-o GLTest \
+		-framework OpenGL \
+		-framework SDL2 \
+		-framework SDL2_image \
+		-I Source/bullet_src \
+		./Libraries/libBulletCollision_gmake_x64_release.a \
+		./Libraries/libBulletDynamics_gmake_x64_release.a \
+		./Libraries/libLinearMath_gmake_x64_release.a \
+		-I Source/fmod_src \
+		./Libraries/libfmod.dylib \
+		-rpath ./Libraries
