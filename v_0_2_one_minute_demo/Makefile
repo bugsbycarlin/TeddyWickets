@@ -1,5 +1,6 @@
 .PHONY: TeddyWickets
 .PHONY: ModelViewer
+.PHONY: GLTest
 
 TeddyWickets:
 		g++ -w \
@@ -27,6 +28,7 @@ TeddyWickets:
 		-framework SDL2 \
 		-framework SDL2_image \
 		-framework SDL2_ttf \
+		-I Source/glm \
 		-I Source/bullet_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \
@@ -51,6 +53,7 @@ ModelViewer:
 		-framework OpenGL \
 		-framework SDL2 \
 		-framework SDL2_image \
+		-I Source/glm \
 		-I Source/bullet_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \
@@ -67,6 +70,7 @@ GLTest:
 		-framework OpenGL \
 		-framework SDL2 \
 		-framework SDL2_image \
+		-I Source/glm \
 		-I Source/bullet_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \

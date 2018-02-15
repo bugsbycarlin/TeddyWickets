@@ -13,8 +13,8 @@
 
 // Various forms of OpenGL
 // #include <SDL2/SDL_opengl.h>
-#include <OpenGL/gl3.h>
-// #include <OpenGL/gl.h>
+// #include <OpenGL/gl3.h>
+#include <OpenGL/gl.h>
 
 // DO NOT
 // #include <OpenGL/GLU.h>
