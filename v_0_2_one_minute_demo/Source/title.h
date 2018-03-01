@@ -36,7 +36,7 @@ class Title: public Screen {
   int selection;
   int mode;
 
-  TextBox* bugsby_presents;
+  TextBox* friends_on_mountains_presents;
 
   TextBox* title;
 

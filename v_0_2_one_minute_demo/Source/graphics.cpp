@@ -91,25 +91,13 @@ void Graphics::end2DDraw() {
 // The fade functions contain extremely useful and generic code
 // to fade the screen to and from black based on time inputs.
 void Graphics::fadeInOut(float start, float finish, float timeDiff) {
-  // glPushAttrib(GL_ALL_ATTRIB_BITS);
   glDisable(GL_CULL_FACE);
   glEnable(GL_BLEND);
-  //glDisable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   float alpha = 1.0f - sin((timeDiff - start) * M_PI / (finish - start));
-  //alpha = 1.0f;
-  printf("alpha %f\n", alpha);
-  // glDisable(GL_TEXTURE_2D);
   setTexture(black_texture_id);
   color(1.0f, 1.0f, 1.0f, alpha);
   drawRectangle(0, 0, k_screen_width, k_screen_height);
-  // glBegin(GL_QUADS);
-  // glVertex3f(0, k_screen_height, 0);
-  // glVertex3f(k_screen_width, k_screen_height, 0);
-  // glVertex3f(k_screen_width, 0, 0);
-  // glVertex3f(0, 0, 0);
-  // glEnd();
-  // glPopAttrib();
 }
 
 void Graphics::fadeIn(float start, float finish, float timeDiff) {
@@ -125,22 +113,12 @@ void Graphics::fadeOut(float start, float finish, float timeDiff) {
 }
 
 void Graphics::blackout() {
+  glDisable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   setTexture(black_texture_id);
-  // glPushAttrib(GL_ALL_ATTRIB_BITS);
-  // glDisable(GL_CULL_FACE);
-  // glEnable(GL_BLEND);
-  // glDisable(GL_DEPTH_TEST);
-  // glDisable(GL_TEXTURE_2D);
-  // glColor4f(0, 0, 0, 1);
   color(0.0f, 0.0f, 0.0f, 1.0f);
   drawRectangle(0, 0, k_screen_width, k_screen_height);
-  // glBegin(GL_QUADS);
-  // glVertex3f(0, k_screen_height, 0);
-  // glVertex3f(k_screen_width, k_screen_height, 0);
-  // glVertex3f(k_screen_width, 0, 0);
-  // glVertex3f(0, 0, 0);
-  // glEnd();
-  // glPopAttrib();
 }
 
 void Graphics::initialize() {
@@ -160,8 +138,6 @@ void Graphics::initializeBasic() {
   // glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  // glEnable(GL_TEXTURE_2D);
 
   // Simple viewport.
   glViewport(0, 0, k_screen_width, k_screen_height);
@@ -229,6 +205,8 @@ void Graphics::initializeBuffersAndGeometry() {
   glGenBuffers(1, &rectangle_texture_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(g_texture_buffer_data), g_texture_buffer_data, GL_STATIC_DRAW);
+
+  model = glm::mat4(1.0);
 }
 
 void Graphics::initializeOpenGLVersion() {
@@ -247,19 +225,19 @@ void Graphics::clearScreen() {
 }
 
 void Graphics::set3d(float zoom) {
-  // glMatrixMode(GL_PROJECTION);
-  // glLoadIdentity();
-
   // // Set one of these perspectives:
 
-  // // 1. this is cool, super zoomed out
-  // // glOrtho(-50, 50, -50, 50, -50, 50);
+  // 1. this is cool, super zoomed out
+  // ortho(-50, 50, -50, 50, -50, 50);
 
-  // // 2. weirdly reasonable ortho
-  // glOrtho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
+  // 2. weirdly reasonable ortho
+  // ortho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
 
-  // // 3. normal perspective
-  // // gluPerspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+  // 3. normal perspective
+  // perspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+
+  projection = glm::ortho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
+  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z) {
@@ -269,7 +247,10 @@ void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float targe
   // glLoadIdentity();
   // lookAt(cam_x, cam_y, cam_z,
   //   target_x, target_y, target_z,
-  //   0, 0, 1);  
+  //   0, 0, 1);
+  view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z),
+    glm::vec3(target_x, target_y, target_z),
+    glm::vec3(0, 0, 1));
 }
 
 void Graphics::standardLightPosition() {

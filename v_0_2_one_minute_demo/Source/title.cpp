@@ -94,7 +94,7 @@ void Title::render() {
   graphics->start2DDraw();
 
   if (mode == k_title_presents_mode) {
-    bugsby_presents->render();
+    friends_on_mountains_presents->render();
     graphics->fadeIn(0.0f, 2.0f, ((last_time - start_time) / 1000.0f));
     graphics->fadeOut(3.0f, 4.0f, ((last_time - start_time) / 1000.0f) - 3.0f);
   } else if (mode == k_title_title_mode) {
@@ -132,20 +132,18 @@ void Title::render() {
 bool Title::initialize() {
   graphics->initialize();
 
-  textures->addTexture("title_screen", "title_screen_draft_5.png");
+  textures->addTexture("title_screen", "title_screen_draft_6.png");
 
-  textures->addTexture("plain", "plain.png");
-
-  bugsby_presents = new TextBox("cartoon_blocks.ttf", 90, "Bugsby Presents", 255, 255, 255, 780, 770);
+  friends_on_mountains_presents = new TextBox("cartoon_blocks.ttf", 70, "Friends on Mountains Presents", 255, 255, 255, 460, 770);
 
   title = new TextBox("cartoon_blocks.ttf", 180, "Teddy Wickets", 53, 62, 89, 200, 100);
 
-  one_player_selected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 53, 62, 89, 800, 450);
-  one_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 206, 206, 206, 800, 450);
-  two_player_selected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 53, 62, 89, 800, 550);
-  two_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 206, 206, 206, 800, 550);
-  control_setup_selected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 53, 62, 89, 800, 650);
-  control_setup_unselected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 206, 206, 206, 800, 650);
+  one_player_selected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 53, 62, 89, 760, 450);
+  one_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "1P Tutorial", 206, 206, 206, 760, 450);
+  two_player_selected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 53, 62, 89, 760, 550);
+  two_player_unselected = new TextBox("cartoon_blocks.ttf", 90, "2P Game", 206, 206, 206, 760, 550);
+  control_setup_selected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 53, 62, 89, 760, 650);
+  control_setup_unselected = new TextBox("cartoon_blocks.ttf", 90, "Controls", 206, 206, 206, 760, 650);
 
   start_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   last_time = start_time;

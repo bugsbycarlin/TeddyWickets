@@ -59,6 +59,8 @@ class Graphics {
   GLuint texture_sampler_id;
 
   glm::mat4 projection;
+  glm::mat4 view;
+  glm::mat4 model;
   glm::vec4 global_color_vector;
 
   void drawRectangle(float x, float y, float w, float h);
