@@ -11,13 +11,21 @@
 
 #define GL3_PROTOTYPES 1
 
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
+
 // Various forms of OpenGL
 // #include <SDL2/SDL_opengl.h>
 // #include <OpenGL/gl3.h>
-#include <OpenGL/gl.h>
+#include <OpenGL/gl3.h>
 
 // DO NOT
 // #include <OpenGL/GLU.h>
+
+#include "glm/glm.hpp"
+#include "glm/gtx/transform.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include <math.h>
 #include <stdio.h>
@@ -34,7 +42,24 @@ class Graphics {
   Graphics();
 
   int cel_shader_program;
+  int normal_shader_program;
+  int current_program;
   int next_display_list_index;
+
+  int* white_texture_id;
+  int* black_texture_id;
+
+  GLuint rectangle_vertex_buffer;
+  GLuint rectangle_color_buffer;
+  GLuint rectangle_texture_buffer;
+
+  GLuint vertex_array_id;
+  GLuint matrix_id;
+  GLuint global_color_id;
+  GLuint texture_sampler_id;
+
+  glm::mat4 projection;
+  glm::vec4 global_color_vector;
 
   void drawRectangle(float x, float y, float w, float h);
 
@@ -46,11 +71,16 @@ class Graphics {
   void fadeOut(float start, float finish, float timeDiff);
   void blackout();
 
+  void initialize();
   void initializeBasic();
-  void initializeLighting();
+  void initializeShadersAndLighting();
+  void initializeBuffersAndGeometry();
+  
   void initializeCelShading();
   void startCelShading();
-  void stopCelShading();
+  void initializeNormalShading();
+  void startNormalShading();
+  void clearShading();
 
   void initializeOpenGLVersion();
 

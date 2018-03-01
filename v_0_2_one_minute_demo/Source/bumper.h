@@ -22,7 +22,6 @@ class Bumper {
     Point* extrusion;
 
     Physics* physics;
-    Textures* textures;
 
     int identity;
 
@@ -30,7 +29,7 @@ class Bumper {
 
     bool use_grey;
 
-    Bumper(Physics* physics, Textures* textures, Point* start, Point* end, Point* extrusion);
+    Bumper(Physics* physics, Point* start, Point* end, Point* extrusion);
 
     void bump();
 

@@ -7,9 +7,7 @@
 
 #include "model.h"
 
-Model::Model(Textures* textures, std::string model_file_name) {
-  this->textures = textures;
-
+Model::Model(std::string model_file_name) {
   std::string line;
   std::smatch match;
 
@@ -286,7 +284,8 @@ void Model::render() {
       }
     }
 
-    graphics->stopCelShading();
+    //graphics->stopCelShading();
+    graphics->startNormalShading();
 
     // bool use_this = true;
     // if (outline && use_this) {

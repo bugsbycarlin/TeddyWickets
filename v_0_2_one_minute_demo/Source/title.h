@@ -36,8 +36,6 @@ class Title: public Screen {
   int selection;
   int mode;
 
-  Textures* textures;
-
   TextBox* bugsby_presents;
 
   TextBox* title;

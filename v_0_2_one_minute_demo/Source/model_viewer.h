@@ -33,7 +33,6 @@
 
 class ModelViewer: public Screen {
  public:
-  Textures* textures;
 
   float rotation;
 

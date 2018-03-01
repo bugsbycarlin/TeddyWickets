@@ -33,8 +33,6 @@
 
 class Model {
  public:
-    Textures* textures;
-
     std::list<std::string> component_names;
     std::map<std::string, std::map<int, Point*>> vertices;
     std::map<std::string, std::map<int, Point*>> texture_coords;
@@ -50,7 +48,7 @@ class Model {
 
     int cache_id;
 
-    Model(Textures* textures, std::string model_file_name);
+    Model(std::string model_file_name);
 
     void render();
 

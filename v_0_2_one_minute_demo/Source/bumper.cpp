@@ -7,7 +7,7 @@
 
 #include "bumper.h"
 
-Bumper::Bumper(Physics* physics, Textures* textures, Point* start, Point* end, Point* extrusion) {
+Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrusion) {
   this->start = start;
   this->end = end;
   this->extrusion = extrusion;
@@ -15,7 +15,6 @@ Bumper::Bumper(Physics* physics, Textures* textures, Point* start, Point* end, P
   last_bumped = 0;
 
   this->physics = physics;
-  this->textures = textures;
 
   identity = physics->addBumper(start, end, extrusion);
 }

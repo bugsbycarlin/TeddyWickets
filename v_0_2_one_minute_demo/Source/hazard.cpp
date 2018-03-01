@@ -7,16 +7,15 @@
 
 #include "hazard.h"
 
-Hazard::Hazard(std::string object_type, Physics* physics, Textures* textures, Point* position, float rotation) {
+Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float rotation) {
   this->position = position;
   this->rotation = rotation;
 
   this->physics = physics;
-  this->textures = textures;
 
   this->object_type = object_type;
 
-  this->model = new Model(textures, object_type + ".obj");
+  this->model = new Model(object_type + ".obj");
 
   this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, rotation);
 }

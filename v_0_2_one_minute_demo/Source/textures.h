@@ -32,4 +32,6 @@ class Textures {
   void setTexture(std::string texture_name);
 };
 
+extern Textures* textures;
+
 #endif

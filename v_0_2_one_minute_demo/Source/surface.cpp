@@ -7,7 +7,7 @@
 
 #include "surface.h"
 
-Surface::Surface(Physics* physics, Textures* textures, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4) {
+Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4) {
   this->p1 = p1;
   this->p2 = p2;
   this->p3 = p3;
@@ -21,7 +21,6 @@ Surface::Surface(Physics* physics, Textures* textures, bool use_grey, Point* p1,
   this->use_grey = use_grey;
 
   this->physics = physics;
-  this->textures = textures;
 
   this->normal = physics->normalVectorRelative(p1, p3, p4);
 

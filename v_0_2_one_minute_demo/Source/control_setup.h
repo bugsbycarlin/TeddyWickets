@@ -33,8 +33,6 @@ class ControlSetup: public Screen {
  public:
   int mode;
 
-  Textures* textures;
-
   TextBox* view_mode_instruction;
   TextBox* configure_mode_instruction;
   TextBox* return_to_title_instruction;

@@ -122,20 +122,16 @@ void ModelViewer::render() {
 bool ModelViewer::initialize() {
   graphics->initializeBasic();
 
-  textures = new Textures();
-
   textures->addTexture("bear_face", "bear_test2.png");
   textures->addTexture("plain", "plain.png");
   textures->addTexture("barber", "barber_pole.png");
 
-  //model = new Model(textures, "teddy_bear_draft_2.obj");
-  model = new Model(textures, "wicket.obj");
+  //model = new Model("teddy_bear_draft_2.obj");
+  model = new Model("wicket.obj");
 
   return true;
 }
 
 void ModelViewer::shutdown() {
-  // To do: release the image files.
-  delete textures;
 }
 

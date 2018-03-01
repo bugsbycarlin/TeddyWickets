@@ -130,11 +130,11 @@ void Title::render() {
 }
 
 bool Title::initialize() {
-  graphics->initializeBasic();
-
-  textures = new Textures();
+  graphics->initialize();
 
   textures->addTexture("title_screen", "title_screen_draft_5.png");
+
+  textures->addTexture("plain", "plain.png");
 
   bugsby_presents = new TextBox("cartoon_blocks.ttf", 90, "Bugsby Presents", 255, 255, 255, 780, 770);
 
@@ -154,8 +154,6 @@ bool Title::initialize() {
 }
 
 void Title::shutdown() {
-  delete textures;
-
   title->shutdown();
 
   one_player_selected->shutdown();

@@ -30,7 +30,7 @@ Game::Game() {
     {8, 1}
   };
 
-  bool choose = false;
+  bool choose = true;
 
   if (choose) {
     // choose bears
@@ -439,6 +439,11 @@ void Game::renderBearSelectMode() {
     bear_name_text->render();
     bear_description_text->render();
 
+    // textures->setTexture("bear_selection_box");
+    // float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
+    // float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
+    // graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+
     for (int i = 0; i < bear_choices.size(); i++) {
       textures->setTexture(bear_choices[i] + "_box");
       float m = k_bear_choice_x + k_bear_choice_margin * (i % 3);
@@ -488,34 +493,34 @@ void Game::renderBearSelectMode() {
 
 // This huge method puts all the crap on the game board.
 bool Game::initializeGamePieces() {
-  character = new Character(physics, textures, new Point(0, 0, k_character_drop_height));
+  character = new Character(physics, new Point(0, 0, k_character_drop_height));
   physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
 
   // Ramp
-  hazards.push_front(new Hazard("ramp", physics, textures,
+  hazards.push_front(new Hazard("ramp", physics,
     new Point(4, 0, 0), -M_PI / 2.0));
 
   // test wicket
-  hazards.push_front(new Hazard("wicket", physics, textures,
+  hazards.push_front(new Hazard("wicket", physics,
     new Point(21, 1.5, -4), 0));
 
   // test wicket
-  hazards.push_front(new Hazard("wicket", physics, textures,
+  hazards.push_front(new Hazard("wicket", physics,
     new Point(54, 1.5, -8), 0));
 
   // test wicket
-  hazards.push_front(new Hazard("wicket", physics, textures,
+  hazards.push_front(new Hazard("wicket", physics,
     new Point(49.5, 9, -8), M_PI / 2.0));
 
   // test wicket
-  hazards.push_front(new Hazard("wicket", physics, textures,
+  hazards.push_front(new Hazard("wicket", physics,
     new Point(45, -46.5, 0), 0));
 
   // surfaces segment 1 (slide down)
   int height_array[] = {0, 0, 0, -2, -4, -4, -4, -6, -8};
   for (int k = 0; k < 8; k++) {
     for (int y = 0; y < 3; y++) {
-      surfaces.push_front(new Surface(physics, textures,
+      surfaces.push_front(new Surface(physics,
         false,
         new Point(0 + 6 * k, 0 + 6 * y, height_array[k+1]),
         new Point(-6 + 6 * k, 0 + 6 * y, height_array[k]),
@@ -525,35 +530,35 @@ bool Game::initializeGamePieces() {
   }
 
   // bumper segment 1
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(-6, 12, 0),
     new Point(6, 12, 0),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(6, 12, 0),
     new Point(18, 12, -4),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(18, 12, -4),
     new Point(30, 12, -4),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(30, 12, -4),
     new Point(42, 12, -8),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(-6, -6, 0),
     new Point(6, -6, 0),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(6, -6, 0),
     new Point(18, -6, -4),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(18, -6, -4),
     new Point(30, -6, -4),
     new Point(0, k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(30, -6, -4),
     new Point(42, -6, -8),
     new Point(0, k_bumper_width, 0)));
@@ -563,7 +568,7 @@ bool Game::initializeGamePieces() {
   int last_y = 25 + rand() % static_cast<int>(25 + 1);
   for (int k = 0; k < 8; k++) {
     int new_y = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics, textures,
+    surfaces.push_front(new Surface(physics,
       true,
       new Point(0 + 6 * k, 0 + (6 * 2) + new_y, height_array[k+1] - 70),
       new Point(-6 + 6 * k - first_x, 0 + (6 * 2) + last_y, height_array[k] - 70),
@@ -576,7 +581,7 @@ bool Game::initializeGamePieces() {
   // surfaces segment 2 (corner)
   for (int x = 0; x < 3; x++) {
     for (int y = 0; y < 3; y++) {
-      surfaces.push_front(new Surface(physics, textures,
+      surfaces.push_front(new Surface(physics,
         false,
         new Point(48 + 6 * x, 0 + 6 * y, -8),
         new Point(42 + 6 * x, 0 + 6 * y, -8),
@@ -586,11 +591,11 @@ bool Game::initializeGamePieces() {
   }
 
   // bumper segment 2 (corner)
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(60, 12, -8),
     new Point(42, 12, -8),
     new Point(0, -k_bumper_width, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(60, 12, -8),
     new Point(60, -6, -8),
     new Point(-k_bumper_width, 0.0, 0)));
@@ -598,7 +603,7 @@ bool Game::initializeGamePieces() {
   // mountain segment 2
   for (int k = 0; k < 3; k++) {
     int new_y = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics, textures,
+    surfaces.push_front(new Surface(physics,
       true,
       new Point(48 + 6 * k, 0 + (6 * 2) + new_y, -8 - 70),
       new Point(42 + 6 * k, 0 + (6 * 2) + last_y, -8 - 70),
@@ -609,7 +614,7 @@ bool Game::initializeGamePieces() {
 
   // mountain corner
   int last_x = 25 + rand() % static_cast<int>(25 + 1);
-  surfaces.push_front(new Surface(physics, textures,
+  surfaces.push_front(new Surface(physics,
     true,
     new Point(60 + last_x, 0 + (6 * 2) + last_y, -8 - 70),
     new Point(60, 0 + (6 * 2) + last_y, -8 - 70),
@@ -619,7 +624,7 @@ bool Game::initializeGamePieces() {
   // mountain segment 3
   for (int k = 0; k < 3; k++) {
     int new_x = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics, textures,
+    surfaces.push_front(new Surface(physics,
       true,
       new Point(48 + 6 * 2 + new_x, 6 - 6 * k, -8 - 70),
       new Point(48 + 6 * 2 + last_x, 12 - 6 * k + last_y, -8 - 70),
@@ -633,7 +638,7 @@ bool Game::initializeGamePieces() {
   int height_array2[] = {-8, -6, -4, -4, -4, -2, 0, 0, 0};
   for (int k = 0; k < 8; k++) {
     for (int x = 0; x < 3; x++) {
-      surfaces.push_front(new Surface(physics, textures,
+      surfaces.push_front(new Surface(physics,
         false,
         new Point(48 + 6 * x, -6 - 6 * k, height_array2[k]),
         new Point(42 + 6 * x, -6 - 6 * k, height_array2[k]),
@@ -643,35 +648,35 @@ bool Game::initializeGamePieces() {
   }
 
   // bumper segment 3
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(60, -6, -8),
     new Point(60, -18, -4),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(60, -18, -4),
     new Point(60, -30, -4),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(60, -30, -4),
     new Point(60, -42, 0),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(60, -42, 0),
     new Point(60, -54, 0),
     new Point(-k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(42, -6, -8),
     new Point(42, -18, -4),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(42, -18, -4),
     new Point(42, -30, -4),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(42, -30, -4),
     new Point(42, -42, 0),
     new Point(k_bumper_width, 0.0, 0)));
-  bumpers.push_front(new Bumper(physics, textures,
+  bumpers.push_front(new Bumper(physics,
     new Point(42, -42, 0),
     new Point(42, -54, 0),
     new Point(k_bumper_width, 0.0, 0)));
@@ -679,7 +684,7 @@ bool Game::initializeGamePieces() {
   // mountain segment 4
   for (int k = 0; k < 8; k++) {
     int new_x = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics, textures,
+    surfaces.push_front(new Surface(physics,
       true,
       new Point(48 + 6 * 2 + new_x, -12 - 6 * k, height_array2[k+1] - 70),
       new Point(48 + 6 * 2 + last_x, -6 - 6 * k, height_array2[k] - 70),
@@ -692,14 +697,13 @@ bool Game::initializeGamePieces() {
 }
 
 bool Game::initialize() {
+  graphics->initialize();
+
   // Initialize Textures
   if (!initializeTextures()) {
     printf("Unable to initialize textures!\n");
     return false;
   }
-
-  // Initialize Lighting
-  graphics->initializeLighting();
 
   // Initialize Bullet Physics
   physics = new Physics();
@@ -722,10 +726,6 @@ bool Game::initialize() {
 }
 
 bool Game::initializeTextures() {
-  graphics->initializeBasic();
-
-  textures = new Textures();
-
   textures->addTexture("coordinates", "coordinates.png");
 
   textures->addTexture("tiles", "tiles4.png");
@@ -792,7 +792,4 @@ bool Game::initializeTextures() {
 void Game::shutdown() {
   physics->shutdown();
   delete physics;
-
-  // To do: release the image files.
-  delete textures;
 }

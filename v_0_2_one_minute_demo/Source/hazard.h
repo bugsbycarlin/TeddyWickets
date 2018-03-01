@@ -28,10 +28,9 @@ class Hazard {
     std::string object_type;
 
     Physics* physics;
-    Textures* textures;
     Model* model;
 
-    Hazard(std::string object_type, Physics* physics, Textures* textures, Point* position, float rotation);
+    Hazard(std::string object_type, Physics* physics, Point* position, float rotation);
 
     void render();
 };

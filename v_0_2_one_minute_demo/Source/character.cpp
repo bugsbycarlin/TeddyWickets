@@ -7,13 +7,12 @@
 
 #include "character.h"
 
-Character::Character(Physics* physics, Textures* textures, Point* position) {
+Character::Character(Physics* physics, Point* position) {
   this->position = position;
 
   this->physics = physics;
-  this->textures = textures;
 
-  this->model = new Model(textures, "teddy_bear_draft_2.obj");
+  this->model = new Model("teddy_bear_draft_2.obj");
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;

@@ -7,6 +7,8 @@
 
 #include "textures.h"
 
+Textures* textures = new Textures();
+
 Textures::Textures() {
   texture_map = {};
   texture_root = k_texture_root_path;

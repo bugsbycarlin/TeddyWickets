@@ -46,7 +46,6 @@ class Game: public Screen {
   std::list<Hazard*> hazards = { };
 
   Physics* physics;
-  Textures* textures;
 
   Character* character;
 

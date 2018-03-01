@@ -165,9 +165,7 @@ void ControlSetup::setEmptyTextToMap() {
 }
 
 bool ControlSetup::initialize() {
-  graphics->initializeBasic();
-
-  textures = new Textures();
+  graphics->initialize();
 
   control_map = new ControlMap();
 
@@ -247,6 +245,5 @@ bool ControlSetup::initialize() {
 }
 
 void ControlSetup::shutdown() {
-  delete textures;
 }
 
