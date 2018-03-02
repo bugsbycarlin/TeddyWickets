@@ -55,7 +55,7 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
 
 void TextBox::render() {
   graphics->setTexture(texture);
-  graphics->drawRectangle(x, y, text_surface->w, text_surface->h);
+  graphics->rectangle(x, y, text_surface->w, text_surface->h);
 
   if (countdown > 0) {
     countdown--;

@@ -30,7 +30,7 @@ Game::Game() {
     {8, 1}
   };
 
-  bool choose = true;
+  bool choose = false;
 
   if (choose) {
     // choose bears
@@ -378,39 +378,45 @@ void Game::render() {
   // render shot prep infographic
   if (game_mode == k_prep_mode) {
     textures->setTexture("m_prep_info");
-    graphics->drawRectangle(info_x, info_y, 400, 400);
+    graphics->rectangle(info_x, info_y, 400, 400);
   }
 
   // render power mode
   if (game_mode == k_power_mode) {
     // render power mode infographic
     textures->setTexture("m_shot_info");
-    graphics->drawRectangle(info_x, info_y, 400, 400);
+    graphics->rectangle(info_x, info_y, 400, 400);
 
     // render power gauge outline
     int power_x = 974;
     int power_y = 20;
     textures->setTexture("shot_power_outline");
-    graphics->drawRectangle(power_x, power_y, 30, 150);
+    graphics->rectangle(power_x, power_y, 30, 150);
 
     // render power gauge fill
     float portion = character->shot_power / character->default_shot_power;
     textures->setTexture("shot_power_fill");
     // custom texture scaling for the fill
-    double data[16] = {
-      0.0, 1.0 - 140.0 / 150.0 * portion, power_x + 0.0, power_y + 150 - 140 * portion,
-      0.0, 1.0, power_x + 0.0, power_y + 150.0,
-      1.0, 1.0, power_x + 30.0f, power_y + 150.0,
-      1.0, 1.0 - 140.0 / 150.0 * portion, power_x + 30.0, power_y + 150 - 140 * portion
+    float vertex_data[12] = {
+      power_x + 0.0f, power_y + 150.0f - 140.0f * portion, 0.0f,
+      power_x + 0.0f, power_y + 150.0f, 0.0f,
+      power_x + 30.0f, power_y + 150.0f, 0.0f,
+      power_x + 30.0f, power_y + 150.0f - 140.0f * portion, 0.0f
     };
-    graphics->face2d(data);
+    float texture_data[8] = {
+      0.0f, 1.0f - 140.0f / 150.0f * portion,
+      0.0f, 1.0f,
+      1.0f, 1.0f,
+      1.0f, 1.0f - 140.0f / 150.0f * portion
+    };
+    graphics->rectangleWithTexture(vertex_data, texture_data);
   }
 
   // render coordinates
   int coord_x = 40;
   int coord_y = k_screen_height - 79 - 40;
   textures->setTexture("coordinates");
-  graphics->drawRectangle(coord_x, coord_y, 93, 79);
+  graphics->rectangle(coord_x, coord_y, 93, 79);
 
   graphics->end2DDraw();
 }
@@ -420,7 +426,7 @@ void Game::renderBackground() {
 
   // background render
   textures->setTexture("clouds");
-  graphics->drawRectangle(0, 0, k_screen_width, k_screen_height);
+  graphics->rectangle(0, 0, k_screen_width, k_screen_height);
 
   graphics->end2DDraw();
 }
@@ -442,24 +448,24 @@ void Game::renderBearSelectMode() {
     // textures->setTexture("bear_selection_box");
     // float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
     // float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
-    // graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+    // graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
 
     for (int i = 0; i < bear_choices.size(); i++) {
       textures->setTexture(bear_choices[i] + "_box");
       float m = k_bear_choice_x + k_bear_choice_margin * (i % 3);
       float n = k_bear_choice_y + k_bear_choice_margin * (i / 3);
-      graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+      graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
 
       if (available_bear_choices[i] != 1) {
         textures->setTexture("unavailable_bear_selection_box");
-        graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+        graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
       }
     }
 
     textures->setTexture("bear_selection_box");
     float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
     float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
-    graphics->drawRectangle(m, n, k_selection_box_size, k_selection_box_size);
+    graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
   } else if (game_mode == k_lets_go_mode) {
     go_text->render();
   }
@@ -471,7 +477,7 @@ void Game::renderBearSelectMode() {
       textures->setTexture(player_1_bears[j] + "_box");
     }
     float n = k_bear_choice_y + k_bear_choice_margin * j;
-    graphics->drawRectangle(k_player_1_choices_x, n, k_selection_box_size, k_selection_box_size);
+    graphics->rectangle(k_player_1_choices_x, n, k_selection_box_size, k_selection_box_size);
   }
 
   for (int j = 0; j < 3; j++) {
@@ -481,7 +487,7 @@ void Game::renderBearSelectMode() {
       textures->setTexture(player_2_bears[j] + "_box");
     }
     float n = k_bear_choice_y + k_bear_choice_margin * j;
-    graphics->drawRectangle(k_player_2_choices_x, n, k_selection_box_size, k_selection_box_size);
+    graphics->rectangle(k_player_2_choices_x, n, k_selection_box_size, k_selection_box_size);
   }
 
   if (game_mode == k_lets_go_mode) {

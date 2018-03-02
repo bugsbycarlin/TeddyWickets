@@ -279,7 +279,7 @@ void Model::render() {
             data[8*i+6] = vertex->y;
             data[8*i+7] = vertex->z;
           }
-          graphics->face(num_edges, data);
+          //graphics->face(num_edges, data);
         }
       }
     }

@@ -17,63 +17,6 @@ Graphics::Graphics() {
   // gluQuadricNormals(ball, GLU_SMOOTH);
 }
 
-// This method draws a rectangle
-void Graphics::drawRectangle(float x, float y, float w, float h) {
-
-  GLfloat g_vertex_buffer_data[] = { 
-    x, y, 0.0f,
-    x, y + h, 0.0f,
-    x + w, y + h, 0.0f,
-    x + w, y, 0.0f,
-  };
-
-  glGenBuffers(1, &rectangle_vertex_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-  // 1rst attribute buffer : vertices
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
-  glVertexAttribPointer(
-    0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-    3,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized?
-    0,                  // stride
-    (void*)0            // array buffer offset
-  );
-
-  // 2nd attribute buffer : colors
-  glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_color_buffer);
-  glVertexAttribPointer(
-    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-    4,                                // size
-    GL_FLOAT,                         // type
-    GL_FALSE,                         // normalized?
-    0,                                // stride
-    (void*)0                          // array buffer offset
-  );
-
-  // 3nd attribute buffer : UVs
-  glEnableVertexAttribArray(2);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
-  glVertexAttribPointer(
-    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
-    2,                                // size : U+V => 2
-    GL_FLOAT,                         // type
-    GL_FALSE,                         // normalized?
-    0,                                // stride
-    (void*)0                          // array buffer offset
-  );
-
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-  glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
-  glDisableVertexAttribArray(2);
-}
-
 // This method sets up the screen for a 2D drawing phase
 void Graphics::start2DDraw() {
   glDisable(GL_DEPTH_TEST);
@@ -97,7 +40,7 @@ void Graphics::fadeInOut(float start, float finish, float timeDiff) {
   float alpha = 1.0f - sin((timeDiff - start) * M_PI / (finish - start));
   setTexture(black_texture_id);
   color(1.0f, 1.0f, 1.0f, alpha);
-  drawRectangle(0, 0, k_screen_width, k_screen_height);
+  rectangle(0, 0, k_screen_width, k_screen_height);
 }
 
 void Graphics::fadeIn(float start, float finish, float timeDiff) {
@@ -118,7 +61,7 @@ void Graphics::blackout() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   setTexture(black_texture_id);
   color(0.0f, 0.0f, 0.0f, 1.0f);
-  drawRectangle(0, 0, k_screen_width, k_screen_height);
+  rectangle(0, 0, k_screen_width, k_screen_height);
 }
 
 void Graphics::initialize() {
@@ -186,14 +129,6 @@ void Graphics::initializeBuffersAndGeometry() {
     1.0f, 1.0f, 1.0f, 1.0f,
   };
 
-  // Two UV coordinatesfor each vertex. They were created with Blender.
-  static const GLfloat g_texture_buffer_data[] = { 
-    0.0f, 0.0f,
-    0.0f, 1.0f,
-    1.0f, 1.0f,
-    1.0f, 0.0f
-  };
-
   // glGenBuffers(1, &vertexbuffer);
   // glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
   // glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
@@ -202,9 +137,13 @@ void Graphics::initializeBuffersAndGeometry() {
   glBindBuffer(GL_ARRAY_BUFFER, rectangle_color_buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
-  glGenBuffers(1, &rectangle_texture_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(g_texture_buffer_data), g_texture_buffer_data, GL_STATIC_DRAW);
+  // glGenBuffers(1, &rectangle_texture_buffer);
+  // glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
+  // glBufferData(GL_ARRAY_BUFFER, sizeof(g_texture_buffer_data), g_texture_buffer_data, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &primitive_color_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
   model = glm::mat4(1.0);
 }
@@ -243,11 +182,6 @@ void Graphics::set3d(float zoom) {
 void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z) {
   // // Set the camera to look down at the character.
   // // For fun, change the z-value to change the viewing angle of the game.
-  // glMatrixMode(GL_MODELVIEW);
-  // glLoadIdentity();
-  // lookAt(cam_x, cam_y, cam_z,
-  //   target_x, target_y, target_z,
-  //   0, 0, 1);
   view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z),
     glm::vec3(target_x, target_y, target_z),
     glm::vec3(0, 0, 1));
@@ -505,7 +439,7 @@ void Graphics::initializeCelShading() {
 
 void Graphics::startCelShading() {
   //glUseProgram(cel_shader_program);
-  current_program = cel_shader_program;
+  //current_program = cel_shader_program;
 }
 
 void Graphics::startNormalShading() {
@@ -563,42 +497,145 @@ void Graphics::matteMaterial() {
   // glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 }
 
-void Graphics::texVert(float t1, float t2, float v1, float v2, float v3) {
-  // glTexCoord2f(t1, t2);
-  // glVertex3f(v1, v2, v3);
+// void Graphics::texVert(float t1, float t2, float v1, float v2, float v3) {
+//   // glTexCoord2f(t1, t2);
+//   // glVertex3f(v1, v2, v3);
+// }
+
+// void Graphics::texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3) {
+//   // glTexCoord2f(t1, t2);
+//   // glNormal3f(n1, n2, n3);
+//   // glVertex3f(v1, v2, v3);
+// }
+
+void Graphics::primitive(int size, float vertex_data[], float normal_data[], float texture_data[]) {
+
+  glGenBuffers(1, &primitive_vertex_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_vertex_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * size * 3, vertex_data, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &primitive_texture_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_texture_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * size * 2, texture_data, GL_STATIC_DRAW);
+
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_vertex_buffer);
+  glVertexAttribPointer(
+    0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
+
+  // 2nd attribute buffer : colors
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
+  glVertexAttribPointer(
+    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    4,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3nd attribute buffer : UVs
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_texture_buffer);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    2,                                // size : U+V => 2
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  if (size == 4) {
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+  } else {
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  }
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
 }
 
-void Graphics::texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3) {
-  // glTexCoord2f(t1, t2);
-  // glNormal3f(n1, n2, n3);
-  // glVertex3f(v1, v2, v3);
+
+// This method draws a rectangle
+void Graphics::rectangle(float x, float y, float w, float h) {
+
+  GLfloat vertex_buffer_data[] = { 
+    x, y, 0.0f,
+    x, y + h, 0.0f,
+    x + w, y + h, 0.0f,
+    x + w, y, 0.0f,
+  };
+
+  GLfloat texture_buffer_data[] = { 
+    0.0f, 0.0f,
+    0.0f, 1.0f,
+    1.0f, 1.0f,
+    1.0f, 0.0f
+  };
+
+  rectangleWithTexture(vertex_buffer_data, texture_buffer_data);
 }
 
-void Graphics::face(int size, float data[]) {
-  // if (size == 4) {
-  //   glBegin(GL_QUADS);
-  // } else if (size == 3) {
-  //   glBegin(GL_TRIANGLES);
-  // }
+void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
+  glGenBuffers(1, &rectangle_vertex_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * 4 * 3, vertex_data, GL_STATIC_DRAW);
 
-  // for (int i = 0; i < size; i++) {
-  //   glTexCoord2f(data[8 * i], data[8 * i + 1]);
-  //   glNormal3f(data[8 * i + 2], data[8 * i + 3], data[8 * i + 4]);
-  //   glVertex3f(data[8 * i + 5], data[8 * i + 6], data[8 * i + 7]);
-  // }
+  glGenBuffers(1, &rectangle_texture_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * 4 * 2, texture_data, GL_STATIC_DRAW);
 
-  // glEnd();
-}
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
+  glVertexAttribPointer(
+    0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
 
-void Graphics::face2d(double data[]) {
-  // glBegin(GL_QUADS);
+  // 2nd attribute buffer : colors
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_color_buffer);
+  glVertexAttribPointer(
+    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    4,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
 
-  // for (int i = 0; i < 4; i++) {
-  //   glTexCoord2d(data[4 * i], data[4 * i + 1]);
-  //   glVertex2d(data[4 * i + 2], data[4 * i + 3]);
-  // }
+  // 3nd attribute buffer : UVs
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    2,                                // size : U+V => 2
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
 
-  // glEnd();
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
 }
 
 void Graphics::lineWidth(int lineWidth) {
@@ -663,56 +700,56 @@ void Graphics::runCacheProgram(int id) {
   // glCallList(id);
 }
 
-// https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
-void Graphics::crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3])
-{
-  res[0] = y1*z2 - y2*z1;
-  res[1] = x2*z1 - x1*z2;
-  res[2] = x1*y2 - x2*y1;
-}
+// // https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
+// void Graphics::crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3])
+// {
+//   res[0] = y1*z2 - y2*z1;
+//   res[1] = x2*z1 - x1*z2;
+//   res[2] = x1*y2 - x2*y1;
+// }
 
-//https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
-void Graphics::lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
-{
-  // float f[3];
+// //https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
+// void Graphics::lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
+// {
+//   // float f[3];
 
-  // // calculating the viewing vector
-  // f[0] = lookAtX - eyeX;
-  // f[1] = lookAtY - eyeY;
-  // f[2] = lookAtZ - eyeZ;
+//   // // calculating the viewing vector
+//   // f[0] = lookAtX - eyeX;
+//   // f[1] = lookAtY - eyeY;
+//   // f[2] = lookAtZ - eyeZ;
 
-  // float fMag = sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2]);
-  // float upMag = sqrt(upX*upX + upY*upY + upZ*upZ);
+//   // float fMag = sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2]);
+//   // float upMag = sqrt(upX*upX + upY*upY + upZ*upZ);
 
-  // // normalizing the viewing vector
-  // if( fMag != 0)
-  // {
-  //   f[0] = f[0]/fMag;
-  //   f[1] = f[1]/fMag;
-  //   f[2] = f[2]/fMag;
-  // }
+//   // // normalizing the viewing vector
+//   // if( fMag != 0)
+//   // {
+//   //   f[0] = f[0]/fMag;
+//   //   f[1] = f[1]/fMag;
+//   //   f[2] = f[2]/fMag;
+//   // }
 
-  // // normalising the up vector
-  // if( upMag != 0 )
-  // {
-  //   upX = upX/upMag;
-  //   upY = upY/upMag;
-  //   upZ = upZ/upMag;
-  // }
+//   // // normalising the up vector
+//   // if( upMag != 0 )
+//   // {
+//   //   upX = upX/upMag;
+//   //   upY = upY/upMag;
+//   //   upZ = upZ/upMag;
+//   // }
 
-  // float s[3], u[3];
+//   // float s[3], u[3];
 
-  // crossProduct(f[0], f[1], f[2], upX, upY, upZ, s);
-  // crossProduct(s[0], s[1], s[2], f[0], f[1], f[2], u);
+//   // crossProduct(f[0], f[1], f[2], upX, upY, upZ, s);
+//   // crossProduct(s[0], s[1], s[2], f[0], f[1], f[2], u);
 
-  // float M[]=
-  // {
-  //   s[0], u[0], -f[0], 0,
-  //   s[1], u[1], -f[1], 0,
-  //   s[2], u[2], -f[2], 0,
-  //   0, 0, 0, 1
-  // };
+//   // float M[]=
+//   // {
+//   //   s[0], u[0], -f[0], 0,
+//   //   s[1], u[1], -f[1], 0,
+//   //   s[2], u[2], -f[2], 0,
+//   //   0, 0, 0, 1
+//   // };
 
-  // glMultMatrixf(M);
-  // glTranslatef(-eyeX, -eyeY, -eyeZ); 
-}
+//   // glMultMatrixf(M);
+//   // glTranslatef(-eyeX, -eyeY, -eyeZ); 
+// }

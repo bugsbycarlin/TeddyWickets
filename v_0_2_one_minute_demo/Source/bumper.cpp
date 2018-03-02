@@ -50,7 +50,7 @@ void Bumper::render() {
     4, 1, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
     0, 1, 0, 0, 1, start->x, start->y, start->z + k_bumper_height
   };
-  graphics->face(4, data1);
+  //graphics->primitive(4, data1);
 
   float data2[] = {
     0, 0, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z,
@@ -58,7 +58,7 @@ void Bumper::render() {
     4, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
     0, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
   };
-  graphics->face(4, data2);
+  //graphics->primitive(4, data2);
 
   float data3[] = {
     0, 0, 0, 0, 1, start->x, start->y, start->z + k_bumper_height,
@@ -66,7 +66,7 @@ void Bumper::render() {
     4, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
     0, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
   };
-  graphics->face(4, data3);
+  //graphics->primitive(4, data3);
 
   float data4[] = {
     0.5, 0, 0, 0, 1, start->x, start->y, start->z,
@@ -74,7 +74,7 @@ void Bumper::render() {
     1, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
     0.5, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z,
   };
-  graphics->face(4, data4);
+  //graphics->primitive(4, data4);
 
   float data5[] = {
     0.5, 0, 0, 0, 1, end->x, end->y, end->z,
@@ -82,5 +82,5 @@ void Bumper::render() {
     1, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
     0.5, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z,
   };
-  graphics->face(4, data5);
+  //graphics->primitive(4, data5);
 }

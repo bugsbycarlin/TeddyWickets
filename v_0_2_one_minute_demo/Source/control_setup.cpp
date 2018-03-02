@@ -121,7 +121,7 @@ void ControlSetup::render() {
   graphics->start2DDraw();
 
   textures->setTexture("control_setup_screen");
-  graphics->drawRectangle(0, 0, k_screen_width, k_screen_height);
+  graphics->rectangle(0, 0, k_screen_width, k_screen_height);
 
   if (mode == k_control_view_mode) {
     view_mode_instruction->render();

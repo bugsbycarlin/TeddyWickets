@@ -53,6 +53,12 @@ class Graphics {
   GLuint rectangle_color_buffer;
   GLuint rectangle_texture_buffer;
 
+  // Um. Ignoring normals for now.
+  GLuint primitive_vertex_buffer;
+  GLuint primitive_normal_buffer;
+  GLuint primitive_color_buffer;
+  GLuint primitive_texture_buffer;
+
   GLuint vertex_array_id;
   GLuint matrix_id;
   GLuint global_color_id;
@@ -62,8 +68,6 @@ class Graphics {
   glm::mat4 view;
   glm::mat4 model;
   glm::vec4 global_color_vector;
-
-  void drawRectangle(float x, float y, float w, float h);
 
   void start2DDraw();
   void end2DDraw();
@@ -97,10 +101,12 @@ class Graphics {
 
   void matteMaterial();
 
-  void texVert(float t1, float t2, float v1, float v2, float v3);
-  void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
-  void face(int size, float data[]);
-  void face2d(double data[]);
+  //void texVert(float t1, float t2, float v1, float v2, float v3);
+  //void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
+
+  void primitive(int size, float vertex_data[], float normal_data[], float texture_data[]);
+  void rectangle(float x, float y, float w, float h);
+  void rectangleWithTexture(float vertex_data[], float texture_data[]);
 
   void lineWidth(int line_width);
   void lineStrip(std::vector<float> line_data);
@@ -120,8 +126,8 @@ class Graphics {
   void endCacheProgram();
   void runCacheProgram(int id);
 
-  void crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3]);
-  void lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);
+  //void crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3]);
+  //void lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);
 };
 
 extern Graphics* graphics;

@@ -100,7 +100,7 @@ void Title::render() {
   } else if (mode == k_title_title_mode) {
     // title screen render
     textures->setTexture("title_screen");
-    graphics->drawRectangle(0, 0, k_screen_width, k_screen_height);
+    graphics->rectangle(0, 0, k_screen_width, k_screen_height);
 
     // title text render
     title->render();
