@@ -11,6 +11,7 @@ Graphics* graphics = new Graphics();
 
 Graphics::Graphics() {
   this->next_display_list_index = 1;
+  this->next_mesh_cache_id = 1;
 
   // ball = gluNewQuadric();
   // gluQuadricTexture(ball, GL_TRUE);
@@ -507,6 +508,116 @@ void Graphics::matteMaterial() {
 //   // glNormal3f(n1, n2, n3);
 //   // glVertex3f(v1, v2, v3);
 // }
+
+
+int Graphics::cacheMesh(int size, float vertex_data[], float normal_data[], float texture_data[]) {
+  int cache_id = this->next_mesh_cache_id;
+
+  glGenBuffers(1, &vertex_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * size * 3, vertex_data, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &texture_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * size * 2, texture_data, GL_STATIC_DRAW);
+
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
+  glVertexAttribPointer(
+    0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
+
+  // 2nd attribute buffer : colors
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
+  glVertexAttribPointer(
+    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    4,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3nd attribute buffer : UVs
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    2,                                // size : U+V => 2
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  if (size == 4) {
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+  } else {
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  }
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+  
+  this->next_mesh_cache_id++;
+  return cache_id;
+}
+
+void Graphics::drawMesh(int cache_id, int size) {
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
+  glVertexAttribPointer(
+    0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
+
+  // 2nd attribute buffer : colors
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
+  glVertexAttribPointer(
+    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    4,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3nd attribute buffer : UVs
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    2,                                // size : U+V => 2
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  if (size == 4) {
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+  } else {
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  }
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+}
 
 void Graphics::primitive(int size, float vertex_data[], float normal_data[], float texture_data[]) {
 

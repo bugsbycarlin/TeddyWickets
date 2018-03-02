@@ -32,6 +32,8 @@ class Surface {
 
     bool use_grey;
 
+    int cache_id;
+
     Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4);
 
     void render();

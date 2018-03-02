@@ -32,6 +32,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <list>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
@@ -44,7 +45,13 @@ class Graphics {
   int cel_shader_program;
   int normal_shader_program;
   int current_program;
+
   int next_display_list_index;
+  int next_mesh_cache_id;
+
+  std::unordered_map<int, GLuint> vertex_buffers;
+  std::unordered_map<int, GLuint> normal_buffers;
+  std::unordered_map<int, GLuint> texture_buffers;
 
   int* white_texture_id;
   int* black_texture_id;
@@ -107,6 +114,9 @@ class Graphics {
   void primitive(int size, float vertex_data[], float normal_data[], float texture_data[]);
   void rectangle(float x, float y, float w, float h);
   void rectangleWithTexture(float vertex_data[], float texture_data[]);
+
+  int cacheMesh(int size, float vertex_data[], float normal_data[], float texture_data[]);
+  void drawMesh(int cache_id, int size);
 
   void lineWidth(int line_width);
   void lineStrip(std::vector<float> line_data);
