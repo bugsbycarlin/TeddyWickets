@@ -66,7 +66,7 @@ void Surface::render() {
     //graphics->primitive(4, vertex_data, normal_data, texture_data);
     cache_id = graphics->cacheMesh(4, vertex_data, normal_data, texture_data);
   } else {
-    graphics->drawMesh(cache_id, 4);
+    graphics->drawMesh(cache_id);
   }
   
 }

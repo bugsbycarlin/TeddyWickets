@@ -52,6 +52,7 @@ class Graphics {
   std::unordered_map<int, GLuint> vertex_buffers;
   std::unordered_map<int, GLuint> normal_buffers;
   std::unordered_map<int, GLuint> texture_buffers;
+  std::unordered_map<int, int> buffer_sizes;
 
   int* white_texture_id;
   int* black_texture_id;
@@ -111,12 +112,15 @@ class Graphics {
   //void texVert(float t1, float t2, float v1, float v2, float v3);
   //void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
 
-  void primitive(int size, float vertex_data[], float normal_data[], float texture_data[]);
+  //void primitive(int size, float vertex_data[], float normal_data[], float texture_data[]);
   void rectangle(float x, float y, float w, float h);
   void rectangleWithTexture(float vertex_data[], float texture_data[]);
 
   int cacheMesh(int size, float vertex_data[], float normal_data[], float texture_data[]);
-  void drawMesh(int cache_id, int size);
+  void drawMesh(int cache_id);
+
+  int cacheRectangle(float x, float y, float w, float h);
+  void rectangle(int cache_id);
 
   void lineWidth(int line_width);
   void lineStrip(std::vector<float> line_data);

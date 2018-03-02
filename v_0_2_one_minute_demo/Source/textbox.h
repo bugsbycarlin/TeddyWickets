@@ -34,6 +34,8 @@ class TextBox {
   int x;
   int y;
 
+  int cache_id;
+
   int countdown;
   SDL_Color permanent_color;
 

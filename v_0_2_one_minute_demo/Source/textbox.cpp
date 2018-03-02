@@ -17,6 +17,8 @@ TextBox::TextBox(std::string font_name, int font_size, std::string text, Uint8 R
   this->x = x;
   this->y = y;
 
+  this->cache_id = -1;
+
   this->text = text;
 
   this->countdown = 0;
@@ -55,7 +57,12 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
 
 void TextBox::render() {
   graphics->setTexture(texture);
-  graphics->rectangle(x, y, text_surface->w, text_surface->h);
+  if (cache_id == -1) {
+    cache_id = graphics->cacheRectangle(x, y, text_surface->w, text_surface->h);
+  } else {
+    graphics->rectangle(cache_id);
+  }
+  //graphics->rectangle(x, y, text_surface->w, text_surface->h);
 
   if (countdown > 0) {
     countdown--;
