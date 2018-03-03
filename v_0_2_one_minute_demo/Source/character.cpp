@@ -12,7 +12,7 @@ Character::Character(Physics* physics, Point* position) {
 
   this->physics = physics;
 
-  this->model = new Model("teddy_bear_draft_2.obj");
+  this->model = new Model("teddy_bear_draft_3.obj");
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;

@@ -42,6 +42,12 @@ class Model {
     std::map<std::string, int> texture_keys;
     std::map<int, std::string> texture_map;
 
+    std::map<std::string, std::vector<float>> vbo_vertex_data_by_texture;
+    std::map<std::string, std::vector<float>> vbo_normal_data_by_texture;
+    std::map<std::string, std::vector<float>> vbo_texture_data_by_texture;
+    std::map<std::string, std::vector<float>> vbo_color_data_by_texture;
+    std::map<std::string, int> vbo_cache_ids_by_texture;
+
     float outlineColor[3] = {0.0f, 0.0f, 0.0f};
     float outlineWidth = 10.0f;
     bool outline = true;
@@ -51,6 +57,7 @@ class Model {
     Model(std::string model_file_name);
 
     void render();
+    void oldRender();
 
     std::list<Triangle*> getMeshAsTriangles();
 };

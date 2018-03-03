@@ -239,6 +239,109 @@ void Model::render() {
   graphics->rotate(90.0f, 1.0f, 0.0f, 0.0f);
 
   if (cache_id == -1) {
+    vbo_vertex_data_by_texture = {};
+    vbo_normal_data_by_texture = {};
+    vbo_texture_data_by_texture = {};
+    vbo_color_data_by_texture = {};
+    vbo_cache_ids_by_texture = {};
+    std::string current_texture = "";
+
+    for (auto component = component_names.begin(); component != component_names.end(); ++component) {
+      std::string component_name = component->c_str();
+      std::list<std::map<int, int>> current_faces = faces[component_name];
+
+      std::map<int, Point*> current_vertices = vertices[component_name];
+      std::map<int, Point*> current_texture_coords = texture_coords[component_name];
+      std::map<int, Point*> current_normals = normals[component_name];
+
+      for (auto face = current_faces.begin(); face != current_faces.end(); ++face) {
+        int num_edges = -1;
+        if (face->size() == 1) {
+          //textures->setTexture(texture_map[face->operator[](0)]);
+          printf("Found texture %s yo\n", texture_map[face->operator[](0)].c_str());
+          current_texture = texture_map[face->operator[](0)];
+          if (vbo_vertex_data_by_texture.find(current_texture) == vbo_vertex_data_by_texture.end()) {
+            vbo_vertex_data_by_texture[current_texture] = {};
+          }
+          if (vbo_normal_data_by_texture.find(current_texture) == vbo_normal_data_by_texture.end()) {
+            vbo_normal_data_by_texture[current_texture] = {};
+          }
+          if (vbo_texture_data_by_texture.find(current_texture) == vbo_texture_data_by_texture.end()) {
+            vbo_texture_data_by_texture[current_texture] = {};
+          }
+          if (vbo_color_data_by_texture.find(current_texture) == vbo_color_data_by_texture.end()) {
+            vbo_color_data_by_texture[current_texture] = {};
+          }
+          continue;
+        } else if (face->size() == 12) {
+          num_edges = 4;
+        } else if (face->size() == 9) {
+          num_edges = 3;
+        }
+
+        //float data[num_edges * 8];
+        // now always triangles, no quads allowed
+        for (int i = 0; i < num_edges; i++) {
+          int start = 3*i + 1;
+
+          Point* vertex = current_vertices[face->operator[](start)];
+          Point* texture = current_texture_coords[face->operator[](start+1)];
+          Point* normal = current_normals[face->operator[](start+2)];
+
+          vbo_vertex_data_by_texture[current_texture].push_back(vertex->x);
+          vbo_vertex_data_by_texture[current_texture].push_back(vertex->y);
+          vbo_vertex_data_by_texture[current_texture].push_back(vertex->z);
+
+          vbo_normal_data_by_texture[current_texture].push_back(normal->x);
+          vbo_normal_data_by_texture[current_texture].push_back(normal->y);
+          vbo_normal_data_by_texture[current_texture].push_back(normal->z);
+
+          vbo_color_data_by_texture[current_texture].push_back(1.0f);
+          vbo_color_data_by_texture[current_texture].push_back(1.0f);
+          vbo_color_data_by_texture[current_texture].push_back(1.0f);
+
+          vbo_texture_data_by_texture[current_texture].push_back(texture->x);
+          vbo_texture_data_by_texture[current_texture].push_back(-texture->y);
+
+          // data[8*i] = texture->x;
+          // data[8*i+1] = -texture->y;
+          // data[8*i+2] = normal->x;
+          // data[8*i+3] = normal->y;
+          // data[8*i+4] = normal->z;
+          // data[8*i+5] = vertex->x;
+          // data[8*i+6] = vertex->y;
+          // data[8*i+7] = vertex->z;
+        }
+        //graphics->face(num_edges, data);
+      }
+    }
+
+    for (auto texture = vbo_vertex_data_by_texture.begin(); texture != vbo_vertex_data_by_texture.end(); ++texture) {
+      std::string current_texture = (std::string) texture->first;
+      textures->setTexture(current_texture);
+      int cache_id_by_texture = graphics->cacheFullMesh(
+        vbo_vertex_data_by_texture[current_texture],
+        vbo_normal_data_by_texture[current_texture],
+        vbo_texture_data_by_texture[current_texture],
+        vbo_color_data_by_texture[current_texture]);
+      vbo_cache_ids_by_texture[current_texture] = cache_id_by_texture;
+    }
+
+    cache_id = 1;
+  } else {
+    for (auto texture = vbo_cache_ids_by_texture.begin(); texture != vbo_cache_ids_by_texture.end(); ++texture) {
+      std::string current_texture = (std::string) texture->first;
+      textures->setTexture(current_texture);
+      graphics->drawFullMesh(vbo_cache_ids_by_texture[current_texture]);
+    }
+  }
+}
+
+void Model::oldRender() {
+  graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
+  graphics->rotate(90.0f, 1.0f, 0.0f, 0.0f);
+
+  if (cache_id == -1) {
     cache_id = graphics->cacheProgram();
     //graphics->startCelShading();
     bool fill_model = true;

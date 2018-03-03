@@ -176,6 +176,7 @@ void Graphics::set3d(float zoom) {
   // 3. normal perspective
   // perspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 
+  model = glm::mat4(1.0);
   projection = glm::ortho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
   glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
@@ -579,6 +580,75 @@ void Graphics::drawMesh(int cache_id) {
   glDisableVertexAttribArray(2);
 }
 
+int Graphics::cacheFullMesh(std::vector<float> vertex_data, std::vector<float> normal_data, std::vector<float> texture_data, std::vector<float> color_data) {
+  int cache_id = this->next_mesh_cache_id;
+
+  buffer_sizes[cache_id] = vertex_data.size() / 3;
+
+  glGenBuffers(1, &vertex_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, vertex_data.size() * sizeof(float), &vertex_data[0], GL_STATIC_DRAW);
+
+  glGenBuffers(1, &texture_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, texture_data.size() * sizeof(float), &texture_data[0], GL_STATIC_DRAW);
+
+  glGenBuffers(1, &color_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, color_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, color_data.size() * sizeof(float), &color_data[0], GL_STATIC_DRAW);
+
+  drawFullMesh(cache_id);
+  
+  this->next_mesh_cache_id++;
+  return cache_id;
+}
+
+void Graphics::drawFullMesh(int cache_id) {
+  int size = buffer_sizes[cache_id];
+
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
+  glVertexAttribPointer(
+    0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
+
+  // 2nd attribute buffer : colors
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, color_buffers[cache_id]);
+  glVertexAttribPointer(
+    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    4,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3nd attribute buffer : UVs
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    2,                                // size : U+V => 2
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  glDrawArrays(GL_TRIANGLES, 0, size);
+
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
+}
+
 int Graphics::cacheRectangle(float x, float y, float w, float h) {
   int cache_id = this->next_mesh_cache_id;
 
@@ -763,21 +833,26 @@ void Graphics::sphere(float radius) {
 }
 
 void Graphics::color(float r, float g, float b, float a) {
-  // glColor4f(r, g, b, a);
   global_color_vector = glm::vec4(r, g, b, a);
   glUniform4fv(global_color_id, 1, glm::value_ptr(global_color_vector));
 }
 
 void Graphics::rotate(float angle, float x, float y, float z) {
   // glRotatef(angle, x, y, z);
+  model = model * glm::rotate(angle, glm::vec3(x, y, z));
+  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::translate(float x, float y, float z) {
   // glTranslatef(x, y, z);
+  //model = model * glm::translate(glm::vec3(x, y, z));
+  //glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::scale(float x, float y, float z) {
   // glScalef(x, y, z);
+  model = model * glm::scale(glm::vec3(x, y, z));
+  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::pushMatrix() {
