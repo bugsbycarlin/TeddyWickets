@@ -299,6 +299,7 @@ void Model::render() {
           vbo_color_data_by_texture[current_texture].push_back(1.0f);
           vbo_color_data_by_texture[current_texture].push_back(1.0f);
           vbo_color_data_by_texture[current_texture].push_back(1.0f);
+          vbo_color_data_by_texture[current_texture].push_back(1.0f);
 
           vbo_texture_data_by_texture[current_texture].push_back(texture->x);
           vbo_texture_data_by_texture[current_texture].push_back(-texture->y);
@@ -319,6 +320,7 @@ void Model::render() {
     for (auto texture = vbo_vertex_data_by_texture.begin(); texture != vbo_vertex_data_by_texture.end(); ++texture) {
       std::string current_texture = (std::string) texture->first;
       textures->setTexture(current_texture);
+      printf("This many faces: %d\n", vbo_vertex_data_by_texture[current_texture].size() / 9);
       int cache_id_by_texture = graphics->cacheFullMesh(
         vbo_vertex_data_by_texture[current_texture],
         vbo_normal_data_by_texture[current_texture],
@@ -342,7 +344,7 @@ void Model::oldRender() {
   graphics->rotate(90.0f, 1.0f, 0.0f, 0.0f);
 
   if (cache_id == -1) {
-    cache_id = graphics->cacheProgram();
+    //cache_id = graphics->cacheProgram();
     //graphics->startCelShading();
     bool fill_model = true;
     if (fill_model) {
@@ -488,9 +490,9 @@ void Model::oldRender() {
     //   glPopAttrib();
     // }
 
-    graphics->endCacheProgram();
+    //graphics->endCacheProgram();
   } else {
-    graphics->runCacheProgram(cache_id);
+    //graphics->runCacheProgram(cache_id);
   }
 }
 

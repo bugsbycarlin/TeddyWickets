@@ -23,10 +23,10 @@ Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float
 void Hazard::render() {
   graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
 
-  graphics->pushMatrix();
+  graphics->pushModelMatrix();
   graphics->translate(position->x, position->y, position->z);
   graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
   graphics->rotate(-rotation * 180.0 / M_PI, 0, 0, 1);
   model->render();
-  graphics->popMatrix();
+  graphics->popModelMatrix();
 }

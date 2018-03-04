@@ -13,6 +13,8 @@ Graphics::Graphics() {
   this->next_display_list_index = 1;
   this->next_mesh_cache_id = 1;
 
+  model_stack = {};
+
   // ball = gluNewQuadric();
   // gluQuadricTexture(ball, GL_TRUE);
   // gluQuadricNormals(ball, GLU_SMOOTH);
@@ -577,6 +579,8 @@ int Graphics::cacheFullMesh(std::vector<float> vertex_data, std::vector<float> n
   int cache_id = this->next_mesh_cache_id;
 
   buffer_sizes[cache_id] = vertex_data.size() / 3;
+  printf("Buffer size is %d\n", buffer_sizes[cache_id]);
+  printf("Given to buffer data function: %d\n", vertex_data.size() * sizeof(float));
 
   glGenBuffers(1, &vertex_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
@@ -836,7 +840,7 @@ void Graphics::rotate(float angle, float x, float y, float z) {
 }
 
 void Graphics::translate(float x, float y, float z) {
-  model = model * glm::translate(glm::vec3(0, 0, 0));
+  model = model * glm::translate(glm::vec3(x, y, z));
   glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
@@ -845,12 +849,13 @@ void Graphics::scale(float x, float y, float z) {
   glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
-void Graphics::pushMatrix() {
-  // glPushMatrix();
+void Graphics::pushModelMatrix() {
+  model_stack.push_back(model);
 }
 
-void Graphics::popMatrix() {
-  // glPopMatrix();
+void Graphics::popModelMatrix() {
+  model = model_stack.back();
+  model_stack.pop_back();
 }
 
 void Graphics::multMatrix(const float* m) {
@@ -860,21 +865,21 @@ void Graphics::multMatrix(const float* m) {
   glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
-int Graphics::cacheProgram() {
-  // int id = this->next_display_list_index;
-  // this->next_display_list_index++;
+// int Graphics::cacheProgram() {
+//   // int id = this->next_display_list_index;
+//   // this->next_display_list_index++;
 
-  // glNewList(id, GL_COMPILE);
-  // return id;
-}
+//   // glNewList(id, GL_COMPILE);
+//   // return id;
+// }
 
-void Graphics::endCacheProgram() {
-  // glEndList();
-}
+// void Graphics::endCacheProgram() {
+//   // glEndList();
+// }
 
-void Graphics::runCacheProgram(int id) {
-  // glCallList(id);
-}
+// void Graphics::runCacheProgram(int id) {
+//   // glCallList(id);
+// }
 
 // // https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
 // void Graphics::crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3])

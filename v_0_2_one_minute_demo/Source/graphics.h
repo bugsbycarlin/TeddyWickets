@@ -78,6 +78,8 @@ class Graphics {
   glm::mat4 model;
   glm::vec4 global_color_vector;
 
+  std::vector<glm::mat4> model_stack;
+
   void start2DDraw();
   void end2DDraw();
 
@@ -136,13 +138,13 @@ class Graphics {
   void scale(float x, float y, float z);
   void translate(float x, float y, float z);
 
-  void pushMatrix();
-  void popMatrix();
+  void pushModelMatrix();
+  void popModelMatrix();
   void multMatrix(const float* m);
 
-  int cacheProgram();
-  void endCacheProgram();
-  void runCacheProgram(int id);
+  // int cacheProgram();
+  // void endCacheProgram();
+  // void runCacheProgram(int id);
 
   //void crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3]);
   //void lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);

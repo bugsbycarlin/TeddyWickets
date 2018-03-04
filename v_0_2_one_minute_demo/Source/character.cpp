@@ -35,15 +35,15 @@ void Character::updateFromPhysics() {
 void Character::render(int game_mode) {
   btScalar transform_matrix[16];
   btTransform transform = physics->getTransform(identity);
-  graphics->pushMatrix();
+  graphics->pushModelMatrix();
     transform.getOpenGLMatrix(transform_matrix);
     graphics->multMatrix(transform_matrix);
-    graphics->pushMatrix();
+    graphics->pushModelMatrix();
       graphics->scale(k_model_scale, k_model_scale, k_model_scale);
       graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
       model->render();
-    graphics->popMatrix();
-  graphics->popMatrix();
+    graphics->popModelMatrix();
+  graphics->popModelMatrix();
 
   // future positions (to help the player predict the shot)
   if (game_mode == k_prep_mode) {
@@ -53,10 +53,10 @@ void Character::render(int game_mode) {
     for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
       btScalar transform_matrix[16];
       position->getOpenGLMatrix(transform_matrix);
-      graphics->pushMatrix();
+      graphics->pushModelMatrix();
       graphics->multMatrix(transform_matrix);
       graphics->sphere(radius * 0.15);
-      graphics->popMatrix();
+      graphics->popModelMatrix();
     }
 
     // lines between balls
