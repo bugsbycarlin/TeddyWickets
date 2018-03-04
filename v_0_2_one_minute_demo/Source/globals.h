@@ -42,8 +42,8 @@ const std::string k_font_root_path = "Fonts/";
 
 // Shaders
 const std::string k_shader_root_path = "Shaders/";
-const int k_cel_shader_id = 17;
-const int k_normal_shader_id = 53;
+//const int k_cel_shader_id = 17;
+const int k_shader_id = 53;
 
 // Screen modes
 enum {

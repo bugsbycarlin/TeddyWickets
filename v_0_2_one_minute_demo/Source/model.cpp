@@ -390,7 +390,7 @@ void Model::oldRender() {
     }
 
     //graphics->stopCelShading();
-    graphics->startNormalShading();
+    //graphics->startNormalShading();
 
     // bool use_this = true;
     // if (outline && use_this) {

@@ -5,6 +5,8 @@
 TeddyWickets:
 		g++ -w \
 		./Source/main.cpp \
+		./Source/point.cpp \
+		./Source/colors.cpp \
 		./Source/graphics.cpp \
 		./Source/globals.cpp \
 		./Source/screen.cpp \
@@ -13,7 +15,6 @@ TeddyWickets:
 		./Source/control_setup.cpp \
 		./Source/game.cpp \
 		./Source/physics.cpp \
-		./Source/point.cpp \
 		./Source/surface.cpp \
 		./Source/character.cpp \
 		./Source/model.cpp \

@@ -70,7 +70,8 @@ void Graphics::blackout() {
 void Graphics::initialize() {
   initializeBasic();
   initializeShadersAndLighting();
-  startNormalShading();
+  // startNormalShading();
+  glUseProgram(shader_program);
   initializeBuffersAndGeometry();
 }
 
@@ -118,9 +119,11 @@ void Graphics::initializeBasic() {
 
 void Graphics::initializeBuffersAndGeometry() {
 
-  global_color_id = glGetUniformLocation(current_program, "global_color_vector");
-  matrix_id = glGetUniformLocation(current_program, "mvp_matrix");
-  texture_sampler_id = glGetUniformLocation(current_program, "myTextureSampler");
+  global_color_id = glGetUniformLocation(shader_program, "global_color_vector");
+  matrix_id = glGetUniformLocation(shader_program, "mvp_matrix");
+  texture_sampler_id = glGetUniformLocation(shader_program, "myTextureSampler");
+  bool_cel_shading_id = glGetUniformLocation(shader_program, "bool_cel_shading");
+  bool_lighting_id = glGetUniformLocation(shader_program, "bool_lighting");
 
   glGenVertexArrays(1, &vertex_array_id);
   glBindVertexArray(vertex_array_id);
@@ -253,7 +256,7 @@ void Graphics::initializeShadersAndLighting() {
   graphics->initializeNormalShading();
 
   // Cel Shader
-  graphics->initializeCelShading();
+  // graphics->initializeCelShading();
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {
@@ -263,11 +266,11 @@ void Graphics::initializeShadersAndLighting() {
 }
 
 void Graphics::initializeNormalShading() {
-  normal_shader_program = k_normal_shader_id;
+  shader_program = k_shader_id;
 
   std::string line;
 
-  std::string vertex_shader_path = k_shader_root_path + "normal_shader_vertex.glsl";
+  std::string vertex_shader_path = k_shader_root_path + "shader_vertex.glsl";
   printf("Loading vertex shader from %s\n", vertex_shader_path.c_str());
 
   std::ifstream vertex_shader_file;
@@ -283,7 +286,7 @@ void Graphics::initializeNormalShading() {
     vertex_shader_string += line + "\n";
   }
 
-  std::string fragment_shader_path = k_shader_root_path + "normal_shader_fragment.glsl";
+  std::string fragment_shader_path = k_shader_root_path + "shader_fragment.glsl";
   printf("Loading fragment shader from %s\n", fragment_shader_path.c_str());
 
   std::ifstream fragment_shader_file;
@@ -315,9 +318,9 @@ void Graphics::initializeNormalShading() {
   glCompileShader(vertex_shader);
   glCompileShader(fragment_shader);
 
-  normal_shader_program = glCreateProgram();
-  glAttachShader(normal_shader_program, vertex_shader);
-  glAttachShader(normal_shader_program, fragment_shader);
+  shader_program = glCreateProgram();
+  glAttachShader(shader_program, vertex_shader);
+  glAttachShader(shader_program, fragment_shader);
 
   glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &status);
   if (!status) {
@@ -339,16 +342,17 @@ void Graphics::initializeNormalShading() {
     exit(1);
   }
 
-  glLinkProgram(normal_shader_program);
+  glLinkProgram(shader_program);
 
-  glGetProgramiv(normal_shader_program, GL_LINK_STATUS, &status);
+  glGetProgramiv(shader_program, GL_LINK_STATUS, &status);
   if (!status) {
     printf("Error: failed to link the shader program object.\n");
     exit(1);
   }
 }
 
-void Graphics::initializeCelShading() {
+
+// void Graphics::initializeCelShading() {
   // cel_shader_program = k_cel_shader_id;
 
   // std::string line;
@@ -432,20 +436,36 @@ void Graphics::initializeCelShading() {
   //   printf("Error: failed to link the shader program object.\n");
   //   exit(1);
   // }
+// }
+
+// void Graphics::startCelShading() {
+//   //glUseProgram(cel_shader_program);
+//   //current_program = cel_shader_program;
+// }
+
+// void Graphics::startNormalShading() {
+//   glUseProgram(normal_shader_program);
+//   current_program = normal_shader_program;
+// }
+
+// void Graphics::clearShading() {
+//   glUseProgram(0);
+// }
+
+void Graphics::enableCelShading() {
+  glUniform1f(bool_cel_shading_id, 1.0);
 }
 
-void Graphics::startCelShading() {
-  //glUseProgram(cel_shader_program);
-  //current_program = cel_shader_program;
+void Graphics::disableCelShading() {
+  glUniform1f(bool_cel_shading_id, 0.0);
 }
 
-void Graphics::startNormalShading() {
-  glUseProgram(normal_shader_program);
-  current_program = normal_shader_program;
+void Graphics::enableLights() {
+  glUniform1f(bool_lighting_id, 1.0);
 }
 
-void Graphics::clearShading() {
-  glUseProgram(0);
+void Graphics::disableLights() {
+  glUniform1f(bool_lighting_id, 0.0);
 }
 
 int* Graphics::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {

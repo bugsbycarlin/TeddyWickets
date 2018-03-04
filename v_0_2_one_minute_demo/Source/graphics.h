@@ -42,9 +42,9 @@ class Graphics {
  public:
   Graphics();
 
-  int cel_shader_program;
-  int normal_shader_program;
-  int current_program;
+  //int cel_shader_program;
+  int shader_program;
+  //int current_program;
 
   int next_display_list_index;
   int next_mesh_cache_id;
@@ -62,7 +62,6 @@ class Graphics {
   GLuint rectangle_color_buffer;
   GLuint rectangle_texture_buffer;
 
-  // Um. Ignoring normals for now.
   GLuint primitive_vertex_buffer;
   GLuint primitive_normal_buffer;
   GLuint primitive_color_buffer;
@@ -72,6 +71,8 @@ class Graphics {
   GLuint matrix_id;
   GLuint global_color_id;
   GLuint texture_sampler_id;
+  GLuint bool_cel_shading_id;
+  GLuint bool_lighting_id;
 
   glm::mat4 projection;
   glm::mat4 view;
@@ -93,11 +94,17 @@ class Graphics {
   void initializeShadersAndLighting();
   void initializeBuffersAndGeometry();
   
-  void initializeCelShading();
-  void startCelShading();
   void initializeNormalShading();
-  void startNormalShading();
-  void clearShading();
+
+  void enableCelShading();
+  void disableCelShading();
+  void enableLights();
+  void disableLights();
+
+  // void initializeCelShading();
+  // void startCelShading();
+  // void startNormalShading();
+  // void clearShading();
 
   void initializeOpenGLVersion();
 

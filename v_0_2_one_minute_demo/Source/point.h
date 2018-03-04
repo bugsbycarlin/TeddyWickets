@@ -10,7 +10,6 @@
 #define TEDDY_WICKETS_POINT_H_
 
 #include "globals.h"
-#include "graphics.h"
 
 class Point {
  public:

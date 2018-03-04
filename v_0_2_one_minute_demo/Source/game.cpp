@@ -570,19 +570,19 @@ bool Game::initializeGamePieces() {
     new Point(0, k_bumper_width, 0)));
 
   // mountain segment 1
-  int first_x = 10 + rand() % static_cast<int>(20 + 1);
-  int last_y = 25 + rand() % static_cast<int>(25 + 1);
-  for (int k = 0; k < 8; k++) {
-    int new_y = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
-      true,
-      new Point(0 + 6 * k, 0 + (6 * 2) + new_y, height_array[k+1] - 70),
-      new Point(-6 + 6 * k - first_x, 0 + (6 * 2) + last_y, height_array[k] - 70),
-      new Point(-6 + 6 * k, 0 + (6 * 2), height_array[k]),
-      new Point(0 + 6 * k, 0 + (6 * 2), height_array[k+1])));
-    last_y = new_y;
-    first_x = 0;
-  }
+  // int first_x = 10 + rand() % static_cast<int>(20 + 1);
+  // int last_y = 25 + rand() % static_cast<int>(25 + 1);
+  // for (int k = 0; k < 8; k++) {
+  //   int new_y = 25 + rand() % static_cast<int>(25 + 1);
+  //   surfaces.push_front(new Surface(physics,
+  //     true,
+  //     new Point(0 + 6 * k, 0 + (6 * 2) + new_y, height_array[k+1] - 70),
+  //     new Point(-6 + 6 * k - first_x, 0 + (6 * 2) + last_y, height_array[k] - 70),
+  //     new Point(-6 + 6 * k, 0 + (6 * 2), height_array[k]),
+  //     new Point(0 + 6 * k, 0 + (6 * 2), height_array[k+1])));
+  //   last_y = new_y;
+  //   first_x = 0;
+  // }
 
   // surfaces segment 2 (corner)
   for (int x = 0; x < 3; x++) {
@@ -607,38 +607,38 @@ bool Game::initializeGamePieces() {
     new Point(-k_bumper_width, 0.0, 0)));
 
   // mountain segment 2
-  for (int k = 0; k < 3; k++) {
-    int new_y = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
-      true,
-      new Point(48 + 6 * k, 0 + (6 * 2) + new_y, -8 - 70),
-      new Point(42 + 6 * k, 0 + (6 * 2) + last_y, -8 - 70),
-      new Point(42 + 6 * k, 0 + (6 * 2), -8),
-      new Point(48 + 6 * k, 0 + (6 * 2), -8)));
-    last_y = new_y;
-  }
+  // for (int k = 0; k < 3; k++) {
+  //   int new_y = 25 + rand() % static_cast<int>(25 + 1);
+  //   surfaces.push_front(new Surface(physics,
+  //     true,
+  //     new Point(48 + 6 * k, 0 + (6 * 2) + new_y, -8 - 70),
+  //     new Point(42 + 6 * k, 0 + (6 * 2) + last_y, -8 - 70),
+  //     new Point(42 + 6 * k, 0 + (6 * 2), -8),
+  //     new Point(48 + 6 * k, 0 + (6 * 2), -8)));
+  //   last_y = new_y;
+  // }
 
   // mountain corner
-  int last_x = 25 + rand() % static_cast<int>(25 + 1);
-  surfaces.push_front(new Surface(physics,
-    true,
-    new Point(60 + last_x, 0 + (6 * 2) + last_y, -8 - 70),
-    new Point(60, 0 + (6 * 2) + last_y, -8 - 70),
-    new Point(60, 0 + (6 * 2), -8),
-    new Point(60, 0 + (6 * 2), -8)));
+  // int last_x = 25 + rand() % static_cast<int>(25 + 1);
+  // surfaces.push_front(new Surface(physics,
+  //   true,
+  //   new Point(60 + last_x, 0 + (6 * 2) + last_y, -8 - 70),
+  //   new Point(60, 0 + (6 * 2) + last_y, -8 - 70),
+  //   new Point(60, 0 + (6 * 2), -8),
+  //   new Point(60, 0 + (6 * 2), -8)));
 
   // mountain segment 3
-  for (int k = 0; k < 3; k++) {
-    int new_x = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
-      true,
-      new Point(48 + 6 * 2 + new_x, 6 - 6 * k, -8 - 70),
-      new Point(48 + 6 * 2 + last_x, 12 - 6 * k + last_y, -8 - 70),
-      new Point(48 + 6 * 2, 12 - 6 * k, -8),
-      new Point(48 + 6 * 2, 6 - 6 * k, -8)));
-    last_x = new_x;
-    last_y = 0;
-  }
+  // for (int k = 0; k < 3; k++) {
+  //   int new_x = 25 + rand() % static_cast<int>(25 + 1);
+  //   surfaces.push_front(new Surface(physics,
+  //     true,
+  //     new Point(48 + 6 * 2 + new_x, 6 - 6 * k, -8 - 70),
+  //     new Point(48 + 6 * 2 + last_x, 12 - 6 * k + last_y, -8 - 70),
+  //     new Point(48 + 6 * 2, 12 - 6 * k, -8),
+  //     new Point(48 + 6 * 2, 6 - 6 * k, -8)));
+  //   last_x = new_x;
+  //   last_y = 0;
+  // }
 
   // surfaces segment 3 (slide back up)
   int height_array2[] = {-8, -6, -4, -4, -4, -2, 0, 0, 0};
@@ -688,16 +688,16 @@ bool Game::initializeGamePieces() {
     new Point(k_bumper_width, 0.0, 0)));
 
   // mountain segment 4
-  for (int k = 0; k < 8; k++) {
-    int new_x = 25 + rand() % static_cast<int>(25 + 1);
-    surfaces.push_front(new Surface(physics,
-      true,
-      new Point(48 + 6 * 2 + new_x, -12 - 6 * k, height_array2[k+1] - 70),
-      new Point(48 + 6 * 2 + last_x, -6 - 6 * k, height_array2[k] - 70),
-      new Point(48 + 6 * 2, -6 - 6 * k, height_array2[k]),
-      new Point(48 + 6 * 2, -12 - 6 * k, height_array2[k+1])));
-    last_x = new_x;
-  }
+  // for (int k = 0; k < 8; k++) {
+  //   int new_x = 25 + rand() % static_cast<int>(25 + 1);
+  //   surfaces.push_front(new Surface(physics,
+  //     true,
+  //     new Point(48 + 6 * 2 + new_x, -12 - 6 * k, height_array2[k+1] - 70),
+  //     new Point(48 + 6 * 2 + last_x, -6 - 6 * k, height_array2[k] - 70),
+  //     new Point(48 + 6 * 2, -6 - 6 * k, height_array2[k]),
+  //     new Point(48 + 6 * 2, -12 - 6 * k, height_array2[k+1])));
+  //   last_x = new_x;
+  // }
 
   return true;
 }
