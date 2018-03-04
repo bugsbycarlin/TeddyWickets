@@ -37,6 +37,7 @@
 #include <vector>
 
 #include "globals.h"
+#include "colors.h"
 
 class Graphics {
  public:

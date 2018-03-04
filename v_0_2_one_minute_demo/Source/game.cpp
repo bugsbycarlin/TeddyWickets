@@ -777,6 +777,10 @@ bool Game::initializeTextures() {
 
   ///////
 
+  Point* selection_box_color = colors->color("selection_box");
+  Point* dark_box_color = colors->darker(selection_box_color);
+  printf("Darker color: %d, %d, %d\n", (int) dark_box_color->x, (int) dark_box_color->y, (int) dark_box_color->z);
+
   choose_your_bears_text = new TextBox("cartoon_blocks.ttf", 60,
     "Choose your bears", 53, 62, 89, 44, 22);
   player_1_choose_text = new TextBox("cartoon_blocks.ttf", 60,

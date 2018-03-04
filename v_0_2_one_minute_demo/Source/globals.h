@@ -94,19 +94,11 @@ const int k_player_2_choices_x = 1147;
 // Experimental visual
 const int k_sun_period = 50000;
 
-
 /*
 
-
-  Random colors:
-
-  Sky blue: 135, 206, 235
-  Muted dark blue: 53, 62, 89
-  Silver Mist: 191, 200, 205
-  Selection box: 140, 98, 57
+For color palette, see colors.cpp
 
 */
-
 
 
 /*
