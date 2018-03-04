@@ -130,17 +130,9 @@ void Graphics::initializeBuffersAndGeometry() {
     1.0f, 1.0f, 1.0f, 1.0f,
   };
 
-  // glGenBuffers(1, &vertexbuffer);
-  // glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-  // glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
   glGenBuffers(1, &rectangle_color_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, rectangle_color_buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-
-  // glGenBuffers(1, &rectangle_texture_buffer);
-  // glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
-  // glBufferData(GL_ARRAY_BUFFER, sizeof(g_texture_buffer_data), g_texture_buffer_data, GL_STATIC_DRAW);
 
   glGenBuffers(1, &primitive_color_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
@@ -187,6 +179,7 @@ void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float targe
   view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z),
     glm::vec3(target_x, target_y, target_z),
     glm::vec3(0, 0, 1));
+  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::standardLightPosition() {
@@ -838,19 +831,16 @@ void Graphics::color(float r, float g, float b, float a) {
 }
 
 void Graphics::rotate(float angle, float x, float y, float z) {
-  // glRotatef(angle, x, y, z);
-  model = model * glm::rotate(angle, glm::vec3(x, y, z));
+  model = model * glm::rotate(glm::radians(angle), glm::vec3(x, y, z));
   glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::translate(float x, float y, float z) {
-  // glTranslatef(x, y, z);
-  //model = model * glm::translate(glm::vec3(x, y, z));
-  //glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  model = model * glm::translate(glm::vec3(0, 0, 0));
+  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 void Graphics::scale(float x, float y, float z) {
-  // glScalef(x, y, z);
   model = model * glm::scale(glm::vec3(x, y, z));
   glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
@@ -864,7 +854,10 @@ void Graphics::popMatrix() {
 }
 
 void Graphics::multMatrix(const float* m) {
+  glm::mat4 mult = glm::make_mat4(m);
+  model = model * mult;
   // glMultMatrixf((GLfloat*)m);
+  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
 }
 
 int Graphics::cacheProgram() {
