@@ -535,6 +535,10 @@ int Graphics::cacheMesh(int size, float vertex_data[], float normal_data[], floa
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * size * 3, vertex_data, GL_STATIC_DRAW);
 
+  glGenBuffers(1, &normal_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, normal_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(normal_data) * size * 3, normal_data, GL_STATIC_DRAW);
+
   glGenBuffers(1, &texture_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * size * 2, texture_data, GL_STATIC_DRAW);
@@ -560,11 +564,23 @@ void Graphics::drawMesh(int cache_id) {
     (void*)0            // array buffer offset
   );
 
-  // 2nd attribute buffer : colors
+  // 2nd attribute buffer : normals
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, normal_buffers[cache_id]);
   glVertexAttribPointer(
     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    3,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3rd attribute buffer : colors
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
     4,                                // size
     GL_FLOAT,                         // type
     GL_FALSE,                         // normalized?
@@ -572,11 +588,11 @@ void Graphics::drawMesh(int cache_id) {
     (void*)0                          // array buffer offset
   );
 
-  // 3nd attribute buffer : UVs
-  glEnableVertexAttribArray(2);
+  // 4th attribute buffer : textures
+  glEnableVertexAttribArray(3);
   glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
   glVertexAttribPointer(
-    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    3,                                // attribute. No particular reason for 3, but must match the layout in the shader.
     2,                                // size : U+V => 2
     GL_FLOAT,                         // type
     GL_FALSE,                         // normalized?
@@ -593,6 +609,7 @@ void Graphics::drawMesh(int cache_id) {
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
+  glDisableVertexAttribArray(3);
 }
 
 int Graphics::cacheFullMesh(std::vector<float> vertex_data, std::vector<float> normal_data, std::vector<float> texture_data, std::vector<float> color_data) {
@@ -605,6 +622,10 @@ int Graphics::cacheFullMesh(std::vector<float> vertex_data, std::vector<float> n
   glGenBuffers(1, &vertex_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
   glBufferData(GL_ARRAY_BUFFER, vertex_data.size() * sizeof(float), &vertex_data[0], GL_STATIC_DRAW);
+
+  glGenBuffers(1, &normal_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, normal_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, normal_data.size() * sizeof(float), &normal_data[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &texture_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
@@ -635,11 +656,23 @@ void Graphics::drawFullMesh(int cache_id) {
     (void*)0            // array buffer offset
   );
 
-  // 2nd attribute buffer : colors
+  // 2nd attribute buffer : normals
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, color_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, normal_buffers[cache_id]);
   glVertexAttribPointer(
     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    3,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3rd attribute buffer : colors
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, color_buffers[cache_id]);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
     4,                                // size
     GL_FLOAT,                         // type
     GL_FALSE,                         // normalized?
@@ -647,11 +680,11 @@ void Graphics::drawFullMesh(int cache_id) {
     (void*)0                          // array buffer offset
   );
 
-  // 3nd attribute buffer : UVs
-  glEnableVertexAttribArray(2);
+  // 4th attribute buffer : textures
+  glEnableVertexAttribArray(3);
   glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
   glVertexAttribPointer(
-    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    3,                                // attribute. No particular reason for 2, but must match the layout in the shader.
     2,                                // size : U+V => 2
     GL_FLOAT,                         // type
     GL_FALSE,                         // normalized?
@@ -664,6 +697,7 @@ void Graphics::drawFullMesh(int cache_id) {
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
+  glDisableVertexAttribArray(3);
 }
 
 int Graphics::cacheRectangle(float x, float y, float w, float h) {
@@ -685,9 +719,20 @@ int Graphics::cacheRectangle(float x, float y, float w, float h) {
     1.0f, 0.0f
   };
 
+  GLfloat normal_data[] = {
+    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f
+  };
+
   glGenBuffers(1, &vertex_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * 4 * 3, vertex_data, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &normal_buffers[cache_id]);
+  glBindBuffer(GL_ARRAY_BUFFER, normal_buffers[cache_id]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(normal_data) * 4 * 3, normal_data, GL_STATIC_DRAW);
 
   glGenBuffers(1, &texture_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, texture_buffers[cache_id]);
@@ -782,9 +827,21 @@ void Graphics::rectangle(float x, float y, float w, float h) {
 }
 
 void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
+
+  GLfloat normal_data[] = { 
+    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f
+  };
+
   glGenBuffers(1, &rectangle_vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * 4 * 3, vertex_data, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &rectangle_normal_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_normal_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(normal_data) * 4 * 3, normal_data, GL_STATIC_DRAW);
 
   glGenBuffers(1, &rectangle_texture_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
@@ -804,9 +861,21 @@ void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
 
   // 2nd attribute buffer : colors
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_color_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_normal_buffer);
   glVertexAttribPointer(
     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    3,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  // 3rd attribute buffer : colors
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, rectangle_color_buffer);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
     4,                                // size
     GL_FLOAT,                         // type
     GL_FALSE,                         // normalized?
@@ -814,11 +883,11 @@ void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
     (void*)0                          // array buffer offset
   );
 
-  // 3nd attribute buffer : UVs
-  glEnableVertexAttribArray(2);
+  // 4th attribute buffer : textures
+  glEnableVertexAttribArray(3);
   glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
   glVertexAttribPointer(
-    2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
+    3,                                // attribute. No particular reason for 2, but must match the layout in the shader.
     2,                                // size : U+V => 2
     GL_FLOAT,                         // type
     GL_FALSE,                         // normalized?
@@ -831,6 +900,7 @@ void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
+  glDisableVertexAttribArray(3);
 }
 
 void Graphics::lineWidth(int lineWidth) {

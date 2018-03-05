@@ -60,6 +60,7 @@ class Graphics {
   int* black_texture_id;
 
   GLuint rectangle_vertex_buffer;
+  GLuint rectangle_normal_buffer;
   GLuint rectangle_color_buffer;
   GLuint rectangle_texture_buffer;
 
