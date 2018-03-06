@@ -23,14 +23,16 @@ Graphics::Graphics() {
 // This method sets up the screen for a 2D drawing phase
 void Graphics::start2DDraw() {
   glDisable(GL_DEPTH_TEST);
+  disableLights();
   projection = glm::ortho(0.0f, (float) k_screen_width, (float) k_screen_height, 0.0f, 0.0f, 1.0f);
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection));
   color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 // This method ends the 2D drawing phase
 void Graphics::end2DDraw() {
   glEnable(GL_DEPTH_TEST);
+  enableLights();
 }
 
 
@@ -120,10 +122,13 @@ void Graphics::initializeBasic() {
 void Graphics::initializeBuffersAndGeometry() {
 
   global_color_id = glGetUniformLocation(shader_program, "global_color_vector");
-  matrix_id = glGetUniformLocation(shader_program, "mvp_matrix");
+  mvp_matrix_id = glGetUniformLocation(shader_program, "mvp_matrix");
+  v_matrix_id = glGetUniformLocation(shader_program, "v_matrix");
+  m_matrix_id = glGetUniformLocation(shader_program, "m_matrix");
   texture_sampler_id = glGetUniformLocation(shader_program, "myTextureSampler");
   bool_cel_shading_id = glGetUniformLocation(shader_program, "bool_cel_shading");
   bool_lighting_id = glGetUniformLocation(shader_program, "bool_lighting");
+  light_position_worldspace_id = glGetUniformLocation(shader_program, "light_position_worldspace");
 
   glGenVertexArrays(1, &vertex_array_id);
   glBindVertexArray(vertex_array_id);
@@ -174,8 +179,11 @@ void Graphics::set3d(float zoom) {
   // perspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
 
   model = glm::mat4(1.0);
+  view = glm::mat4(1.0);
   projection = glm::ortho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
+  glUniformMatrix4fv(v_matrix_id, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z) {
@@ -184,7 +192,8 @@ void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float targe
   view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z),
     glm::vec3(target_x, target_y, target_z),
     glm::vec3(0, 0, 1));
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(v_matrix_id, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void Graphics::standardLightPosition() {
@@ -220,6 +229,8 @@ void Graphics::standardLightPosition() {
   // // straight from the left
   // // GLfloat light_position[] = {-1.0, 1.0, 0.0, 0.0};
   // // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+  glUniform3fv(light_position_worldspace_id, 1, glm::value_ptr(glm::vec3(2, 2, 5)));
 }
 
 void Graphics::initializeShadersAndLighting() {
@@ -926,17 +937,20 @@ void Graphics::color(float r, float g, float b, float a) {
 
 void Graphics::rotate(float angle, float x, float y, float z) {
   model = model * glm::rotate(glm::radians(angle), glm::vec3(x, y, z));
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void Graphics::translate(float x, float y, float z) {
   model = model * glm::translate(glm::vec3(x, y, z));
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void Graphics::scale(float x, float y, float z) {
   model = model * glm::scale(glm::vec3(x, y, z));
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
 }
 
 void Graphics::pushModelMatrix() {
@@ -952,7 +966,8 @@ void Graphics::multMatrix(const float* m) {
   glm::mat4 mult = glm::make_mat4(m);
   model = model * mult;
   // glMultMatrixf((GLfloat*)m);
-  glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
 }
 
 // int Graphics::cacheProgram() {

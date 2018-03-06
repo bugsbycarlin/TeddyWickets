@@ -350,6 +350,7 @@ void Game::render() {
     character->position->x, character->position->y, 0);
 
   graphics->standardLightPosition();
+  graphics->enableLights();
 
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {

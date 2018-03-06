@@ -70,11 +70,14 @@ class Graphics {
   GLuint primitive_texture_buffer;
 
   GLuint vertex_array_id;
-  GLuint matrix_id;
+  GLuint mvp_matrix_id;
+  GLuint v_matrix_id;
+  GLuint m_matrix_id;
   GLuint global_color_id;
   GLuint texture_sampler_id;
   GLuint bool_cel_shading_id;
   GLuint bool_lighting_id;
+  GLuint light_position_worldspace_id;
 
   glm::mat4 projection;
   glm::mat4 view;
