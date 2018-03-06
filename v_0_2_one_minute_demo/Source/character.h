@@ -26,6 +26,8 @@ class Character {
     Physics* physics;
     Model* model;
 
+    Model* shot_arrow;
+
     float default_shot_rotation;
     float shot_rotation;
     float default_shot_power;

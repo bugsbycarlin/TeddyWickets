@@ -31,10 +31,11 @@ class Surface {
     float color_b;
 
     bool use_grey;
+    bool tiled;
 
     int cache_id;
 
-    Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4);
+    Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4, bool tiled);
 
     void render();
 };

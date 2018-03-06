@@ -16,6 +16,8 @@ Bumper::Bumper(Physics* physics, Point* start, Point* end, Point* extrusion) {
 
   this->physics = physics;
 
+  this->cache_id = -1;
+
   identity = physics->addBumper(start, end, extrusion);
 }
 
@@ -34,53 +36,90 @@ void Bumper::update() {
 
 void Bumper::render() {
   // if the bumper has been bumped, light it up
+  // if (last_bumped > 0) {
+  //   textures->setTexture("lit_bumper");
+  // } else {
+  //   textures->setTexture("bumper");
+  // }
+  // graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
+
+  textures->setTexture("pastel_rainbow");
   if (last_bumped > 0) {
-    textures->setTexture("lit_bumper");
+    graphics->color(0.5f, 0.5f, 1.0f, 1.0f);
   } else {
-    textures->setTexture("bumper");
+    graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
   }
 
-  graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
+  if (cache_id == -1) {
 
-  // GROSS
+    std::vector<float> vertex_data = {};
+    std::vector<float> normal_data = {};
+    std::vector<float> texture_data = {};
+    std::vector<float> color_data = {};
 
-  float data1[] = {
-    0, 0, 0, 0, 1, start->x, start->y, start->z,
-    4, 0, 0, 0, 1, end->x, end->y, end->z,
-    4, 1, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
-    0, 1, 0, 0, 1, start->x, start->y, start->z + k_bumper_height
-  };
-  //graphics->primitive(4, data1);
+    vertex_data.push_back(start->x);
+    vertex_data.push_back(start->y);
+    vertex_data.push_back(start->z + 0.01f);
+    vertex_data.push_back(end->x);
+    vertex_data.push_back(end->y);
+    vertex_data.push_back(end->z + 0.01f);
+    vertex_data.push_back(end->x + extrusion->x);
+    vertex_data.push_back(end->y + extrusion->y);
+    vertex_data.push_back(end->z + extrusion->z + 0.01f);
+    vertex_data.push_back(start->x + extrusion->x);
+    vertex_data.push_back(start->y + extrusion->y);
+    vertex_data.push_back(start->z + extrusion->z + 0.01f);
 
-  float data2[] = {
-    0, 0, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z,
-    4, 0, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z,
-    4, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
-    0, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
-  };
-  //graphics->primitive(4, data2);
+    texture_data.push_back(0);
+    texture_data.push_back(0);
+    texture_data.push_back(4);
+    texture_data.push_back(0);
+    texture_data.push_back(4);
+    texture_data.push_back(1);
+    texture_data.push_back(0);
+    texture_data.push_back(1);
 
-  float data3[] = {
-    0, 0, 0, 0, 1, start->x, start->y, start->z + k_bumper_height,
-    4, 0, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
-    4, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
-    0, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
-  };
-  //graphics->primitive(4, data3);
+    Point* normal = physics->normalVectorRelative(start, end, new Point(start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z));
+    float flip = 1.0f;
+    if (normal->z < 0) {
+      flip = -1.0f;
+    }
+    normal_data.push_back(normal->x * flip);
+    normal_data.push_back(normal->y * flip);
+    normal_data.push_back(normal->z * flip);
+    normal_data.push_back(normal->x * flip);
+    normal_data.push_back(normal->y * flip);
+    normal_data.push_back(normal->z * flip);
+    normal_data.push_back(normal->x * flip);
+    normal_data.push_back(normal->y * flip);
+    normal_data.push_back(normal->z * flip);
+    normal_data.push_back(normal->x * flip);
+    normal_data.push_back(normal->y * flip);
+    normal_data.push_back(normal->z * flip);
 
-  float data4[] = {
-    0.5, 0, 0, 0, 1, start->x, start->y, start->z,
-    1, 0, 0, 0, 1, start->x, start->y, start->z + k_bumper_height,
-    1, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z + k_bumper_height,
-    0.5, 1, 0, 0, 1, start->x + extrusion->x, start->y + extrusion->y, start->z + extrusion->z,
-  };
-  //graphics->primitive(4, data4);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
+    color_data.push_back(1.0f);
 
-  float data5[] = {
-    0.5, 0, 0, 0, 1, end->x, end->y, end->z,
-    1, 0, 0, 0, 1, end->x, end->y, end->z + k_bumper_height,
-    1, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z + k_bumper_height,
-    0.5, 1, 0, 0, 1, end->x + extrusion->x, end->y + extrusion->y, end->z + extrusion->z,
-  };
-  //graphics->primitive(4, data5);
+    cache_id = graphics->cacheFullMesh(
+      vertex_data,
+      normal_data,
+      texture_data,
+      color_data);
+  } else {
+    graphics->drawMesh(cache_id);
+  }
 }

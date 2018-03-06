@@ -20,7 +20,13 @@
   +- Abstract away OpenGL in wrappers
   +- Upgrade from OpenGL 2.1 to OpenGL 4.1 and rewrite graphics to fit
   
-  - Cel shading and outlining
+
+  +- Cel shading
+  
+  - Refined cel shading
+  - cel shade outlining
+  
+  - fix color palette
 
 
   - Remove mouse support

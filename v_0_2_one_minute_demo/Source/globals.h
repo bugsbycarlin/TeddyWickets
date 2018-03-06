@@ -21,9 +21,9 @@ const float k_default_zoom = 11.0f;
 // const float k_default_zoom = 4.0f;
 
 // Bumper
-const float k_bumper_height = 0.5f;
+const float k_bumper_height = 0.25f;
 const float k_physics_bumper_height = 4.0f;
-const float k_bumper_width = 0.5;
+const float k_bumper_width = 0.25;
 
 // Character
 const float k_default_shot_rotation = 2.36f;

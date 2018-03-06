@@ -9,6 +9,8 @@
 #ifndef TEDDY_WICKETS_BUMPER_H_
 #define TEDDY_WICKETS_BUMPER_H_
 
+#include <cstdlib>
+
 #include "globals.h"
 #include "graphics.h"
 #include "physics.h"
@@ -26,6 +28,8 @@ class Bumper {
     int identity;
 
     int last_bumped;
+
+    int cache_id;
 
     bool use_grey;
 

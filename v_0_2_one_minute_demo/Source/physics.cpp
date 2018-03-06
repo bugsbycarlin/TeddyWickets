@@ -118,7 +118,6 @@ int Physics::addSurface(Point* p1, Point* p2, Point* p3, Point* p4) {
   return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
 }
 
-
 // Add a whole mesh
 int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rotation) {
   btTriangleMesh *mesh = new btTriangleMesh();
@@ -143,6 +142,22 @@ int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rota
   transform.setRotation(rotation_quaternion);
 
   return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
+}
+
+// Add a mesh which is to be used as a softbody
+int Physics::addSoftbodyMesh(std::list<Triangle*> triangles, Point* position, float rotation) {
+  btTriangleMesh *mesh = new btTriangleMesh();
+  int counter = 0;
+  for (auto triangle = triangles.begin(); triangle != triangles.end(); ++triangle) {
+    mesh->addTriangle(btVector3((*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y),
+      btVector3((*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y),
+      btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y));
+    counter += 1;
+  }
+  printf("Added %d softbody mesh triangles to the physics system.\n", counter);
+  btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+
+  
 }
 
 // Add a wicket object to the physics system. This involves adding two poles.

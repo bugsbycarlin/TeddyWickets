@@ -7,7 +7,7 @@
 
 #include "surface.h"
 
-Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4) {
+Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p3, Point* p4, bool tiled) {
   this->p1 = p1;
   this->p2 = p2;
   this->p3 = p3;
@@ -22,8 +22,10 @@ Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p
 
   this->physics = physics;
 
+  this->tiled = tiled;
+
   this->normal = physics->normalVectorRelative(p1, p3, p4);
-  printf("Normal: %0.2f, %0.2f, %0.2f\n", normal->x, normal->y, normal->z);
+  printf("Normal: %0.4f, %0.4f, %0.4f\n", normal->x, normal->y, normal->z);
 
   physics->addSurface(p1, p2, p3, p4);
 
@@ -31,7 +33,11 @@ Surface::Surface(Physics* physics, bool use_grey, Point* p1, Point* p2, Point* p
 }
 
 void Surface::render() {
-  textures->setTexture("tiles");
+  if (tiled) {
+    textures->setTexture("tiles");
+  } else {
+    textures->setTexture("polar_grey");
+  }
 
   if (use_grey) {
     graphics->color(color_r, color_g, color_b, 1.0f);

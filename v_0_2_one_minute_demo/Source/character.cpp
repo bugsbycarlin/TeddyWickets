@@ -14,6 +14,8 @@ Character::Character(Physics* physics, Point* position) {
 
   this->model = new Model("teddy_bear_draft_3.obj");
 
+  this->shot_arrow = new Model("arrow.obj");
+
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
   default_shot_power = k_default_shot_power;
@@ -55,23 +57,26 @@ void Character::render(int game_mode) {
       position->getOpenGLMatrix(transform_matrix);
       graphics->pushModelMatrix();
       graphics->multMatrix(transform_matrix);
-      graphics->sphere(radius * 0.15);
+      //graphics->sphere(radius * 0.15);
+      graphics->scale(1.0f, 1.0f, 1.0f);
+      graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+      shot_arrow->render();
       graphics->popModelMatrix();
     }
 
     // lines between balls
 
-    graphics->lineWidth(3);
-    //float line_data[3 * future_positions.size()];
-    std::vector<float> line_data = {};
-    for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
-      btScalar transform_matrix[16];
-      position->getOpenGLMatrix(transform_matrix);
-      line_data.push_back(position->getOrigin().getX());
-      line_data.push_back(position->getOrigin().getY());
-      line_data.push_back(position->getOrigin().getZ());
-    }
-    graphics->lineStrip(line_data);
+    // graphics->lineWidth(3);
+    // //float line_data[3 * future_positions.size()];
+    // std::vector<float> line_data = {};
+    // for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
+    //   btScalar transform_matrix[16];
+    //   position->getOpenGLMatrix(transform_matrix);
+    //   line_data.push_back(position->getOrigin().getX());
+    //   line_data.push_back(position->getOrigin().getY());
+    //   line_data.push_back(position->getOrigin().getZ());
+    // }
+    // graphics->lineStrip(line_data);
   }
 }
 
@@ -99,7 +104,7 @@ void Character::setShotRotation(float value, bool recompute_trajectory) {
     btTransform current_transform = physics->getTransform(identity);
     for (int i = 0; i < 300; i++) {
       physics->update(1.0f / 60.f);
-      if (i > 0 && i % 5 == 0) future_positions.push_front(btTransform(physics->getTransform(identity)));
+      if (i > 0 && i % 8 == 0) future_positions.push_front(btTransform(physics->getTransform(identity)));
     }
     physics->setTransform(identity, current_transform);
     physics->stop(identity);
