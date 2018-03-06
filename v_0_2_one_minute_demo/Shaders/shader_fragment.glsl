@@ -22,51 +22,29 @@ in vec3 light_direction_vector_cameraspace;
 
 out vec4 final_color_vector;
 
-float cel_step(in float color_value) {
-    float new_color_value;
-    // if (color_value > 0.9) {
-    //   new_color_value = 0.95;
-    // } else if (color_value > 0.8) {
-    //   new_color_value = 0.85;
-    // } else if (color_value > 0.7) {
-    //   new_color_value = 0.75;
-    // } else if (color_value > 0.6) {
-    //   new_color_value = 0.65;
-    // } else if (color_value > 0.5) {
-    //   new_color_value = 0.55;
-    // } else if (color_value > 0.4) {
-    //   new_color_value = 0.45;
-    // } else if (color_value > 0.3) {
-    //   new_color_value = 0.35;
-    // } else if (color_value > 0.2) {
-    //   new_color_value = 0.25;
-    // } else if (color_value > 0.1) {
-    //   new_color_value = 0.15;
-    // } else {
-    //   new_color_value = 0;
-    // }
+vec3 cel_step(in vec3 light_color, in vec3 true_color) {
+    float color_fraction;
+    // if (true_color.r > 0) color_fraction += clamp(light_color.r / true_color.r, 1.2, 0);
+    // if (true_color.g > 0) color_fraction += clamp(light_color.g / true_color.g, 1.2, 0);
+    // if (true_color.b > 0) color_fraction += clamp(light_color.b / true_color.b, 1.2, 0);
+    // color_fraction = color_fraction / 3.0;
+    color_fraction = clamp((light_color.x + light_color.y + light_color.z) / 1.8, 0, 1);
 
-    // if (color_value > 0.9) {
-    //   new_color_value = 1.0;
-    // } else if (color_value > 0.6) {
-    //   new_color_value = 0.6;
-    // } else if (color_value > 0.2) {
-    //   new_color_value = 0.2;
-    // } else {
-    //   new_color_value = 0;
-    // }
+    float new_color_fraction;
 
-    if (color_value < 0.1) {
-      new_color_value = 0;
-    } else if(color_value < 0.3) {
-      new_color_value = 0.3;
-    } else if(color_value < 0.6) {
-      new_color_value = 0.6;
+    if (color_fraction < 0.1) {
+      new_color_fraction = 0.3;
+    } else if(color_fraction < 0.3) {
+      new_color_fraction = 0.5;
+    } else if(color_fraction < 0.6) {
+      new_color_fraction = 0.8;
+    } else if(color_fraction < 0.8) {
+      new_color_fraction = 0.9;
     } else {
-      new_color_value = 0.98;
+      new_color_fraction = 0.98;
     }
 
-    return new_color_value;
+    return new_color_fraction * true_color;
 }
 
 void main(){
@@ -77,16 +55,16 @@ void main(){
 
     vec3 light_color = vec3(1, 1, 1);
     // spotlight needs power, directional doesn't (ish)
-    //float light_power = 1.0f;
-    float light_power = 50.0f;
+    float light_power = 1.0f;
+    //float light_power = 50.0f;
 
     vec3 material_diffuse_color = (global_color_vector * texture(texture_sampler, fragment_texture_vector) * fragment_color_vector).rgb;
     vec3 material_ambient_color = vec3(0.3, 0.3, 0.3) * material_diffuse_color;
-    vec3 material_specular_color = vec3(0.1, 0.1, 0.1);
+    vec3 material_specular_color = vec3(0.0, 0.0, 0.0);
 
     // fix distance to 1.0 to get a directional light, along with the mods in the shader.
-    float distance = length(light_position_worldspace - position_vector_worldspace);
-    //float distance = 1.0f;
+    //float distance = length(light_position_worldspace - position_vector_worldspace);
+    float distance = 1.0f;
 
     vec3 n = normalize(normal_vector_cameraspace);
     vec3 l = normalize(light_direction_vector_cameraspace);
@@ -115,9 +93,12 @@ void main(){
       // Specular : reflective highlight, like a mirror
       material_specular_color * light_color * light_power * pow(cos_alpha, 5) / (distance * distance);
 
-    if (bool_cel_shading > 0.5) {
-      almost_final_color = vec3(cel_step(almost_final_color.x), cel_step(almost_final_color.y), cel_step(almost_final_color.z));
-    }
+    //if (bool_cel_shading > 0.5) {
+      //float intensity = cel_step(clamp((almost_final_color.x + almost_final_color.y + almost_final_color.z) / 1.8, 0, 1));
+      //float intensity = 0.75;
+      //almost_final_color = intensity * almost_final_color;
+      almost_final_color = cel_step(almost_final_color, (global_color_vector * texture(texture_sampler, fragment_texture_vector)).rgb);
+    //}
 
     final_color_vector = vec4(almost_final_color, 1.0);
   }

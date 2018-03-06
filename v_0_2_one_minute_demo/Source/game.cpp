@@ -343,17 +343,20 @@ void Game::render() {
   renderBackground();
 
   graphics->set3d(zoom);
+  graphics->enableLights();
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
   graphics->standardCamera(character->position->x + 15, character->position->y + 15, 10,
     character->position->x, character->position->y, 0);
 
-  graphics->standardLightPosition();
-  graphics->enableLights();
+  //graphics->setLightPosition(character->position->x + 3, character->position->y, character->position->z + 5);
+  graphics->setLightPosition(50, 0, 15);
 
-  unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-  graphics->setLightPosition(5.0f * cos((current_time - start_time) / 1000.0f), 0.0f, 5.0f * sin((current_time - start_time) / 1000.0f));
+  //graphics->standardLightPosition();
+
+  //unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+  //graphics->setLightPosition(5.0f * cos((current_time - start_time) / 1000.0f), 0.0f, 5.0f * sin((current_time - start_time) / 1000.0f));
 
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
@@ -535,7 +538,8 @@ bool Game::initializeGamePieces() {
         new Point(0 + 6 * k, 0 + 6 * y, height_array[k+1]),
         new Point(-6 + 6 * k, 0 + 6 * y, height_array[k]),
         new Point(-6 + 6 * k, -6 + 6 * y, height_array[k]),
-        new Point(0 + 6 * k, -6 + 6 * y, height_array[k+1])));
+        new Point(0 + 6 * k, -6 + 6 * y, height_array[k+1]),
+        true));
     }
   }
 
@@ -574,19 +578,20 @@ bool Game::initializeGamePieces() {
     new Point(0, k_bumper_width, 0)));
 
   // mountain segment 1
-  // int first_x = 10 + rand() % static_cast<int>(20 + 1);
-  // int last_y = 25 + rand() % static_cast<int>(25 + 1);
-  // for (int k = 0; k < 8; k++) {
-  //   int new_y = 25 + rand() % static_cast<int>(25 + 1);
-  //   surfaces.push_front(new Surface(physics,
-  //     true,
-  //     new Point(0 + 6 * k, 0 + (6 * 2) + new_y, height_array[k+1] - 70),
-  //     new Point(-6 + 6 * k - first_x, 0 + (6 * 2) + last_y, height_array[k] - 70),
-  //     new Point(-6 + 6 * k, 0 + (6 * 2), height_array[k]),
-  //     new Point(0 + 6 * k, 0 + (6 * 2), height_array[k+1])));
-  //   last_y = new_y;
-  //   first_x = 0;
-  // }
+  int first_x = 10 + rand() % static_cast<int>(20 + 1);
+  int last_y = 25 + rand() % static_cast<int>(25 + 1);
+  for (int k = 0; k < 8; k++) {
+    int new_y = 25 + rand() % static_cast<int>(25 + 1);
+    surfaces.push_front(new Surface(physics,
+      true,
+      new Point(0 + 6 * k, 0 + (6 * 2) + new_y, height_array[k+1] - 70),
+      new Point(-6 + 6 * k - first_x, 0 + (6 * 2) + last_y, height_array[k] - 70),
+      new Point(-6 + 6 * k, 0 + (6 * 2), height_array[k]),
+      new Point(0 + 6 * k, 0 + (6 * 2), height_array[k+1]),
+      false));
+    last_y = new_y;
+    first_x = 0;
+  }
 
   // surfaces segment 2 (corner)
   for (int x = 0; x < 3; x++) {
@@ -596,7 +601,8 @@ bool Game::initializeGamePieces() {
         new Point(48 + 6 * x, 0 + 6 * y, -8),
         new Point(42 + 6 * x, 0 + 6 * y, -8),
         new Point(42 + 6 * x, -6 + 6 * y, -8),
-        new Point(48 + 6 * x, -6 + 6 * y, -8)));
+        new Point(48 + 6 * x, -6 + 6 * y, -8),
+        true));
     }
   }
 
@@ -611,38 +617,41 @@ bool Game::initializeGamePieces() {
     new Point(-k_bumper_width, 0.0, 0)));
 
   // mountain segment 2
-  // for (int k = 0; k < 3; k++) {
-  //   int new_y = 25 + rand() % static_cast<int>(25 + 1);
-  //   surfaces.push_front(new Surface(physics,
-  //     true,
-  //     new Point(48 + 6 * k, 0 + (6 * 2) + new_y, -8 - 70),
-  //     new Point(42 + 6 * k, 0 + (6 * 2) + last_y, -8 - 70),
-  //     new Point(42 + 6 * k, 0 + (6 * 2), -8),
-  //     new Point(48 + 6 * k, 0 + (6 * 2), -8)));
-  //   last_y = new_y;
-  // }
+  for (int k = 0; k < 3; k++) {
+    int new_y = 25 + rand() % static_cast<int>(25 + 1);
+    surfaces.push_front(new Surface(physics,
+      true,
+      new Point(48 + 6 * k, 0 + (6 * 2) + new_y, -8 - 70),
+      new Point(42 + 6 * k, 0 + (6 * 2) + last_y, -8 - 70),
+      new Point(42 + 6 * k, 0 + (6 * 2), -8),
+      new Point(48 + 6 * k, 0 + (6 * 2), -8),
+      false));
+    last_y = new_y;
+  }
 
   // mountain corner
-  // int last_x = 25 + rand() % static_cast<int>(25 + 1);
-  // surfaces.push_front(new Surface(physics,
-  //   true,
-  //   new Point(60 + last_x, 0 + (6 * 2) + last_y, -8 - 70),
-  //   new Point(60, 0 + (6 * 2) + last_y, -8 - 70),
-  //   new Point(60, 0 + (6 * 2), -8),
-  //   new Point(60, 0 + (6 * 2), -8)));
+  int last_x = 25 + rand() % static_cast<int>(25 + 1);
+  surfaces.push_front(new Surface(physics,
+    true,
+    new Point(60 + last_x, 0 + (6 * 2) + last_y, -8 - 70),
+    new Point(60, 0 + (6 * 2) + last_y, -8 - 70),
+    new Point(60, 0 + (6 * 2), -8),
+    new Point(60, 0 + (6 * 2), -8),
+    false));
 
   // mountain segment 3
-  // for (int k = 0; k < 3; k++) {
-  //   int new_x = 25 + rand() % static_cast<int>(25 + 1);
-  //   surfaces.push_front(new Surface(physics,
-  //     true,
-  //     new Point(48 + 6 * 2 + new_x, 6 - 6 * k, -8 - 70),
-  //     new Point(48 + 6 * 2 + last_x, 12 - 6 * k + last_y, -8 - 70),
-  //     new Point(48 + 6 * 2, 12 - 6 * k, -8),
-  //     new Point(48 + 6 * 2, 6 - 6 * k, -8)));
-  //   last_x = new_x;
-  //   last_y = 0;
-  // }
+  for (int k = 0; k < 3; k++) {
+    int new_x = 25 + rand() % static_cast<int>(25 + 1);
+    surfaces.push_front(new Surface(physics,
+      true,
+      new Point(48 + 6 * 2 + new_x, 6 - 6 * k, -8 - 70),
+      new Point(48 + 6 * 2 + last_x, 12 - 6 * k + last_y, -8 - 70),
+      new Point(48 + 6 * 2, 12 - 6 * k, -8),
+      new Point(48 + 6 * 2, 6 - 6 * k, -8),
+      false));
+    last_x = new_x;
+    last_y = 0;
+  }
 
   // surfaces segment 3 (slide back up)
   int height_array2[] = {-8, -6, -4, -4, -4, -2, 0, 0, 0};
@@ -653,7 +662,8 @@ bool Game::initializeGamePieces() {
         new Point(48 + 6 * x, -6 - 6 * k, height_array2[k]),
         new Point(42 + 6 * x, -6 - 6 * k, height_array2[k]),
         new Point(42 + 6 * x, -12 - 6 * k, height_array2[k+1]),
-        new Point(48 + 6 * x, -12 - 6 * k, height_array2[k+1])));
+        new Point(48 + 6 * x, -12 - 6 * k, height_array2[k+1]),
+        true));
     }
   }
 
@@ -692,16 +702,17 @@ bool Game::initializeGamePieces() {
     new Point(k_bumper_width, 0.0, 0)));
 
   // mountain segment 4
-  // for (int k = 0; k < 8; k++) {
-  //   int new_x = 25 + rand() % static_cast<int>(25 + 1);
-  //   surfaces.push_front(new Surface(physics,
-  //     true,
-  //     new Point(48 + 6 * 2 + new_x, -12 - 6 * k, height_array2[k+1] - 70),
-  //     new Point(48 + 6 * 2 + last_x, -6 - 6 * k, height_array2[k] - 70),
-  //     new Point(48 + 6 * 2, -6 - 6 * k, height_array2[k]),
-  //     new Point(48 + 6 * 2, -12 - 6 * k, height_array2[k+1])));
-  //   last_x = new_x;
-  // }
+  for (int k = 0; k < 8; k++) {
+    int new_x = 25 + rand() % static_cast<int>(25 + 1);
+    surfaces.push_front(new Surface(physics,
+      true,
+      new Point(48 + 6 * 2 + new_x, -12 - 6 * k, height_array2[k+1] - 70),
+      new Point(48 + 6 * 2 + last_x, -6 - 6 * k, height_array2[k] - 70),
+      new Point(48 + 6 * 2, -6 - 6 * k, height_array2[k]),
+      new Point(48 + 6 * 2, -12 - 6 * k, height_array2[k+1]),
+      false));
+    last_x = new_x;
+  }
 
   return true;
 }
@@ -738,7 +749,9 @@ bool Game::initialize() {
 bool Game::initializeTextures() {
   textures->addTexture("coordinates", "coordinates.png");
 
-  textures->addTexture("tiles", "tiles4.png");
+  textures->addTexture("tiles", "tile.png");
+  textures->addTexture("polar_grey", "polar_grey.png");
+  textures->addTexture("pastel_rainbow", "pastel_rainbow.png");
 
   textures->addTexture("bumper", "bumper2.png");
   textures->addTexture("lit_bumper", "bumper4.png");
@@ -753,7 +766,7 @@ bool Game::initializeTextures() {
   textures->addTexture("shot_power_outline", "ShotPowerOutline.png");
   textures->addTexture("shot_power_fill", "ShotPowerFill.png");
 
-  textures->addTexture("clouds", "clouds.png");
+  textures->addTexture("clouds", "clouds_soft.png");
 
   textures->addTexture("left_turn_info", "A_Key_Turn_Left.png");
   textures->addTexture("right_turn_info", "D_Key_Turn_Right.png");

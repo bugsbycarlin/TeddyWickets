@@ -54,6 +54,7 @@ class Physics {
     int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
     int addBall(float radius, float x_pos, float y_pos, float z_pos);
     int addMesh(std::list<Triangle*> triangles, Point* position, float rotation);
+    int addSoftbodyMesh(std::list<Triangle*> triangles, Point* position, float rotation);
 
     void update(float time_step);
 

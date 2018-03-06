@@ -15,6 +15,8 @@ Colors::Colors() {
   palette["silver_mist"] = new Point(191, 200, 205);
 
   palette["selection_box"] = new Point(140, 98, 57);
+  palette["polar_grey"] = new Point(248, 245, 239);
+  palette["soft_blue"] = new Point(123, 125, 157);
 
 }
 
