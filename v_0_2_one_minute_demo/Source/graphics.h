@@ -118,6 +118,7 @@ class Graphics {
   void set3d(float zoom);
   void standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z);
   void standardLightPosition();
+  void setLightPosition(float x, float y, float z);
 
   int* makeTexture(int w, int h, const GLvoid * pixels, bool soften);
   void setTexture(int* texture);

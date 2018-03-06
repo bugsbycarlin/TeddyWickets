@@ -36,6 +36,8 @@ void main(){
 
   vec3 light_position_cameraspace = (v_matrix * vec4(light_position_worldspace,1)).xyz;
   light_direction_vector_cameraspace = light_position_cameraspace + eye_direction_vector_cameraspace;
+  // force the light to always be relative to 0,0,0, making it effectively a directional light shining from point xyz to 000.
+  //light_direction_vector_cameraspace = light_position_cameraspace - (v_matrix * m_matrix * vec4(0,0,0,1)).xyz;
 
   normal_vector_cameraspace = (v_matrix * transpose(inverse(m_matrix)) * vec4(normal_vector,0)).xyz;
 }

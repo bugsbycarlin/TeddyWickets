@@ -230,7 +230,13 @@ void Graphics::standardLightPosition() {
   // // GLfloat light_position[] = {-1.0, 1.0, 0.0, 0.0};
   // // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-  glUniform3fv(light_position_worldspace_id, 1, glm::value_ptr(glm::vec3(2, 2, 5)));
+  //glUniform3fv(light_position_worldspace_id, 1, glm::value_ptr(glm::vec3(2, 2, 5)));
+
+  glUniform3fv(light_position_worldspace_id, 1, glm::value_ptr(glm::vec3(2, 0, 5)));
+}
+
+void Graphics::setLightPosition(float x, float y, float z) {
+  glUniform3fv(light_position_worldspace_id, 1, glm::value_ptr(glm::vec3(x, y, z)));
 }
 
 void Graphics::initializeShadersAndLighting() {

@@ -352,6 +352,9 @@ void Game::render() {
   graphics->standardLightPosition();
   graphics->enableLights();
 
+  unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+  graphics->setLightPosition(5.0f * cos((current_time - start_time) / 1000.0f), 0.0f, 5.0f * sin((current_time - start_time) / 1000.0f));
+
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {
     (*surface)->render();
@@ -377,19 +380,19 @@ void Game::render() {
   int info_y = 20;
 
   // render shot prep infographic
-  if (game_mode == k_prep_mode) {
-    textures->setTexture("m_prep_info");
-    graphics->rectangle(info_x, info_y, 400, 400);
-  }
+  // if (game_mode == k_prep_mode) {
+  //   textures->setTexture("m_prep_info");
+  //   graphics->rectangle(info_x, info_y, 400, 400);
+  // }
 
   // render power mode
   if (game_mode == k_power_mode) {
     // render power mode infographic
-    textures->setTexture("m_shot_info");
-    graphics->rectangle(info_x, info_y, 400, 400);
+    // textures->setTexture("m_shot_info");
+    // graphics->rectangle(info_x, info_y, 400, 400);
 
     // render power gauge outline
-    int power_x = 974;
+    int power_x = 1340;
     int power_y = 20;
     textures->setTexture("shot_power_outline");
     graphics->rectangle(power_x, power_y, 30, 150);

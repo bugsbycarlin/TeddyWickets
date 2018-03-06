@@ -76,13 +76,17 @@ void main(){
     //final_color_vector = global_color_vector * texture(texture_sampler, fragment_texture_vector) * fragment_color_vector;
 
     vec3 light_color = vec3(1, 1, 1);
+    // spotlight needs power, directional doesn't (ish)
+    //float light_power = 1.0f;
     float light_power = 50.0f;
 
     vec3 material_diffuse_color = (global_color_vector * texture(texture_sampler, fragment_texture_vector) * fragment_color_vector).rgb;
-    vec3 material_ambient_color = vec3(0.5, 0.5, 0.5) * material_diffuse_color;
+    vec3 material_ambient_color = vec3(0.3, 0.3, 0.3) * material_diffuse_color;
     vec3 material_specular_color = vec3(0.1, 0.1, 0.1);
 
+    // fix distance to 1.0 to get a directional light, along with the mods in the shader.
     float distance = length(light_position_worldspace - position_vector_worldspace);
+    //float distance = 1.0f;
 
     vec3 n = normalize(normal_vector_cameraspace);
     vec3 l = normalize(light_direction_vector_cameraspace);

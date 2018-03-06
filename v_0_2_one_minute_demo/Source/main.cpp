@@ -17,8 +17,8 @@
   +- Game controller / keyboard setup screen
   +- bear selection mode in the 2p game
   +- Improved lighting model
-
-  - Abstract away OpenGL in wrappers
+  +- Abstract away OpenGL in wrappers
+  +- Upgrade from OpenGL 2.1 to OpenGL 4.1 and rewrite graphics to fit
   
   - Cel shading and outlining
 
