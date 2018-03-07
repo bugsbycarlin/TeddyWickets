@@ -224,7 +224,7 @@ int Physics::addSoftball(std::list<Triangle*> triangles, Point* position, float 
   booty->setRestitution(restitution);
 
   int identity = object_counter;
-  dynamics_world->addSoftBody(body);
+  dynamics_world->addSoftBody(booty);
   object_counter++;
 
   return identity;
