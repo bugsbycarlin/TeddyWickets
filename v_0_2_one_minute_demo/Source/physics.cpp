@@ -144,8 +144,8 @@ int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rota
   return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
 }
 
-// Add a mesh which is to be used as a softbody
-int Physics::addSoftbodyMesh(std::list<Triangle*> triangles, Point* position, float rotation) {
+// Add a mesh which is to be used as a softbody for the player ball
+int Physics::addSoftball(std::list<Triangle*> triangles, Point* position, float rotation) {
   btTriangleMesh *mesh = new btTriangleMesh();
   int counter = 0;
   for (auto triangle = triangles.begin(); triangle != triangles.end(); ++triangle) {
@@ -157,38 +157,108 @@ int Physics::addSoftbodyMesh(std::list<Triangle*> triangles, Point* position, fl
   printf("Added %d softbody mesh triangles to the physics system.\n", counter);
   btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
 
-  
+  collision_shapes.push_back(shape);
+
+  btTransform transform;
+  transform.setIdentity();
+  transform.setOrigin(btVector3(position->x, position->y, position->z));
+
+  btQuaternion rotation_quaternion;
+  rotation_quaternion.setEuler(0, 0, rotation);
+  transform.setRotation(rotation_quaternion);
+
+  float mass = 1.0f;
+  float friction = 0.4f;
+  float rolling_friction = 0.05f;
+  float restitution = 0.7f;
+
+  const btVector3 meshScaling = mesh->getScaling();
+
+  btAlignedObjectArray<btScalar> vertices;
+  btAlignedObjectArray<int> triangz;
+
+  for (int part=0;part< mesh->getNumSubParts(); part++)
+  {
+      const unsigned char * vertexbase;
+      const unsigned char * indexbase;
+
+      int indexstride;
+      int stride,numverts,numtriangles;
+      PHY_ScalarType type, gfxindextype;
+
+      mesh->getLockedReadOnlyVertexIndexBase(&vertexbase,numverts,type,stride,&indexbase,indexstride,numtriangles,gfxindextype,part);
+
+      for (int gfxindex=0; gfxindex < numverts; gfxindex++)
+      {
+          float* graphicsbase = (float*)(vertexbase+gfxindex*stride);
+          vertices.push_back(graphicsbase[0]*meshScaling.getX());
+          vertices.push_back(graphicsbase[1]*meshScaling.getY());
+          vertices.push_back(graphicsbase[2]*meshScaling.getZ());
+      }
+
+      for (int gfxindex=0;gfxindex < numtriangles; gfxindex++)
+      {
+          unsigned int* tri_indices= (unsigned int*)(indexbase+gfxindex*indexstride);
+          triangz.push_back(tri_indices[0]);
+          triangz.push_back(tri_indices[1]);
+          triangz.push_back(tri_indices[2]);
+      }
+  }
+
+  btSoftBody* booty = btSoftBodyHelpers::CreateFromTriMesh(*softBodyWorldInfo, &vertices[0], &triangz[0], triangz.size()/3);
+
+  btSoftBody::Material* pm=booty->appendMaterial();
+  pm->m_kLST = 0.75;
+  pm->m_flags -= btSoftBody::fMaterial::DebugDraw;
+  booty->generateBendingConstraints(4,pm);
+  booty->m_cfg.piterations = 2;  
+  booty->m_cfg.kDF = 0.75;
+  booty->m_cfg.collisions |= btSoftBody::fCollision::VF_SS;  
+  booty->randomizeConstraints(); 
+
+  booty->transform(transform);  
+  booty->setTotalMass(mass); 
+  booty->getCollisionShape()->setMargin(0.1f);
+  booty->setFriction(friction);
+  booty->setRollingFriction(rolling_friction);
+  booty->setRestitution(restitution);
+
+  int identity = object_counter;
+  dynamics_world->addSoftBody(body);
+  object_counter++;
+
+  return identity;
 }
 
 // Add a wicket object to the physics system. This involves adding two poles.
 // Currently, for simplicity I just return the identity of the second pole.
-int Physics::addWicket(Point* pole_1_position, Point* pole_2_position, float height) {
-  // pole radius
-  float pole_radius = 0.2f;
+// int Physics::addWicket(Point* pole_1_position, Point* pole_2_position, float height) {
+//   // pole radius
+//   float pole_radius = 0.2f;
 
-  btCollisionShape* shape_1 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
-  collision_shapes.push_back(shape_1);
+//   btCollisionShape* shape_1 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
+//   collision_shapes.push_back(shape_1);
 
-  btCollisionShape* shape_2 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
-  collision_shapes.push_back(shape_2);
+//   btCollisionShape* shape_2 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
+//   collision_shapes.push_back(shape_2);
 
-  // To do: top of the wicket
-  // btCollisionShape* shape_3 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
-  // collision_shapes.push_back(shape_3);
+//   // To do: top of the wicket
+//   // btCollisionShape* shape_3 = new btCylinderShapeZ(btVector3(pole_radius, pole_radius, height));
+//   // collision_shapes.push_back(shape_3);
 
-  // set up the first body
-  btTransform transform_1;
-  transform_1.setIdentity();
-  transform_1.setOrigin(btVector3(pole_1_position->x, pole_1_position->y, pole_1_position->z));
-  addBody(shape_1, transform_1, 0.0f, 0.4f, 0.05f, 1.5f);
+//   // set up the first body
+//   btTransform transform_1;
+//   transform_1.setIdentity();
+//   transform_1.setOrigin(btVector3(pole_1_position->x, pole_1_position->y, pole_1_position->z));
+//   addBody(shape_1, transform_1, 0.0f, 0.4f, 0.05f, 1.5f);
 
-  // set up the second body
-  // To do: find a nice way to return both bodies to the wicket object
-  btTransform transform_2;
-  transform_2.setIdentity();
-  transform_2.setOrigin(btVector3(pole_2_position->x, pole_2_position->y, pole_2_position->z));
-  return addBody(shape_2, transform_2, 0.0f, 0.4f, 0.05f, 1.5f);
-}
+//   // set up the second body
+//   // To do: find a nice way to return both bodies to the wicket object
+//   btTransform transform_2;
+//   transform_2.setIdentity();
+//   transform_2.setOrigin(btVector3(pole_2_position->x, pole_2_position->y, pole_2_position->z));
+//   return addBody(shape_2, transform_2, 0.0f, 0.4f, 0.05f, 1.5f);
+// }
 
 // Add a ball/character object to the physics system.
 int Physics::addBall(float radius, float x_pos, float y_pos, float z_pos) {
@@ -411,11 +481,17 @@ bool Physics::initializePhysics() {
   // the default constraint solver.
   solver = new btSequentialImpulseConstraintSolver;
 
-  dynamics_world = new btDiscreteDynamicsWorld(dispatcher, overlapping_pair_cache, solver, collision_configuration);
+  dynamics_world = new btSoftRigidDynamicsWorld(dispatcher, overlapping_pair_cache, solver, collision_configuration);
 
   dynamics_world->setGravity(btVector3(0, 0, -10));
 
   dynamics_world->setInternalTickCallback(myTickCallback);
+
+  softBodyWorldInfo = new btSoftBodyWorldInfo();
+  softBodyWorldInfo->m_broadphase = overlapping_pair_cache;
+  softBodyWorldInfo->m_dispatcher = dispatcher;
+  softBodyWorldInfo->m_gravity = dynamics_world->getGravity();
+  softBodyWorldInfo->m_sparsesdf.Initialize();
 
   // To do: learn how to catch the potential initialization errors in Bullet.
   return true;

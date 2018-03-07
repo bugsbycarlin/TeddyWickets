@@ -33,6 +33,7 @@ TeddyWickets:
 		-I Source/bullet_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \
+		./Libraries/libBulletSoftBody_gmake_x64_release.a \
 		./Libraries/libLinearMath_gmake_x64_release.a \
 		-I Source/fmod_src \
 		./Libraries/libfmod.dylib \

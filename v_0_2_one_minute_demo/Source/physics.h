@@ -16,6 +16,9 @@
 
 // Bullet, for physics
 #include "btBulletDynamicsCommon.h"
+#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
+#include "BulletSoftBody/btSoftBodyHelpers.h"
+#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
 
 #include "globals.h"
 #include "point.h"
@@ -29,11 +32,13 @@ struct CollisionPair {
 class Physics {
  public:
     btAlignedObjectArray<btCollisionShape*> collision_shapes;
-    btDiscreteDynamicsWorld* dynamics_world;
+    btSoftRigidDynamicsWorld* dynamics_world;
     btSequentialImpulseConstraintSolver* solver;
     btCollisionDispatcher* dispatcher;
     btBroadphaseInterface* overlapping_pair_cache;
     btDefaultCollisionConfiguration* collision_configuration;
+
+    btSoftBodyWorldInfo* softBodyWorldInfo;
 
     int object_counter;
 
@@ -51,10 +56,10 @@ class Physics {
 
     int addSurface(Point* p1, Point* p2, Point* p3, Point* p4);
     int addBumper(Point* start, Point* end, Point* normal);
-    int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
+    //int addWicket(Point* pole_1_position, Point* pole_2_position, float height);
     int addBall(float radius, float x_pos, float y_pos, float z_pos);
     int addMesh(std::list<Triangle*> triangles, Point* position, float rotation);
-    int addSoftbodyMesh(std::list<Triangle*> triangles, Point* position, float rotation);
+    int addSoftball(std::list<Triangle*> triangles, Point* position, float rotation);
 
     void update(float time_step);
 
