@@ -226,12 +226,9 @@ int Physics::addSoftball(std::list<Triangle*> triangles, Point* position, float 
   booty->setRollingFriction(rolling_friction);
   booty->setRestitution(restitution);
 
-  printf("Step 12.\n");
   int identity = object_counter;
   dynamics_world->addSoftBody(booty);
   object_counter++;
-
-  printf("Step 13.\n");
 
   return identity;
 }
@@ -289,14 +286,6 @@ btRigidBody* Physics::getBodyById(int identity) {
   return body;
 }
 
-
-// Get a general body by integer identity
-btSoftBody* Physics::getSoftBodyById(int identity) {
-  btCollisionObject* collision_object = dynamics_world->getCollisionObjectArray()[identity];
-  btSoftBody* body = btSoftBody::upcast(collision_object);
-  return body;
-}
-
 // Set an impulse force on a body
 void Physics::impulse(int identity, float x_impulse, float y_impulse, float z_impulse) {
   btRigidBody* body = getBodyById(identity);
@@ -317,35 +306,23 @@ void Physics::setPosition(int identity, Point* p) {
 }
 
 // Set a rotation
-void Physics::setRotation(int identity, float yaw, float pitch, float roll, bool soft) {
-  if (!soft) {
-    btRigidBody* body = getBodyById(identity);
-    btTransform transform;
-    if (body && body->getMotionState()) {
-      body->getMotionState()->getWorldTransform(transform);
-    } else {
-      transform = body->getWorldTransform();
-    }
-
-    Point* p = new Point(transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ());
-    transform.setOrigin(btVector3(p->x, p->y, p->z));
-
-    btQuaternion rotation_quaternion;
-    rotation_quaternion.setEuler(yaw, pitch, roll);
-    transform.setRotation(rotation_quaternion);
-
-    body->setWorldTransform(transform);
+void Physics::setRotation(int identity, float yaw, float pitch, float roll) {
+  btRigidBody* body = getBodyById(identity);
+  btTransform transform;
+  if (body && body->getMotionState()) {
+    body->getMotionState()->getWorldTransform(transform);
   } else {
-    printf("Step 15.\n");
-    btSoftBody* body = getSoftBodyById(identity);
-    printf("Step 16.\n");
-    btQuaternion rotation_quaternion;
-    printf("Step 17.\n");
-    rotation_quaternion.setEuler(yaw, pitch, roll);
-    printf("Step 18.\n");
-    body->rotate(rotation_quaternion);
-    printf("Step 19.\n");
+    transform = body->getWorldTransform();
   }
+
+  Point* p = new Point(transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ());
+  transform.setOrigin(btVector3(p->x, p->y, p->z));
+
+  btQuaternion rotation_quaternion;
+  rotation_quaternion.setEuler(yaw, pitch, roll);
+  transform.setRotation(rotation_quaternion);
+
+  body->setWorldTransform(transform);
 }
 
 // Can't get rotation and translation to stop overwriting each other. Somewhere I'm implicitly setting an identity.
@@ -425,20 +402,15 @@ void Physics::printPositions() {
 }
 
 // Get the transform of a body
-btTransform Physics::getTransform(int identity, bool soft) {
-  if (!soft) {
-    btRigidBody* body = getBodyById(identity);
-    btTransform transform;
-    if (body && body->getMotionState()) {
-      body->getMotionState()->getWorldTransform(transform);
-    } else {
-      transform = body->getWorldTransform();
-    }
-    return transform;
+btTransform Physics::getTransform(int identity) {
+  btRigidBody* body = getBodyById(identity);
+  btTransform transform;
+  if (body && body->getMotionState()) {
+    body->getMotionState()->getWorldTransform(transform);
   } else {
-    btSoftBody* body = getSoftBodyById(identity);
-    return body->transform();
+    transform = body->getWorldTransform();
   }
+  return transform;
 }
 
 // Check if a body is active in the physics system

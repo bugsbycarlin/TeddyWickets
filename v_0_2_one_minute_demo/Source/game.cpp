@@ -64,15 +64,9 @@ void Game::loop(SDL_Window* window, FMOD::System *sound_system) {
     }
   }
 
-  printf("Step game 17.\n");
-  //update();
-
-
-  printf("Step game 18.\n");
+  update();
 
   render();
-
-  printf("Step game 19.\n");
 
   // Update sound
   sound_system->update();
@@ -513,9 +507,7 @@ void Game::renderBearSelectMode() {
 // This huge method puts all the crap on the game board.
 bool Game::initializeGamePieces() {
   character = new Character(physics, new Point(0, 0, k_character_drop_height));
-  printf("Step 14.\n");
-  physics->setRotation(character->identity, 0, 0, character->default_shot_rotation, true);
-  printf("Step PAST.\n");
+  physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
 
   // Ramp
   hazards.push_front(new Hazard("ramp", physics,

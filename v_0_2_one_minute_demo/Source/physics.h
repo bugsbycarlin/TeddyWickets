@@ -65,17 +65,15 @@ class Physics {
 
     void impulse(int identity, float x_impulse, float y_impulse, float z_impulse);
     void setPosition(int identity, Point* p);
-    void setRotation(int identity, float yaw, float pitch, float roll, bool soft = false);
+    void setRotation(int identity, float yaw, float pitch, float roll);
     void setPositionAndRotation(int identity, Point* p, float yaw, float pitch, float roll);
     void setTransform(int identity, btTransform transform);
     void stop(int identity);
 
-    btSoftBody* getSoftBodyById(int identity);
-
     void printPositions();
     void updatePoint(Point* p, int identity);
     btRigidBody* getBodyById(int identity);
-    btTransform getTransform(int identity, bool soft = false);
+    btTransform getTransform(int identity);
     float getVelocity(int identity);
     bool hasCollision(int identity, int identity2);
     bool checkActive(int identity);
