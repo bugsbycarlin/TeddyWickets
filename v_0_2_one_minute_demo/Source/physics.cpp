@@ -154,7 +154,7 @@ int Physics::addSoftball(std::list<Triangle*> triangles, Point* position, float 
       btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y));
     counter += 1;
   }
-  printf("Added %d softbody mesh triangles to the physics system.\n", counter);
+  printf("Adding %d softbody mesh triangles to the physics system.\n", counter);
   btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
 
   collision_shapes.push_back(shape);
@@ -207,25 +207,31 @@ int Physics::addSoftball(std::list<Triangle*> triangles, Point* position, float 
 
   btSoftBody* booty = btSoftBodyHelpers::CreateFromTriMesh(*softBodyWorldInfo, &vertices[0], &triangz[0], triangz.size()/3);
 
+  btVector3 scaling(k_model_scale, k_model_scale, k_model_scale); 
+
   btSoftBody::Material* pm=booty->appendMaterial();
   pm->m_kLST = 0.75;
   pm->m_flags -= btSoftBody::fMaterial::DebugDraw;
+  booty->scale(scaling);
   booty->generateBendingConstraints(4,pm);
   booty->m_cfg.piterations = 2;  
   booty->m_cfg.kDF = 0.75;
   booty->m_cfg.collisions |= btSoftBody::fCollision::VF_SS;  
   booty->randomizeConstraints(); 
 
-  booty->transform(transform);  
+  booty->transform(transform);
   booty->setTotalMass(mass); 
   booty->getCollisionShape()->setMargin(0.1f);
   booty->setFriction(friction);
   booty->setRollingFriction(rolling_friction);
   booty->setRestitution(restitution);
 
+  printf("Step 12.\n");
   int identity = object_counter;
   dynamics_world->addSoftBody(booty);
   object_counter++;
+
+  printf("Step 13.\n");
 
   return identity;
 }
@@ -283,6 +289,14 @@ btRigidBody* Physics::getBodyById(int identity) {
   return body;
 }
 
+
+// Get a general body by integer identity
+btSoftBody* Physics::getSoftBodyById(int identity) {
+  btCollisionObject* collision_object = dynamics_world->getCollisionObjectArray()[identity];
+  btSoftBody* body = btSoftBody::upcast(collision_object);
+  return body;
+}
+
 // Set an impulse force on a body
 void Physics::impulse(int identity, float x_impulse, float y_impulse, float z_impulse) {
   btRigidBody* body = getBodyById(identity);
@@ -303,23 +317,35 @@ void Physics::setPosition(int identity, Point* p) {
 }
 
 // Set a rotation
-void Physics::setRotation(int identity, float yaw, float pitch, float roll) {
-  btRigidBody* body = getBodyById(identity);
-  btTransform transform;
-  if (body && body->getMotionState()) {
-    body->getMotionState()->getWorldTransform(transform);
+void Physics::setRotation(int identity, float yaw, float pitch, float roll, bool soft) {
+  if (!soft) {
+    btRigidBody* body = getBodyById(identity);
+    btTransform transform;
+    if (body && body->getMotionState()) {
+      body->getMotionState()->getWorldTransform(transform);
+    } else {
+      transform = body->getWorldTransform();
+    }
+
+    Point* p = new Point(transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ());
+    transform.setOrigin(btVector3(p->x, p->y, p->z));
+
+    btQuaternion rotation_quaternion;
+    rotation_quaternion.setEuler(yaw, pitch, roll);
+    transform.setRotation(rotation_quaternion);
+
+    body->setWorldTransform(transform);
   } else {
-    transform = body->getWorldTransform();
+    printf("Step 15.\n");
+    btSoftBody* body = getSoftBodyById(identity);
+    printf("Step 16.\n");
+    btQuaternion rotation_quaternion;
+    printf("Step 17.\n");
+    rotation_quaternion.setEuler(yaw, pitch, roll);
+    printf("Step 18.\n");
+    body->rotate(rotation_quaternion);
+    printf("Step 19.\n");
   }
-
-  Point* p = new Point(transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ());
-  transform.setOrigin(btVector3(p->x, p->y, p->z));
-
-  btQuaternion rotation_quaterion;
-  rotation_quaterion.setEuler(yaw, pitch, roll);
-  transform.setRotation(rotation_quaterion);
-
-  body->setWorldTransform(transform);
 }
 
 // Can't get rotation and translation to stop overwriting each other. Somewhere I'm implicitly setting an identity.
@@ -399,15 +425,20 @@ void Physics::printPositions() {
 }
 
 // Get the transform of a body
-btTransform Physics::getTransform(int identity) {
-  btRigidBody* body = getBodyById(identity);
-  btTransform transform;
-  if (body && body->getMotionState()) {
-    body->getMotionState()->getWorldTransform(transform);
+btTransform Physics::getTransform(int identity, bool soft) {
+  if (!soft) {
+    btRigidBody* body = getBodyById(identity);
+    btTransform transform;
+    if (body && body->getMotionState()) {
+      body->getMotionState()->getWorldTransform(transform);
+    } else {
+      transform = body->getWorldTransform();
+    }
+    return transform;
   } else {
-    transform = body->getWorldTransform();
+    btSoftBody* body = getSoftBodyById(identity);
+    return body->transform();
   }
-  return transform;
 }
 
 // Check if a body is active in the physics system

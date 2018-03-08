@@ -12,7 +12,8 @@ Character::Character(Physics* physics, Point* position) {
 
   this->physics = physics;
 
-  this->model = new Model("teddy_bear_draft_3.obj");
+  //this->model = new Model("teddy_bear_draft_3.obj");
+  this->model = new Model("simple_ball.obj");
 
   this->shot_arrow = new Model("arrow.obj");
 
@@ -24,7 +25,8 @@ Character::Character(Physics* physics, Point* position) {
 
   radius = 0.75;
 
-  identity = physics->addBall(radius, position->x, position->y, position->z);
+  //identity = physics->addBall(radius, position->x, position->y, position->z);
+  identity = physics->addSoftball(this->model->getMeshAsTriangles(), this->position, shot_rotation);
 }
 
 // this gets the position of the ball for game logic and rendering. I believe it's currently unused,
@@ -36,7 +38,7 @@ void Character::updateFromPhysics() {
 
 void Character::render(int game_mode) {
   btScalar transform_matrix[16];
-  btTransform transform = physics->getTransform(identity);
+  btTransform transform = physics->getTransform(identity, true);
   graphics->pushModelMatrix();
     transform.getOpenGLMatrix(transform_matrix);
     graphics->multMatrix(transform_matrix);
