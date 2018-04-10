@@ -53,6 +53,7 @@ enum {
   k_2p_game_screen = 3,
   k_control_setup_screen = 4,
   k_model_viewer_screen = 200,
+  k_editor_screen = 300,
 };
 
 // Title screen modes

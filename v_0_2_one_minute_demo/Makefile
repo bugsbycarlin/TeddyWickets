@@ -14,6 +14,7 @@ TeddyWickets:
 		./Source/control_map.cpp \
 		./Source/control_setup.cpp \
 		./Source/game.cpp \
+		./Source/editor.cpp \
 		./Source/physics.cpp \
 		./Source/surface.cpp \
 		./Source/character.cpp \

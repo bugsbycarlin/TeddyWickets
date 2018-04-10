@@ -19,9 +19,8 @@
   +- Improved lighting model
   +- Abstract away OpenGL in wrappers
   +- Upgrade from OpenGL 2.1 to OpenGL 4.1 and rewrite graphics to fit
-  
-
   +- Cel shading
+  +- Model caching
   
   - Refined cel shading
   - cel shade outlining
@@ -58,6 +57,7 @@
 #include "graphics.h"
 #include "game.h"
 #include "title.h"
+#include "editor.h"
 #include "control_setup.h"
 
 // The window
@@ -157,13 +157,22 @@ int main(int argc, char* args[]) {
   SDL_StartTextInput();
 
   int current_screen;
-  if (argc > 1 && (std::string(args[1]) == "title" || std::string(args[1]) == "Title" || std::string(args[1]) == "T")) {
+  if (argc > 1 &&
+    (std::string(args[1]) == "title" ||
+    std::string(args[1]) == "Title" ||
+    std::string(args[1]) == "T")) {
     current_screen = k_title_screen;
   } else if (argc > 1 &&
     (std::string(args[1]) == "controllers" ||
     std::string(args[1]) == "Controllers" ||
     std::string(args[1]) == "C")) {
     current_screen = k_control_setup_screen;
+  } else if (argc > 1 &&
+    (std::string(args[1]) == "editor" ||
+    std::string(args[1]) == "Editor" ||
+    std::string(args[1]) == "E")) {
+    printf("Here i am, man");
+    current_screen = k_editor_screen;
   } else {
     current_screen = k_1p_game_screen;
   }
@@ -182,6 +191,8 @@ int main(int argc, char* args[]) {
         screen = new Title();
       } else if (current_screen == k_1p_game_screen) {
         screen = new Game();
+      } else if (current_screen == k_editor_screen) {
+        screen = new Editor();
       } else if (current_screen == k_control_setup_screen) {
         screen = new ControlSetup();
       }
