@@ -13,7 +13,7 @@
 
 #include "globals.h"
 #include "graphics.h"
-#include "model.h"
+#include "model_cache.h"
 #include "physics.h"
 #include "point.h"
 #include "textures.h"

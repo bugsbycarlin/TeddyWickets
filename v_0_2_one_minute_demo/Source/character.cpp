@@ -12,10 +12,9 @@ Character::Character(Physics* physics, Point* position) {
 
   this->physics = physics;
 
-  this->model = new Model("teddy_bear_draft_3.obj");
-  //this->model = new Model("simple_ball.obj");
+  this->model = model_cache->getModel("teddy_bear_draft_3.obj");
 
-  this->shot_arrow = new Model("arrow.obj");
+  this->shot_arrow = model_cache->getModel("arrow.obj");
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
@@ -45,6 +44,7 @@ void Character::render(int game_mode) {
     graphics->pushModelMatrix();
       graphics->scale(k_model_scale, k_model_scale, k_model_scale);
       graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+      //graphics->scale(1.0f, 1.0f, 0.7f);
       model->render();
     graphics->popModelMatrix();
   graphics->popModelMatrix();

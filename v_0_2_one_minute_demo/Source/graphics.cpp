@@ -15,9 +15,9 @@ Graphics::Graphics() {
 
   model_stack = {};
 
-  // ball = gluNewQuadric();
-  // gluQuadricTexture(ball, GL_TRUE);
-  // gluQuadricNormals(ball, GLU_SMOOTH);
+  rectangle_cache = {};
+
+  initialized_rectangle_buffers = false;
 }
 
 // This method sets up the screen for a 2D drawing phase
@@ -368,107 +368,6 @@ void Graphics::initializeNormalShading() {
   }
 }
 
-
-// void Graphics::initializeCelShading() {
-  // cel_shader_program = k_cel_shader_id;
-
-  // std::string line;
-
-  // std::string vertex_shader_path = k_shader_root_path + "cel_shader_vertex.glsl";
-  // printf("Loading vertex shader from %s\n", vertex_shader_path.c_str());
-
-  // std::ifstream vertex_shader_file;
-  // vertex_shader_file.open(vertex_shader_path);
-
-  // if (!vertex_shader_file.is_open()) {
-  //   printf("Error: Failed to load vertex shader from %s\n", vertex_shader_path.c_str());
-  //   return;
-  // }
-
-  // std::string vertex_shader_string = "";
-  // while (getline(vertex_shader_file, line)) {
-  //   vertex_shader_string += line + "\n";
-  // }
-
-  // std::string fragment_shader_path = k_shader_root_path + "cel_shader_fragment.glsl";
-  // printf("Loading fragment shader from %s\n", fragment_shader_path.c_str());
-
-  // std::ifstream fragment_shader_file;
-  // fragment_shader_file.open(fragment_shader_path);
-
-  // if (!fragment_shader_file.is_open()) {
-  //   printf("Error: Failed to load fragment shader from %s\n", fragment_shader_path.c_str());
-  //   return;
-  // }
-
-  // std::string fragment_shader_string = "";
-  // while (getline(fragment_shader_file, line)) {
-  //   fragment_shader_string += line + "\n";
-  // }
-
-  // const char *vertex_str = vertex_shader_string.c_str();
-  // const char *fragment_str = fragment_shader_string.c_str();
-
-  // GLint vertex_shader = 0;
-  // GLint fragment_shader = 0;
-  // GLint status = 0;
-
-  // vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  // fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-  // glShaderSource(vertex_shader, 1, &vertex_str, NULL);
-  // glShaderSource(fragment_shader, 1, &fragment_str, NULL);
-
-  // glCompileShader(vertex_shader);
-  // glCompileShader(fragment_shader);
-
-  // cel_shader_program = glCreateProgram();
-  // glAttachShader(cel_shader_program, vertex_shader);
-  // glAttachShader(cel_shader_program, fragment_shader);
-
-  // glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &status);
-  // if (!status) {
-  //   char log[500];
-  //   GLint length;
-  //   printf("Error: failed to compile the vertex shader.\n");
-  //   glGetShaderInfoLog(vertex_shader, 500, &length, log);
-  //   printf("Log: %s\n", log);
-  //   exit(1);
-  // }
-
-  // glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &status);
-  // if (!status) {
-  //   char log[500];
-  //   GLint length;
-  //   printf("Error: failed to compile the fragment shader.\n");
-  //   glGetShaderInfoLog(fragment_shader, 500, &length, log);
-  //   printf("Log: %s\n", log);
-  //   exit(1);
-  // }
-
-  // glLinkProgram(cel_shader_program);
-
-  // glGetProgramiv(cel_shader_program, GL_LINK_STATUS, &status);
-  // if (!status) {
-  //   printf("Error: failed to link the shader program object.\n");
-  //   exit(1);
-  // }
-// }
-
-// void Graphics::startCelShading() {
-//   //glUseProgram(cel_shader_program);
-//   //current_program = cel_shader_program;
-// }
-
-// void Graphics::startNormalShading() {
-//   glUseProgram(normal_shader_program);
-//   current_program = normal_shader_program;
-// }
-
-// void Graphics::clearShading() {
-//   glUseProgram(0);
-// }
-
 void Graphics::enableCelShading() {
   glUniform1f(bool_cel_shading_id, 1.0);
 }
@@ -512,8 +411,6 @@ int* Graphics::makeTexture(int w, int h, const GLvoid * pixels, bool soften) {
 }
 
 void Graphics::setTexture(int* texture) {
-  // glBindTexture(GL_TEXTURE_2D, (GLuint) *texture);
-
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, (GLuint) *texture);
   glUniform1i(texture_sampler_id, 0);
@@ -530,18 +427,6 @@ void Graphics::matteMaterial() {
   // glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
   // glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 }
-
-// void Graphics::texVert(float t1, float t2, float v1, float v2, float v3) {
-//   // glTexCoord2f(t1, t2);
-//   // glVertex3f(v1, v2, v3);
-// }
-
-// void Graphics::texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3) {
-//   // glTexCoord2f(t1, t2);
-//   // glNormal3f(n1, n2, n3);
-//   // glVertex3f(v1, v2, v3);
-// }
-
 
 int Graphics::cacheMesh(int size, float vertex_data[], float normal_data[], float texture_data[]) {
   int cache_id = this->next_mesh_cache_id;
@@ -765,104 +650,41 @@ void Graphics::rectangle(int cache_id) {
   drawMesh(cache_id);
 }
 
-// void Graphics::primitive(int size, float vertex_data[], float normal_data[], float texture_data[]) {
-
-//   glGenBuffers(1, &primitive_vertex_buffer);
-//   glBindBuffer(GL_ARRAY_BUFFER, primitive_vertex_buffer);
-//   glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * size * 3, vertex_data, GL_STATIC_DRAW);
-
-//   glGenBuffers(1, &primitive_texture_buffer);
-//   glBindBuffer(GL_ARRAY_BUFFER, primitive_texture_buffer);
-//   glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * size * 2, texture_data, GL_STATIC_DRAW);
-
-//   // 1rst attribute buffer : vertices
-//   glEnableVertexAttribArray(0);
-//   glBindBuffer(GL_ARRAY_BUFFER, primitive_vertex_buffer);
-//   glVertexAttribPointer(
-//     0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-//     3,                  // size
-//     GL_FLOAT,           // type
-//     GL_FALSE,           // normalized?
-//     0,                  // stride
-//     (void*)0            // array buffer offset
-//   );
-
-//   // 2nd attribute buffer : colors
-//   glEnableVertexAttribArray(1);
-//   glBindBuffer(GL_ARRAY_BUFFER, primitive_color_buffer);
-//   glVertexAttribPointer(
-//     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-//     4,                                // size
-//     GL_FLOAT,                         // type
-//     GL_FALSE,                         // normalized?
-//     0,                                // stride
-//     (void*)0                          // array buffer offset
-//   );
-
-//   // 3nd attribute buffer : UVs
-//   glEnableVertexAttribArray(2);
-//   glBindBuffer(GL_ARRAY_BUFFER, primitive_texture_buffer);
-//   glVertexAttribPointer(
-//     2,                                // attribute. No particular reason for 2, but must match the layout in the shader.
-//     2,                                // size : U+V => 2
-//     GL_FLOAT,                         // type
-//     GL_FALSE,                         // normalized?
-//     0,                                // stride
-//     (void*)0                          // array buffer offset
-//   );
-
-//   if (size == 4) {
-//     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-//   } else {
-//     glDrawArrays(GL_TRIANGLES, 0, 3);
-//   }
-
-//   glDisableVertexAttribArray(0);
-//   glDisableVertexAttribArray(1);
-//   glDisableVertexAttribArray(2);
-// }
-
-
 // This method draws a rectangle
 void Graphics::rectangle(float x, float y, float w, float h) {
+  std::string id = std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(w) + "," + std::to_string(h);
 
-  GLfloat vertex_buffer_data[] = { 
-    x, y, 0.0f,
-    x, y + h, 0.0f,
-    x + w, y + h, 0.0f,
-    x + w, y, 0.0f,
-  };
-
-  GLfloat texture_buffer_data[] = { 
-    0.0f, 0.0f,
-    0.0f, 1.0f,
-    1.0f, 1.0f,
-    1.0f, 0.0f
-  };
-
-  rectangleWithTexture(vertex_buffer_data, texture_buffer_data);
+  if (rectangle_cache.find(id) == rectangle_cache.end()) {
+    rectangle_cache[id] = cacheRectangle(x, y, w, h);
+  } else {
+    drawMesh(rectangle_cache[id]);
+  }
 }
 
 void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
+  if (!initialized_rectangle_buffers) {
+    GLfloat normal_data[] = { 
+      0.0f, 0.0f, 1.0f,
+      0.0f, 0.0f, 1.0f,
+      0.0f, 0.0f, 1.0f,
+      0.0f, 0.0f, 1.0f
+    };
 
-  GLfloat normal_data[] = { 
-    0.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f
-  };
+    glGenBuffers(1, &rectangle_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * 4 * 3, vertex_data, GL_STATIC_DRAW);
 
-  glGenBuffers(1, &rectangle_vertex_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_vertex_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data) * 4 * 3, vertex_data, GL_STATIC_DRAW);
+    glGenBuffers(1, &rectangle_normal_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, rectangle_normal_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(normal_data) * 4 * 3, normal_data, GL_STATIC_DRAW);
 
-  glGenBuffers(1, &rectangle_normal_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_normal_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(normal_data) * 4 * 3, normal_data, GL_STATIC_DRAW);
-
-  glGenBuffers(1, &rectangle_texture_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * 4 * 2, texture_data, GL_STATIC_DRAW);
+    glGenBuffers(1, &rectangle_texture_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, rectangle_texture_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_data) * 4 * 2, texture_data, GL_STATIC_DRAW);
+  } else {
+    glBufferSubData(rectangle_vertex_buffer, 0, sizeof(vertex_data) * 4 * 3, vertex_data);
+    glBufferSubData(rectangle_texture_buffer, 0, sizeof(texture_data) * 4 * 2, texture_data);
+  }
 
   // 1rst attribute buffer : vertices
   glEnableVertexAttribArray(0);
@@ -932,10 +754,6 @@ void Graphics::lineStrip(std::vector<float> line_data) {
   // glEnd();
 }
 
-void Graphics::sphere(float radius) {
-  // TODO: reimplement if necessary
-}
-
 void Graphics::color(float r, float g, float b, float a) {
   global_color_vector = glm::vec4(r, g, b, a);
   glUniform4fv(global_color_id, 1, glm::value_ptr(global_color_vector));
@@ -976,72 +794,3 @@ void Graphics::multMatrix(const float* m) {
   glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
 }
 
-// int Graphics::cacheProgram() {
-//   // int id = this->next_display_list_index;
-//   // this->next_display_list_index++;
-
-//   // glNewList(id, GL_COMPILE);
-//   // return id;
-// }
-
-// void Graphics::endCacheProgram() {
-//   // glEndList();
-// }
-
-// void Graphics::runCacheProgram(int id) {
-//   // glCallList(id);
-// }
-
-// // https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
-// void Graphics::crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3])
-// {
-//   res[0] = y1*z2 - y2*z1;
-//   res[1] = x2*z1 - x1*z2;
-//   res[2] = x1*y2 - x2*y1;
-// }
-
-// //https://forums.khronos.org/showthread.php/4991-The-Solution-for-gluLookAt()-Function!!!!
-// void Graphics::lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
-// {
-//   // float f[3];
-
-//   // // calculating the viewing vector
-//   // f[0] = lookAtX - eyeX;
-//   // f[1] = lookAtY - eyeY;
-//   // f[2] = lookAtZ - eyeZ;
-
-//   // float fMag = sqrt(f[0]*f[0] + f[1]*f[1] + f[2]*f[2]);
-//   // float upMag = sqrt(upX*upX + upY*upY + upZ*upZ);
-
-//   // // normalizing the viewing vector
-//   // if( fMag != 0)
-//   // {
-//   //   f[0] = f[0]/fMag;
-//   //   f[1] = f[1]/fMag;
-//   //   f[2] = f[2]/fMag;
-//   // }
-
-//   // // normalising the up vector
-//   // if( upMag != 0 )
-//   // {
-//   //   upX = upX/upMag;
-//   //   upY = upY/upMag;
-//   //   upZ = upZ/upMag;
-//   // }
-
-//   // float s[3], u[3];
-
-//   // crossProduct(f[0], f[1], f[2], upX, upY, upZ, s);
-//   // crossProduct(s[0], s[1], s[2], f[0], f[1], f[2], u);
-
-//   // float M[]=
-//   // {
-//   //   s[0], u[0], -f[0], 0,
-//   //   s[1], u[1], -f[1], 0,
-//   //   s[2], u[2], -f[2], 0,
-//   //   0, 0, 0, 1
-//   // };
-
-//   // glMultMatrixf(M);
-//   // glTranslatef(-eyeX, -eyeY, -eyeZ); 
-// }

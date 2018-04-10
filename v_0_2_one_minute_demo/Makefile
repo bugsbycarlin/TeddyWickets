@@ -18,6 +18,7 @@ TeddyWickets:
 		./Source/surface.cpp \
 		./Source/character.cpp \
 		./Source/model.cpp \
+		./Source/model_cache.cpp \
 		./Source/bumper.cpp \
 		./Source/hazard.cpp \
 		./Source/textures.cpp \

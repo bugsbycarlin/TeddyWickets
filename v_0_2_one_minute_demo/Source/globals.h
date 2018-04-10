@@ -94,6 +94,10 @@ const int k_player_2_choices_x = 1147;
 // Experimental visual
 const int k_sun_period = 50000;
 
+
+// Images
+
+
 /*
 
 For color palette, see colors.cpp

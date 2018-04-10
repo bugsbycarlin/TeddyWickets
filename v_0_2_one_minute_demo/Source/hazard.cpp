@@ -15,7 +15,7 @@ Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float
 
   this->object_type = object_type;
 
-  this->model = new Model(object_type + ".obj");
+  this->model = model_cache->getModel(object_type + ".obj");
 
   this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, rotation);
 }

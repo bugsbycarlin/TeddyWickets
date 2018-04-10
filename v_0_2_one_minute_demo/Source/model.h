@@ -6,14 +6,6 @@
   Heh. Model class models one 3d model.
 */
 
-/*
-
-  Teddy Wickets
-  Copyright 2017 - Matthew Carlin
-
-  Character class models the player's avatar (ie the bear, or the ball).
-*/
-
 #ifndef TEDDY_WICKETS_MODEL_H_
 #define TEDDY_WICKETS_MODEL_H_
 

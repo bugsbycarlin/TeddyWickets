@@ -86,6 +86,10 @@ class Graphics {
 
   std::vector<glm::mat4> model_stack;
 
+  std::unordered_map<std::string, int> rectangle_cache;
+
+  bool initialized_rectangle_buffers;
+
   void start2DDraw();
   void end2DDraw();
 
@@ -106,11 +110,6 @@ class Graphics {
   void enableLights();
   void disableLights();
 
-  // void initializeCelShading();
-  // void startCelShading();
-  // void startNormalShading();
-  // void clearShading();
-
   void initializeOpenGLVersion();
 
   void clearScreen();
@@ -125,10 +124,6 @@ class Graphics {
 
   void matteMaterial();
 
-  //void texVert(float t1, float t2, float v1, float v2, float v3);
-  //void texNormVert(float t1, float t2, float n1, float n2, float n3, float v1, float v2, float v3);
-
-  //void primitive(int size, float vertex_data[], float normal_data[], float texture_data[]);
   void rectangle(float x, float y, float w, float h);
   void rectangleWithTexture(float vertex_data[], float texture_data[]);
 
@@ -144,8 +139,6 @@ class Graphics {
   void lineWidth(int line_width);
   void lineStrip(std::vector<float> line_data);
 
-  void sphere(float radius);
-
   void color(float r, float g, float b, float a);
   void rotate(float angle, float x, float y, float z);
   void scale(float x, float y, float z);
@@ -154,13 +147,6 @@ class Graphics {
   void pushModelMatrix();
   void popModelMatrix();
   void multMatrix(const float* m);
-
-  // int cacheProgram();
-  // void endCacheProgram();
-  // void runCacheProgram(int id);
-
-  //void crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float res[3]);
-  //void lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);
 };
 
 extern Graphics* graphics;

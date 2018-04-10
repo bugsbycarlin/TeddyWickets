@@ -15,7 +15,7 @@
 
 #include "physics.h"
 #include "point.h"
-#include "model.h"
+#include "model_cache.h"
 #include "textures.h"
 #include "triangle.h"
 
