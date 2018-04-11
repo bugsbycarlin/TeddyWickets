@@ -17,7 +17,7 @@
 const int k_screen_width = 1440;
 const int k_screen_height = 900;
 const float k_aspect_ratio = k_screen_width / (1.0 * k_screen_height);
-const float k_default_zoom = 11.0f;
+const float k_default_zoom = 14.0f;
 // const float k_default_zoom = 4.0f;
 
 // Bumper

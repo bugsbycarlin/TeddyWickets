@@ -21,7 +21,11 @@
 #include <list>
 #include <string>
 
+// TinyXML for level file reading and writing
+#include "tinyxml2.h"
+
 // Teddy Wickets includes
+#include "control_map.h"
 #include "bumper.h"
 #include "character.h"
 #include "globals.h"
@@ -40,7 +44,17 @@ class Editor: public Screen {
   std::list<Bumper*> bumpers = { };
   std::list<Hazard*> hazards = { };
 
+  Hazard* current_shape;
+
   Physics* physics;
+
+  int last_x, last_y, last_z;
+
+  int min_x, min_y, max_x, max_y;
+
+  float sway;
+
+  int num_types;
 
   unsigned long start_time;
   unsigned long last_time;
@@ -48,7 +62,30 @@ class Editor: public Screen {
   unsigned long framerate_time;
   int frames_since_last;
 
-  Editor();
+  std::string map_file;
+
+  std::string music;
+  std::string theme;
+
+  Model* theme_tile;
+
+  std::string shape_types[12] = {
+    "tile_flat",
+    "tile_down_x",
+    "tile_down_y",
+    "tile_up_x",
+    "tile_up_y",
+    "tile_down_x_y",
+    "flat_siding",
+    "flat_siding_down_x",
+    "flat_siding_up_x",
+    "flat_siding_sideways",
+    "ramp",
+    "wicket"
+  };
+  int current_shape_type;
+
+  Editor(std::string map_file);
 
   void loop(SDL_Window* window, FMOD::System *sound_system);
 
@@ -59,8 +96,10 @@ class Editor: public Screen {
 
   void handleKeys(SDL_Event e);
 
+  bool saveMap();
+
   bool initialize();
-  bool initializeGamePieces();
+  bool initializeLevel();
   bool initializeTextures();
   void shutdown();
 };

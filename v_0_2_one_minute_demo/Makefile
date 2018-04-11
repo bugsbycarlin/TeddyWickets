@@ -14,6 +14,7 @@ TeddyWickets:
 		./Source/control_map.cpp \
 		./Source/control_setup.cpp \
 		./Source/game.cpp \
+		./Source/tinyxml_src/tinyxml2.cpp \
 		./Source/editor.cpp \
 		./Source/physics.cpp \
 		./Source/surface.cpp \
@@ -33,6 +34,7 @@ TeddyWickets:
 		-framework SDL2_ttf \
 		-I Source/glm \
 		-I Source/bullet_src \
+		-I Source/tinyxml_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \
 		./Libraries/libBulletSoftBody_gmake_x64_release.a \

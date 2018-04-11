@@ -148,13 +148,15 @@ void shutdown() {
 int main(int argc, char* args[]) {
   initialize();
 
-  sound_system->createStream("Sound/Bias_Groove.mp3", FMOD_DEFAULT, 0, &audio_stream);
+  //  sound_system->createStream("Sound/Bias_Groove.mp3", FMOD_DEFAULT, 0, &audio_stream);
 
   // Sound disabled for the moment.
   // sound_system->playSound(audio_stream, NULL, false, 0);
 
   // Enable text input
   SDL_StartTextInput();
+
+  std::string arg2;
 
   int current_screen;
   if (argc > 1 &&
@@ -171,8 +173,8 @@ int main(int argc, char* args[]) {
     (std::string(args[1]) == "editor" ||
     std::string(args[1]) == "Editor" ||
     std::string(args[1]) == "E")) {
-    printf("Here i am, man");
     current_screen = k_editor_screen;
+    arg2 = std::string(args[2]);
   } else {
     current_screen = k_1p_game_screen;
   }
@@ -192,7 +194,8 @@ int main(int argc, char* args[]) {
       } else if (current_screen == k_1p_game_screen) {
         screen = new Game();
       } else if (current_screen == k_editor_screen) {
-        screen = new Editor();
+        screen = new Editor(arg2);
+        screen->sound_system = sound_system;
       } else if (current_screen == k_control_setup_screen) {
         screen = new ControlSetup();
       }
@@ -201,6 +204,8 @@ int main(int argc, char* args[]) {
         quit = true;
         break;
       }
+
+
     }
 
     screen->loop(window, sound_system);

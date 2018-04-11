@@ -26,6 +26,7 @@ class Screen {
 
   int current_screen;
   bool quit;
+  FMOD::System* sound_system;
 
   virtual void loop(SDL_Window* window, FMOD::System *sound_system);
 
