@@ -128,7 +128,7 @@ int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rota
       btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y));
     counter += 1;
   }
-  printf("Added %d triangles to the physics system.\n", counter);
+  //printf("Added %d triangles to the physics system.\n", counter);
   btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
 
   collision_shapes.push_back(shape);

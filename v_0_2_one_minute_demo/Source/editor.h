@@ -25,6 +25,7 @@
 #include "tinyxml2.h"
 
 // Teddy Wickets includes
+#include "hot_config.h"
 #include "control_map.h"
 #include "bumper.h"
 #include "character.h"
@@ -56,6 +57,8 @@ class Editor: public Screen {
 
   int num_types;
 
+  float zoom;
+
   unsigned long start_time;
   unsigned long last_time;
   unsigned long mark_time;
@@ -69,7 +72,7 @@ class Editor: public Screen {
 
   Model* theme_tile;
 
-  std::string shape_types[12] = {
+  std::string shape_types[14] = {
     "tile_flat",
     "tile_down_x",
     "tile_down_y",
@@ -81,7 +84,9 @@ class Editor: public Screen {
     "flat_siding_up_x",
     "flat_siding_sideways",
     "ramp",
-    "wicket"
+    "wicket",
+    "boxguy",
+    "start"
   };
   int current_shape_type;
 

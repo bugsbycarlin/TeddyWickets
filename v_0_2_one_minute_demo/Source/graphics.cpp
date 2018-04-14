@@ -518,8 +518,8 @@ int Graphics::cacheFullMesh(std::vector<float> vertex_data, std::vector<float> n
   int cache_id = this->next_mesh_cache_id;
 
   buffer_sizes[cache_id] = vertex_data.size() / 3;
-  printf("Buffer size is %d\n", buffer_sizes[cache_id]);
-  printf("Given to buffer data function: %d\n", vertex_data.size() * sizeof(float));
+  //printf("Buffer size is %d\n", buffer_sizes[cache_id]);
+  //printf("Given to buffer data function: %d\n", vertex_data.size() * sizeof(float));
 
   glGenBuffers(1, &vertex_buffers[cache_id]);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[cache_id]);

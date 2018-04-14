@@ -15,27 +15,25 @@
   +- Controller support
   +- Keymapping / controller mapping
   +- Game controller / keyboard setup screen
-  +- bear selection mode in the 2p game
+  +- Bear selection mode in the 2p game
   +- Improved lighting model
   +- Abstract away OpenGL in wrappers
   +- Upgrade from OpenGL 2.1 to OpenGL 4.1 and rewrite graphics to fit
   +- Cel shading
+  +- Improved color palette
   +- Model caching
+  +- Level editor (save, load, make levels)
   
   - Refined cel shading
   - cel shade outlining
   
-  - fix color palette
+  - improve color palette even more
 
 
   - Remove mouse support
   - Fully realized game mechanic
   - Two single player levels (?)
   - One multiplayer (2 player) level
-  
-  - Level editor (separate program)
-  - Level saver
-  - Level loader
 
   - Use autoptr
   - Do basic memory profiling to check for leaks
@@ -53,6 +51,7 @@
 #include "fmod.hpp"
 #include "fmod_errors.h"
 
+#include "hot_config.h"
 #include "globals.h"
 #include "graphics.h"
 #include "game.h"

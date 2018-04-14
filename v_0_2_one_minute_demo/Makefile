@@ -8,6 +8,7 @@ TeddyWickets:
 		./Source/point.cpp \
 		./Source/colors.cpp \
 		./Source/graphics.cpp \
+		./Source/hot_config.cpp \
 		./Source/globals.cpp \
 		./Source/screen.cpp \
 		./Source/title.cpp \

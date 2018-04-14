@@ -1,0 +1,17 @@
+<param>
+  <type>int</type>
+  <name>use_music</name>
+  <value>0</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>shot_power</name>
+  <value>15.0</value>
+</param>
+
+<param>
+  <type>string</type>
+  <name>water_texture</name>
+  <value>water_old.png</value>
+</param>

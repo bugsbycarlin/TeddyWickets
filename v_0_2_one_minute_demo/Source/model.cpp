@@ -231,7 +231,7 @@ std::list<Triangle*> Model::getMeshAsTriangles() {
     }
   }
 
-  printf("Mesh loading: Counted %d triangles. Final mesh has %d triangles\n", counter, mesh.size());
+  //printf("Mesh loading: Counted %d triangles. Final mesh has %d triangles\n", counter, mesh.size());
 
   return mesh;
 }
@@ -322,7 +322,7 @@ void Model::render() {
     for (auto texture = vbo_vertex_data_by_texture.begin(); texture != vbo_vertex_data_by_texture.end(); ++texture) {
       std::string current_texture = (std::string) texture->first;
       textures->setTexture(current_texture);
-      printf("This many faces: %d\n", vbo_vertex_data_by_texture[current_texture].size() / 9);
+      //printf("This many faces: %d\n", vbo_vertex_data_by_texture[current_texture].size() / 9);
       int cache_id_by_texture = graphics->cacheFullMesh(
         vbo_vertex_data_by_texture[current_texture],
         vbo_normal_data_by_texture[current_texture],

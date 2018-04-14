@@ -23,8 +23,9 @@ Editor::Editor(std::string map_file) {
   last_z = 0;
   sway = 0;
   current_shape_type = 0;
-  num_types = 12;
+  num_types = 14;
   this->map_file = map_file;
+  zoom = k_default_zoom;
 }
 
 // Editor loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -70,6 +71,7 @@ void Editor::update() {
 
 // Handle keyboard input
 void Editor::handleKeys(SDL_Event e) {
+  bool print = false;
   if (e.key.keysym.sym == SDLK_ESCAPE) {
     quit = true;
   } else if (e.key.keysym.sym == SDLK_RETURN) {
@@ -139,6 +141,18 @@ void Editor::handleKeys(SDL_Event e) {
       last_z += 1;
     }
   }
+
+  if (e.key.keysym.sym == SDLK_z) {
+    zoom += 1.0f;
+  } else if (e.key.keysym.sym == SDLK_x) {
+    zoom -= 1.0f;
+  }
+
+  if (current_shape != nullptr) {
+    printf("Position: %0.2f, %0.2f, %0.2f\n", current_shape->position->x, current_shape->position->y, current_shape->position->z);
+  } else {
+    printf("Position: %d, %d, %d\n", last_x, last_y, last_z);
+  }
 }
 
 bool Editor::saveMap() {
@@ -195,7 +209,7 @@ void Editor::render() {
 
   renderBackground();
 
-  graphics->set3d(k_default_zoom);
+  graphics->set3d(zoom);
   graphics->enableLights();
 
   if (current_shape != nullptr) {
@@ -226,14 +240,18 @@ void Editor::render() {
 
   // Render theme tile
   if (theme == "water") {
-    for (int i = min_x - 30; i <= max_x + 40; i += 6) {
-      for (int j = min_y - 30; j <= max_y + 40; j += 6) {
-        graphics->pushModelMatrix();
-        graphics->translate(i, j + sway, 0);
-        theme_tile->render();
-        graphics->popModelMatrix();
-      }
-    }
+    // for (int i = min_x - 30; i <= max_x + 40; i += 6) {
+    //   for (int j = min_y - 30; j <= max_y + 40; j += 6) {
+    //     graphics->pushModelMatrix();
+    //     graphics->translate(i, j + sway, 0);
+    //     theme_tile->render();
+    //     graphics->popModelMatrix();
+    //   }
+    // }
+    graphics->pushModelMatrix();
+    graphics->translate(50, 0 + sway, 0);
+    theme_tile->render();
+    graphics->popModelMatrix();
   }
 
   if (current_shape != nullptr) {
@@ -271,7 +289,7 @@ bool Editor::initializeLevel() {
   printf("Theme: %s\n", this->theme.c_str());
 
   if (theme == "water") {
-    theme_tile = model_cache->getModel("water_tile.obj");
+    theme_tile = model_cache->getModel("huge_water_tile.obj");
   }
 
   // Level Shape
@@ -331,7 +349,7 @@ bool Editor::initialize() {
   last_time = start_time;
   framerate_time = start_time;
 
-  if (music != "") {
+  if (hot_config->getInt("use_music") == 1) {
     FMOD::Sound *audio_stream;
     sound_system->createStream(music.c_str(), FMOD_DEFAULT, 0, &audio_stream);
     sound_system->playSound(audio_stream, NULL, false, 0);
