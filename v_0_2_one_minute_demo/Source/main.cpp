@@ -23,6 +23,8 @@
   +- Improved color palette
   +- Model caching
   +- Level editor (save, load, make levels)
+  +- HotConfig
+
   
   - Refined cel shading
   - cel shade outlining
@@ -54,8 +56,9 @@
 #include "hot_config.h"
 #include "globals.h"
 #include "graphics.h"
-#include "game.h"
 #include "title.h"
+#include "bear_select.h"
+#include "game.h"
 #include "editor.h"
 #include "control_setup.h"
 
@@ -175,7 +178,8 @@ int main(int argc, char* args[]) {
     current_screen = k_editor_screen;
     arg2 = std::string(args[2]);
   } else {
-    current_screen = k_1p_game_screen;
+    //current_screen = k_1p_game_screen;
+    current_screen = k_bear_select_screen;
   }
 
   Screen* screen = NULL;
@@ -190,6 +194,8 @@ int main(int argc, char* args[]) {
 
       if (current_screen == k_title_screen) {
         screen = new Title();
+      } else if (current_screen == k_bear_select_screen) {
+        screen = new BearSelect();
       } else if (current_screen == k_1p_game_screen) {
         screen = new Game();
       } else if (current_screen == k_editor_screen) {

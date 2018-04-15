@@ -21,8 +21,6 @@ HotConfig::HotConfig() {
     std::string element_type(element->FirstChildElement("type")->GetText());
     std::string element_name(element->FirstChildElement("name")->GetText());
 
-    printf("Type and name: %s %s\n", element_type.c_str(), element_name.c_str());
-
     if (element_type == "int") {
       int value;
       element->FirstChildElement("value")->QueryIntText(&value);

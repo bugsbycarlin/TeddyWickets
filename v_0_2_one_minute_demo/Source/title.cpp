@@ -72,7 +72,7 @@ void Title::handleKeys(SDL_Event e) {
       if (selection == 0) {
         current_screen = k_1p_game_screen;
       } else if (selection == 1) {
-        current_screen = k_1p_game_screen;
+        current_screen = k_bear_select_screen;
       } else if (selection == 2) {
         current_screen = k_control_setup_screen;
       }

@@ -49,9 +49,10 @@ const int k_shader_id = 53;
 enum {
   k_title_screen = 0,
   k_comic_screen = 1,
-  k_1p_game_screen = 2,
-  k_2p_game_screen = 3,
-  k_control_setup_screen = 4,
+  k_bear_select_screen = 2,
+  k_1p_game_screen = 3,
+  k_2p_game_screen = 4,
+  k_control_setup_screen = 5,
   k_model_viewer_screen = 200,
   k_editor_screen = 300,
 };

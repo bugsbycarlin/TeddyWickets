@@ -14,6 +14,7 @@ TeddyWickets:
 		./Source/title.cpp \
 		./Source/control_map.cpp \
 		./Source/control_setup.cpp \
+		./Source/bear_select.cpp \
 		./Source/game.cpp \
 		./Source/tinyxml_src/tinyxml2.cpp \
 		./Source/editor.cpp \

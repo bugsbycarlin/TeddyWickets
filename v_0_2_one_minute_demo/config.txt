@@ -1,7 +1,7 @@
 <param>
   <type>int</type>
   <name>use_music</name>
-  <value>0</value>
+  <value>1</value>
 </param>
 
 <param>

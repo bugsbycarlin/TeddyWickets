@@ -30,7 +30,7 @@ Game::Game() {
     {8, 1}
   };
 
-  bool choose = false;
+  bool choose = true;
 
   if (choose) {
     // choose bears
