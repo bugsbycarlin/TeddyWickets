@@ -28,6 +28,12 @@ class Screen {
   bool quit;
   FMOD::System* sound_system;
 
+  unsigned long start_time;
+  unsigned long last_time;
+  unsigned long mark_time;
+  unsigned long framerate_time;
+  int frames_since_last;
+
   virtual void loop(SDL_Window* window, FMOD::System *sound_system);
 
   virtual bool initialize();

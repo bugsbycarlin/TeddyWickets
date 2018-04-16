@@ -1,7 +1,19 @@
 <param>
   <type>int</type>
   <name>use_music</name>
-  <value>1</value>
+  <value>0</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>x_drop</name>
+  <value>3</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>y_drop</name>
+  <value>3</value>
 </param>
 
 <param>

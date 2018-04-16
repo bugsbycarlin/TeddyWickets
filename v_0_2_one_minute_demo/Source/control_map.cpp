@@ -126,7 +126,6 @@ std::string ControlMap::translateControllerEvent(SDL_Event e) {
 }
 
 std::string ControlMap::translateKeyEvent(SDL_Event e) {
-  printf("Control map 1\n");
   std::string short_name = "Unknown";
   switch (e.key.keysym.sym) {
     case SDLK_UP : short_name = "Up"; break;
@@ -183,6 +182,5 @@ std::string ControlMap::translateKeyEvent(SDL_Event e) {
     case SDLK_y : short_name = "Y"; break;
     case SDLK_z : short_name = "Z"; break;
   }
-  printf("Control map 2\n");
   return "Key " + short_name;
 }

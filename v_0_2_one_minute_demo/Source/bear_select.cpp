@@ -13,7 +13,7 @@ BearSelect::BearSelect() {
   current_screen = k_bear_select_screen;
   game_mode = k_bear_select_mode;
 
-available_bear_choices = {
+  available_bear_choices = {
     {0, 1},
     {1, 1},
     {2, 1},
@@ -28,6 +28,9 @@ available_bear_choices = {
   player_1_bears = {};
   player_2_bears = {};
   bear_choice = 0;
+
+  // Player 1 goes first. Later I'll change this to random
+  first = 0;
 }
 
 // Editor loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -72,7 +75,7 @@ void BearSelect::update() {
 
   if (game_mode == k_lets_go_mode) {
     if (current_time - mark_time > 2000.0f) {
-      game_mode = k_drop_mode;
+      current_screen = k_2p_game_screen;
     } else {
       go_text->setColor(rand() % static_cast<int>(250 + 1),
         rand() % static_cast<int>(250 + 1),
@@ -88,69 +91,89 @@ void BearSelect::handleKeys(SDL_Event e) {
     quit = true;
   }
 
-  printf("Keyboard 1\n");
-
   std::string value = control_map->translateKeyEvent(e);
-  printf("Keyboard 2\n");
-  printf("Action value: %s\n", value.c_str());
-
-  printf("Keyboard 3\n");
-
-  //printf("Control map says: %s\n", control_map->getAction(value).c_str());
 
   for (auto item = control_map->ordered_controls.begin(); item != control_map->ordered_controls.end(); ++item) {
     if (control_map->control_map[*item] == value) {
-      printf("Heyo\n");
+      handleAction(*item);
     }
   }
-
-  printf("Keyboard 4\n");
-
-  // if (game_mode == k_bear_select_mode) {
-  //   if (e.key.keysym.sym == SDLK_DOWN) {
-  //     bear_choice += 3;
-  //     if (bear_choice > 8) bear_choice -= 9;
-  //   } else if (e.key.keysym.sym == SDLK_UP) {
-  //     bear_choice -= 3;
-  //     if (bear_choice < 0) bear_choice += 9;
-  //   } else if (e.key.keysym.sym == SDLK_LEFT) {
-  //     bear_choice -= 1;
-  //     if ((bear_choice + 3) % 3 == 2) bear_choice += 3;
-  //   } else if (e.key.keysym.sym == SDLK_RIGHT) {
-  //     bear_choice += 1;
-  //     if (bear_choice % 3 == 0) bear_choice -= 3;
-  //   } else if (e.key.keysym.sym == SDLK_RETURN) {
-  //     if (available_bear_choices[bear_choice] == 1) {
-  //       available_bear_choices[bear_choice]--;
-  //       if (player_1_bears.size() == player_2_bears.size()) {
-  //         player_1_bears.push_back(bear_choices[bear_choice]);
-  //         player_1_choose_text->setColor(53, 62, 89);
-  //         player_2_choose_text->setColor(140, 98, 57);
-  //       } else {
-  //         player_2_bears.push_back(bear_choices[bear_choice]);
-  //         player_1_choose_text->setColor(140, 98, 57);
-  //         player_2_choose_text->setColor(53, 62, 89);
-  //       }
-
-  //       if (player_1_bears.size() == 3 && player_2_bears.size() == 3) {
-  //         // to do: this should be starting animation instead
-  //         game_mode = k_lets_go_mode;
-  //         mark_time = last_time;
-  //         player_2_choose_text->setColor(53, 62, 89);
-  //       }
-  //     }
-  //   }
-
-  //   bear_name_text->setText(bear_pretty_names[bear_choices[bear_choice]]);
-  //   bear_description_text->setText(bear_descriptions[bear_choices[bear_choice]]);
-
-  //   return;
-  // }
 }
 
 // Handle controller input
 void BearSelect::handleController(SDL_Event e) {
+  std::string value = control_map->translateKeyEvent(e);
 
+  for (auto item = control_map->ordered_controls.begin(); item != control_map->ordered_controls.end(); ++item) {
+    if (control_map->control_map[*item] == value) {
+      handleAction(*item);
+    }
+  }
+}
+
+
+// Handle actions as translated from the control map
+void BearSelect::handleAction(std::string action) {
+  if (game_mode == k_lets_go_mode) {
+    return;
+  }
+
+  // Whose turn?
+  // Player 1
+  if (player_1_bears.size() + first == player_2_bears.size()) {
+    if (action == "player_1_down") {
+      bear_choice += 3;
+      if (bear_choice > 8) bear_choice -= 9;
+    } else if (action == "player_1_up") {
+      bear_choice -= 3;
+      if (bear_choice < 0) bear_choice += 9;
+    } else if (action == "player_1_left") {
+      bear_choice -= 1;
+      if ((bear_choice + 3) % 3 == 2) bear_choice += 3;
+    } else if (action == "player_1_right") {
+      bear_choice += 1;
+      if (bear_choice % 3 == 0) bear_choice -= 3;
+    } else if (action == "player_1_shoot_accept") {
+      if (available_bear_choices[bear_choice] == 1) {
+        available_bear_choices[bear_choice]--;
+        player_1_bears.push_back(bear_choices[bear_choice]);
+        player_1_choose_text->setColor(53, 62, 89);
+        player_2_choose_text->setColor(140, 98, 57);
+      }
+    }
+  } else { // Player 2
+    if (action == "player_2_down") {
+      bear_choice += 3;
+      if (bear_choice > 8) bear_choice -= 9;
+    } else if (action == "player_2_up") {
+      bear_choice -= 3;
+      if (bear_choice < 0) bear_choice += 9;
+    } else if (action == "player_2_left") {
+      bear_choice -= 1;
+      if ((bear_choice + 3) % 3 == 2) bear_choice += 3;
+    } else if (action == "player_2_right") {
+      bear_choice += 1;
+      if (bear_choice % 3 == 0) bear_choice -= 3;
+    } else if (action == "player_2_shoot_accept") {
+      if (available_bear_choices[bear_choice] == 1) {
+        available_bear_choices[bear_choice]--;
+        player_2_bears.push_back(bear_choices[bear_choice]);
+        player_1_choose_text->setColor(140, 98, 57);
+        player_2_choose_text->setColor(53, 62, 89);
+      }
+    }
+  }
+
+  if (player_1_bears.size() == 3 && player_2_bears.size() == 3) {
+    // to do: this should be starting animation instead
+    game_mode = k_lets_go_mode;
+    mark_time = last_time;
+    player_1_choose_text->setColor(53, 62, 89);
+    player_2_choose_text->setColor(53, 62, 89);
+  }
+
+  bear_name_text->setText(bear_pretty_names[bear_choices[bear_choice]]);
+  bear_description_text->setText(bear_descriptions[bear_choices[bear_choice]]);
 }
 
 void BearSelect::render() {

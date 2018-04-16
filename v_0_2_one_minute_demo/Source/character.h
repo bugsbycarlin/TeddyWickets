@@ -38,7 +38,7 @@ class Character {
 
     std::list<btTransform> future_positions = { };
 
-    Character(Physics* physics, Point* position);
+    Character(Physics* physics, Point* position, std::string model_name);
 
     void updateFromPhysics();
 

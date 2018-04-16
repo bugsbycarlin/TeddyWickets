@@ -57,6 +57,11 @@ void Graphics::fadeIn(float start, float finish, float timeDiff) {
 void Graphics::fadeOut(float start, float finish, float timeDiff) {
   if (timeDiff < finish - start && 0 < timeDiff) {
     fadeInOut(0, 1, (timeDiff / (2.0 * (finish - start)) + 0.5));
+  } else if (timeDiff > finish - start) {
+    // all black
+    setTexture(black_texture_id);
+    color(1.0f, 1.0f, 1.0f, 1.0f);
+    rectangle(0, 0, k_screen_width, k_screen_height);
   }
 }
 

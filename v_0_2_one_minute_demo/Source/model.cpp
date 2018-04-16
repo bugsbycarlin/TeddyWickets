@@ -260,7 +260,7 @@ void Model::render() {
         int num_edges = -1;
         if (face->size() == 1) {
           //textures->setTexture(texture_map[face->operator[](0)]);
-          printf("Found texture %s yo\n", texture_map[face->operator[](0)].c_str());
+          //printf("Found texture %s yo\n", texture_map[face->operator[](0)].c_str());
           current_texture = texture_map[face->operator[](0)];
           if (vbo_vertex_data_by_texture.find(current_texture) == vbo_vertex_data_by_texture.end()) {
             vbo_vertex_data_by_texture[current_texture] = {};

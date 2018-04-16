@@ -47,9 +47,6 @@ class Title: public Screen {
   TextBox* control_setup_selected;
   TextBox* control_setup_unselected;
 
-  unsigned long start_time;
-  unsigned long last_time;
-
   Title();
 
   void loop(SDL_Window* window, FMOD::System *sound_system);

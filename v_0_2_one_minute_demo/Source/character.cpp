@@ -7,12 +7,16 @@
 
 #include "character.h"
 
-Character::Character(Physics* physics, Point* position) {
+Character::Character(Physics* physics, Point* position, std::string model_name) {
   this->position = position;
 
   this->physics = physics;
 
-  this->model = model_cache->getModel("teddy_bear_draft_3.obj");
+  if (model_name != "") {
+    this->model = model_cache->getModel(model_name);  
+  } else {
+    this->model = model_cache->getModel("teddy_bear_draft_3.obj");
+  }
 
   this->shot_arrow = model_cache->getModel("arrow.obj");
 

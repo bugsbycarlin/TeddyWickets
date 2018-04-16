@@ -3,11 +3,11 @@
   Teddy Wickets
   Copyright 2017 - Matthew Carlin
 
-  Bear select screen. That's where you select your bears.
+  Game class models one level of the game.
 */
 
-#ifndef TEDDY_WICKETS_BEAR_SELECT_H_
-#define TEDDY_WICKETS_BEAR_SELECT_H_
+#ifndef TEDDY_WICKETS_GAME_H_
+#define TEDDY_WICKETS_GAME_H_
 
 // SDL, for window, user input, and media
 #include <SDL2/SDL.h>
@@ -25,19 +25,47 @@
 #include "fmod.hpp"
 
 // Teddy Wickets includes
-#include "control_map.h"
+#include "bumper.h"
+#include "character.h"
 #include "globals.h"
 #include "graphics.h"
+#include "physics.h"
 #include "screen.h"
+#include "surface.h"
 #include "textbox.h"
 #include "textures.h"
+#include "hazard.h"
 
-class BearSelect: public Screen {
+class Game: public Screen {
  public:
+  bool shot_rising = false;
+
+  // Game logic
+  std::list<Surface*> surfaces = { };
+  std::list<Bumper*> bumpers = { };
+  std::list<Hazard*> hazards = { };
+
+  Physics* physics;
+
+  Character* character;
 
   int game_mode;
 
-  ControlMap* control_map;
+  float default_speed_ramping;
+  float simulation_speed;
+
+  float zoom;
+
+  bool mousedown;
+  int drag_x;
+  int drag_y;
+  float pre_drag_rotation;
+
+  unsigned long start_time;
+  unsigned long last_time;
+  unsigned long mark_time;
+  unsigned long framerate_time;
+  int frames_since_last;
 
   // Bear select stuff
   TextBox* choose_your_bears_text;
@@ -48,8 +76,6 @@ class BearSelect: public Screen {
   TextBox* go_text;
 
   int bear_choice;
-
-  int first;
 
   std::map<int, std::string> bear_choices = {
     {0, "lil_jon"},
@@ -92,19 +118,25 @@ class BearSelect: public Screen {
   std::vector<std::string> player_1_bears;
   std::vector<std::string> player_2_bears;
 
-  BearSelect();
+  Game();
 
   void loop(SDL_Window* window, FMOD::System *sound_system);
 
   void update();
+  void afterUpdate();
+
+  void shoot();
 
   void render();
+  void renderBackground();
+  void renderBearSelectMode();
+  void renderDesign();
 
   void handleKeys(SDL_Event e);
-  void handleController(SDL_Event e);
-  void handleAction(std::string action);
+  void handleMouse(SDL_Event e);
 
   bool initialize();
+  bool initializeGamePieces();
   bool initializeTextures();
   void shutdown();
 };

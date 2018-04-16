@@ -24,7 +24,6 @@
   +- Model caching
   +- Level editor (save, load, make levels)
   +- HotConfig
-
   
   - Refined cel shading
   - cel shade outlining
@@ -159,8 +158,15 @@ int main(int argc, char* args[]) {
   SDL_StartTextInput();
 
   std::string arg2;
-
+  std::vector<std::string> player_1_bears;
+  std::vector<std::string> player_2_bears;
+  int last_screen;
   int current_screen;
+
+  //defaults
+  player_1_bears = {"lil_jon", "mortimer", "gluke"};
+  player_2_bears = {"mags", "bob_smith", "lord_lonsdale"};
+
   if (argc > 1 &&
     (std::string(args[1]) == "title" ||
     std::string(args[1]) == "Title" ||
@@ -178,8 +184,8 @@ int main(int argc, char* args[]) {
     current_screen = k_editor_screen;
     arg2 = std::string(args[2]);
   } else {
-    //current_screen = k_1p_game_screen;
-    current_screen = k_bear_select_screen;
+    current_screen = k_2p_game_screen;
+    //current_screen = k_bear_select_screen;
   }
 
   Screen* screen = NULL;
@@ -196,8 +202,8 @@ int main(int argc, char* args[]) {
         screen = new Title();
       } else if (current_screen == k_bear_select_screen) {
         screen = new BearSelect();
-      } else if (current_screen == k_1p_game_screen) {
-        screen = new Game();
+      } else if (current_screen == k_2p_game_screen) {
+        screen = new Game(player_1_bears, player_2_bears);
       } else if (current_screen == k_editor_screen) {
         screen = new Editor(arg2);
         screen->sound_system = sound_system;
@@ -209,11 +215,16 @@ int main(int argc, char* args[]) {
         quit = true;
         break;
       }
-
-
     }
 
+    last_screen = current_screen;
+
     screen->loop(window, sound_system);
+
+    if (last_screen == k_bear_select_screen && current_screen == k_2p_game_screen) {
+      player_1_bears = ((BearSelect*) screen)->player_1_bears;
+      player_2_bears = ((BearSelect*) screen)->player_2_bears;
+    }
 
     if (screen != NULL && screen->quit == true) {
       screen->shutdown();
