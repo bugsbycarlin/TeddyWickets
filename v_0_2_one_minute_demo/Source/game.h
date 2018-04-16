@@ -38,6 +38,7 @@
 #include "textbox.h"
 #include "textures.h"
 #include "hazard.h"
+#include "wicket.h"
 
 class Game: public Screen {
  public:
@@ -49,6 +50,8 @@ class Game: public Screen {
   std::list<Hazard*> hazards = { };
 
   std::vector<Character*> characters = { };
+  std::vector<Hazard*> starts = { };
+  std::vector<Wicket*> wickets = { };
 
   Character* current_character;
 

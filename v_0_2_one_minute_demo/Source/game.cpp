@@ -144,6 +144,26 @@ void Game::update() {
     if (physics->getVelocity((*character)->identity) < 0.02f) {
       physics->stop((*character)->identity);
     }
+
+    // If the character has fallen off the world, reset the character to its starting place
+    if ((*character)->position->z < -10) {
+      Hazard* start = starts[(*character)->roster_number];
+      physics->stop((*character)->identity);
+      physics->setPositionAndRotation((*character)->identity,
+        new Point(start->position->x + 3, start->position->y + 3, start->position->z + k_character_drop_height),
+        0, 0, (*character)->default_shot_rotation);
+      if ((*character)->roster_number == current_character_number) {
+        game_mode = k_drop_mode;
+
+        // update to the next character and activate.
+        current_character_number += 1;
+        if (current_character_number > 5) {
+          current_character_number = 0;
+        }
+        current_character = characters[current_character_number];
+        physics->activate(current_character->identity);
+      }
+    }
   }
   
 }
@@ -157,7 +177,7 @@ void Game::afterUpdate() {
     physics->getVelocity(current_character->identity) < 0.00001)) {
     game_mode = k_prep_mode;
     current_character->up_shot = false;
-    current_character->setShotRotation(current_character->default_shot_rotation, true);
+    current_character->setShotRotation(current_character->default_shot_rotation, false);
   }
 }
 
@@ -208,30 +228,32 @@ void Game::handleAction(std::string action) {
 //       if (availab
 
   if (game_mode == k_prep_mode) {
-    if ((action == "player_1_left" && current_character_number % 2 == 0) ||
-        ((action == "player_2_left" && current_character_number % 2 == 1))) {
-      current_character->setShotRotation(current_character->shot_rotation + M_PI / 50, true);
-    }
-
     if ((action == "player_1_right" && current_character_number % 2 == 0) ||
         ((action == "player_2_right" && current_character_number % 2 == 1))) {
-      current_character->setShotRotation(current_character->shot_rotation - M_PI / 50, true);
+      printf("Right, I read you\n");
+      current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
+    }
+
+    if ((action == "player_1_left" && current_character_number % 2 == 0) ||
+        ((action == "player_2_left" && current_character_number % 2 == 1))) {
+      printf("Left, I read you\n");
+      current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
     }
 
     if ((action == "player_1_up" && current_character_number % 2 == 0) ||
         ((action == "player_2_up" && current_character_number % 2 == 1))) {
       current_character->up_shot = true;
-      current_character->setShotRotation(current_character->shot_rotation, true);
+      current_character->setShotRotation(current_character->shot_rotation, false);
     }
 
     if ((action == "player_1_down" && current_character_number % 2 == 0) ||
         ((action == "player_2_down" && current_character_number % 2 == 1))) {
       current_character->up_shot = false;
-      current_character->setShotRotation(current_character->shot_rotation, true);
+      current_character->setShotRotation(current_character->shot_rotation, false);
     }
 
-    if ((action == "player_1_left" && current_character_number % 2 == 0) ||
-        ((action == "player_2_left" && current_character_number % 2 == 1))) {
+    if ((action == "player_1_shoot_accept" && current_character_number % 2 == 0) ||
+        ((action == "player_2_shoot_accept" && current_character_number % 2 == 1))) {
       game_mode = k_power_mode;
       current_character->shot_power = 0;
       shot_rising = true;
@@ -293,6 +315,12 @@ void Game::render() {
     (*character)->render(0);
   }
 
+  // Wicket info
+  // for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+  //   (*wicket)->renderInfo();
+  // }
+  wickets[0]->setRenderInfo();
+
   // Render theme tile
   if (theme == "water") {
     graphics->pushModelMatrix();
@@ -301,9 +329,44 @@ void Game::render() {
     graphics->popModelMatrix();
   }
 
-
   // render 2D overlay
   graphics->start2DDraw();
+
+  wickets[0]->renderInfo();
+
+  // render power mode
+  if (game_mode == k_power_mode) {
+    // render power gauge outline
+    int power_x = 1340;
+    int power_y = 20;
+    textures->setTexture("shot_power_outline");
+    graphics->rectangle(power_x, power_y, 30, 150);
+
+    // render power gauge fill
+    float portion = current_character->shot_power / current_character->default_shot_power;
+    textures->setTexture("shot_power_fill");
+    // custom texture scaling for the fill
+    float vertex_data[12] = {
+      power_x + 0.0f, power_y + 150.0f - 140.0f * portion, 0.0f,
+      power_x + 0.0f, power_y + 150.0f, 0.0f,
+      power_x + 30.0f, power_y + 150.0f, 0.0f,
+      power_x + 30.0f, power_y + 150.0f - 140.0f * portion, 0.0f
+    };
+    float texture_data[8] = {
+      0.0f, 1.0f - 140.0f / 150.0f * portion,
+      0.0f, 1.0f,
+      1.0f, 1.0f,
+      1.0f, 1.0f - 140.0f / 150.0f * portion
+    };
+    graphics->rectangleWithTexture(vertex_data, texture_data);
+  }
+
+  // render coordinates
+  int coord_x = 40;
+  int coord_y = k_screen_height - 79 - 40;
+  textures->setTexture("coordinates");
+  graphics->rectangle(coord_x, coord_y, 93, 79);
+
   graphics->end2DDraw();
 }
 
@@ -336,8 +399,8 @@ bool Game::initializeGamePieces() {
   if (theme == "water") {
     theme_tile = model_cache->getModel("huge_water_tile.obj");
 
-    // for now let's add the water tile as a physics floor
-    physics->addMesh(theme_tile->getMeshAsTriangles(), new Point(50, 0, 0), M_PI);
+    // uncomment to add the water tile as a physics floor
+    // physics->addMesh(theme_tile->getMeshAsTriangles(), new Point(50, 0, 0), M_PI);
   }
 
   // Level Shape
@@ -355,17 +418,19 @@ bool Game::initializeGamePieces() {
     tile_element->FirstChildElement("r")->QueryFloatText(&r);
     std::string tile_type(tile_element->Attribute("type"));
 
-    hazards.push_front(new Hazard(tile_type, physics,
-        new Point(x, y, z), M_PI + r));
-
-    // last_x = x;
-    // last_y = y;
-    // last_z = z;
-
-    // if (x < min_x) min_x = x;
-    // if (x > max_x) max_x = x;
-    // if (y < min_y) min_y = y;
-    // if (y > max_y) max_y = y;
+    
+    Hazard* hazard;
+    if (tile_type == "wicket") {
+      hazard = new Hazard(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      hazards.push_front(hazard);
+    } else {
+      Wicket* wicket = new Wicket(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      hazard = (Hazard*) wicket;
+      hazards.push_front(hazard);
+      wickets.push_back(wicket);
+    }
 
     if (tile_type == "start") {
       std::string model_name = "";
@@ -373,6 +438,9 @@ bool Game::initializeGamePieces() {
       Character* character = new Character(physics, new Point(x + hot_config->getInt("x_drop"), y + hot_config->getInt("y_drop"), z + k_character_drop_height), model_name); // 
       physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
       characters.push_back(character);
+
+      starts.push_back(hazard);
+      character->roster_number = alternating_starts;
 
       alternating_starts +=1;
     }
@@ -418,6 +486,11 @@ bool Game::initialize() {
 }
 
 bool Game::initializeTextures() {
+
+  textures->addTexture("coordinates", "coordinates.png");
+
+  textures->addTexture("shot_power_outline", "ShotPowerOutline.png");
+  textures->addTexture("shot_power_fill", "ShotPowerFill.png");
   
   textures->addTexture("clouds", "clouds_soft.png");
   textures->addTexture("water", "water.png");

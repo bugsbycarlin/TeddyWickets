@@ -23,6 +23,8 @@ class Character {
     int identity;
     Point* position;
 
+    int roster_number;
+
     Physics* physics;
     Model* model;
 

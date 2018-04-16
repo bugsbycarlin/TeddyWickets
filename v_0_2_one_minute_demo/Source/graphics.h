@@ -147,6 +147,8 @@ class Graphics {
   void pushModelMatrix();
   void popModelMatrix();
   void multMatrix(const float* m);
+
+  glm::vec3 get2dCoords(float x, float y, float z);
 };
 
 extern Graphics* graphics;

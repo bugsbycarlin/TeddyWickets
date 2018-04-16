@@ -799,3 +799,9 @@ void Graphics::multMatrix(const float* m) {
   glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
 }
 
+glm::vec3 Graphics::get2dCoords(float x, float y, float z) {
+  glm::vec3 coords = glm::project(glm::vec3(x, y, z), model, projection, glm::vec4(0, 0, k_screen_width, k_screen_height));
+  //printf("Here are coords: %0.2f, %0.2f, %0.2f\n", coords.x, coords.y, coords.z);
+  return coords;
+}
+

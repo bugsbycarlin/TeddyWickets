@@ -12,6 +12,24 @@
 
 <param>
   <type>int</type>
+  <name>wicket_font_size</name>
+  <value>60</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_font_x</name>
+  <value>0</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_font_y</name>
+  <value>0</value>
+</param>
+
+<param>
+  <type>int</type>
   <name>y_drop</name>
   <value>3</value>
 </param>
