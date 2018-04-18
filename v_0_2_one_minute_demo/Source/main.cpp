@@ -24,14 +24,39 @@
   +- Model caching
   +- Level editor (save, load, make levels)
   +- HotConfig
+  +- Remove mouse support
+
+
+
+  Demo day to-do:
+  +- Decide player base colors
+  +- Show scores
+  +- Fix the 2d rotation problem
+  - Clean HUD
+  - Control pictures
+  - Fix the graphics memory leak problem (by translate/rotate)
+  - Wicket crossing detection and action
+  - Music loops, multiple music tracks
+  - Final wicket and celebration
+  - Redo physics/state transitions
+  - Topspin and backspin
+  - Shot predictions
+  - Splash effects
+  - Bumpers
+  - Ramp colors
+  - Refine shot powers and redo level (ie, play and fix to play well)
+  - Tutorial comic bubbles?
+
+
   
+
   - Refined cel shading
   - cel shade outlining
   
   - improve color palette even more
 
 
-  - Remove mouse support
+
   - Fully realized game mechanic
   - Two single player levels (?)
   - One multiplayer (2 player) level

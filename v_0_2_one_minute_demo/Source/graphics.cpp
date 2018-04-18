@@ -18,6 +18,7 @@ Graphics::Graphics() {
   rectangle_cache = {};
 
   initialized_rectangle_buffers = false;
+  using_2d = false;
 }
 
 // This method sets up the screen for a 2D drawing phase
@@ -27,12 +28,14 @@ void Graphics::start2DDraw() {
   projection = glm::ortho(0.0f, (float) k_screen_width, (float) k_screen_height, 0.0f, 0.0f, 1.0f);
   glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection));
   color(1.0f, 1.0f, 1.0f, 1.0f);
+  using_2d = true;
 }
 
 // This method ends the 2D drawing phase
 void Graphics::end2DDraw() {
   glEnable(GL_DEPTH_TEST);
   enableLights();
+  using_2d = false;
 }
 
 
@@ -768,18 +771,27 @@ void Graphics::rotate(float angle, float x, float y, float z) {
   model = model * glm::rotate(glm::radians(angle), glm::vec3(x, y, z));
   glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
   glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
+  if (using_2d) {
+    glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * model));
+  }
 }
 
 void Graphics::translate(float x, float y, float z) {
   model = model * glm::translate(glm::vec3(x, y, z));
   glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
   glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
+  if (using_2d) {
+    glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * model));
+  }
 }
 
 void Graphics::scale(float x, float y, float z) {
   model = model * glm::scale(glm::vec3(x, y, z));
   glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
   glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
+  if (using_2d) {
+    glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * model));
+  }
 }
 
 void Graphics::pushModelMatrix() {
@@ -789,6 +801,13 @@ void Graphics::pushModelMatrix() {
 void Graphics::popModelMatrix() {
   model = model_stack.back();
   model_stack.pop_back();
+
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
+  glUniformMatrix4fv(v_matrix_id, 1, GL_FALSE, glm::value_ptr(view));
+  if (using_2d) {
+    glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * model));
+  }
 }
 
 void Graphics::multMatrix(const float* m) {
@@ -800,8 +819,12 @@ void Graphics::multMatrix(const float* m) {
 }
 
 glm::vec3 Graphics::get2dCoords(float x, float y, float z) {
-  glm::vec3 coords = glm::project(glm::vec3(x, y, z), model, projection, glm::vec4(0, 0, k_screen_width, k_screen_height));
+  glm::vec3 coords = glm::project(glm::vec3(x, y, z), view*model, projection, glm::vec4(0, 0, k_screen_width, k_screen_height));
   //printf("Here are coords: %0.2f, %0.2f, %0.2f\n", coords.x, coords.y, coords.z);
   return coords;
+}
+
+void Graphics::printModel() {
+  printf("Model: %s\n", glm::to_string(model).c_str());
 }
 

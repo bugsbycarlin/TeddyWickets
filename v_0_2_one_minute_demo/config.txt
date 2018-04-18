@@ -10,22 +10,113 @@
   <value>3</value>
 </param>
 
+
+<param>
+  <type>int</type>
+  <name>velocity_font_size</name>
+  <value>30</value>
+</param>
+
+
+<param>
+  <type>int</type>
+  <name>player_1_x_margin</name>
+  <value>8</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_x_margin</name>
+  <value>1329</value>
+</param>
+<param>
+  <type>int</type>
+  <name>y_margin</name>
+  <value>8</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>hud_step</name>
+  <value>110</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>v_x</name>
+  <value>5</value>
+</param>
+<param>
+  <type>int</type>
+  <name>v_y</name>
+  <value>70</value>
+</param>
+
+
+
+<param>
+  <type>float</type>
+  <name>rotato</name>
+  <value>14.0</value>
+</param>
+
+
+
+<param>
+  <type>int</type>
+  <name>player_1_score_box_x</name>
+  <value>52</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_1_score_box_y</name>
+  <value>835</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_score_box_x</name>
+  <value>1372</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_score_box_y</name>
+  <value>835</value>
+</param>
+
+
+<param>
+  <type>string</type>
+  <name>wicket_font</name>
+  <value>candy_crayon.ttf</value>
+</param>
+
 <param>
   <type>int</type>
   <name>wicket_font_size</name>
-  <value>60</value>
+  <value>40</value>
 </param>
 
 <param>
   <type>int</type>
   <name>wicket_font_x</name>
-  <value>0</value>
+  <value>-17</value>
 </param>
 
 <param>
   <type>int</type>
   <name>wicket_font_y</name>
-  <value>0</value>
+  <value>-135</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_star_x</name>
+  <value>-32</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_star_y</name>
+  <value>-32</value>
 </param>
 
 <param>

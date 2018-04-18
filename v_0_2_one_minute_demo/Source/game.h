@@ -20,6 +20,8 @@
 #include <cstdlib>
 #include <list>
 #include <string>
+#include <iomanip>
+#include <sstream>
 
 // Fmod for sound
 #include "fmod.hpp"
@@ -61,6 +63,11 @@ class Game: public Screen {
 
   int game_mode;
 
+  int player_1_score;
+  int player_1_display_score;
+  int player_2_score;
+  int player_2_display_score;
+
   float zoom;
 
   float sway;
@@ -68,12 +75,27 @@ class Game: public Screen {
   float default_speed_ramping;
   float simulation_speed;
 
+  int hud_step;
+
   std::string music;
   std::string theme;
 
   Model* theme_tile;
 
   std::string map_file;
+
+  TextBox* bear_velocity_1;
+  TextBox* bear_velocity_2;
+  TextBox* bear_velocity_3;
+  TextBox* bear_velocity_4;
+  TextBox* bear_velocity_5;
+  TextBox* bear_velocity_6;
+
+  TextBox* player_1_score_box;
+  TextBox* player_2_score_box;
+
+  std::vector<std::string> player_1_bears;
+  std::vector<std::string> player_2_bears;
 
   Game(std::vector<std::string> player_1_bears, std::vector<std::string> player_2_bears);
 

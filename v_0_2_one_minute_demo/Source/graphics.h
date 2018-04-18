@@ -26,6 +26,7 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/string_cast.hpp"
 
 #include <math.h>
 #include <stdio.h>
@@ -90,6 +91,8 @@ class Graphics {
 
   bool initialized_rectangle_buffers;
 
+  bool using_2d;
+
   void start2DDraw();
   void end2DDraw();
 
@@ -149,6 +152,7 @@ class Graphics {
   void multMatrix(const float* m);
 
   glm::vec3 get2dCoords(float x, float y, float z);
+  void printModel();
 };
 
 extern Graphics* graphics;

@@ -24,7 +24,17 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
   default_speed_ramping = k_default_speed_ramping;
   simulation_speed = k_default_minimum_speed;
 
+  this->player_1_bears = player_1_bears;
+  this->player_2_bears = player_2_bears;
+
   sway = 0;
+
+  hud_step = hot_config->getInt("hud_step");
+
+  player_1_score = 0;
+  player_1_display_score = 0;
+  player_2_score = 0;
+  player_2_display_score = 0;
 
   game_mode = k_drop_mode;
 
@@ -73,6 +83,34 @@ void Game::update() {
   last_time = current_time;
   if (simulation_speed > k_default_minimum_speed) {
     simulation_speed *= 0.98f;
+  }
+
+  if (player_1_display_score < player_1_score) {
+    player_1_display_score += 1;
+  } else if (player_1_display_score > player_1_score) {
+    player_1_display_score -= 1;
+  }
+  player_1_score_box->setText(std::to_string(player_1_display_score));
+  player_1_score_box->x = hot_config->getInt("player_1_score_box_x");
+  if (player_1_display_score >= 10) {
+    player_1_score_box->x = player_1_score_box->x - (int) (hot_config->getInt("wicket_font_size") / 4);
+  }
+  if (player_1_display_score >= 100) {
+    player_1_score_box->x = player_1_score_box->x - (int) (hot_config->getInt("wicket_font_size") / 4);
+  }
+
+  if (player_2_display_score < player_2_score) {
+    player_2_display_score += 1;
+  } else if (player_2_display_score > player_2_score) {
+    player_2_display_score -= 1;
+  }
+  player_2_score_box->setText(std::to_string(player_2_display_score));
+  player_2_score_box->x = hot_config->getInt("player_2_score_box_x");
+  if (player_2_display_score >= 10) {
+    player_2_score_box->x = player_2_score_box->x - (int) (hot_config->getInt("wicket_font_size") / 4);
+  }
+  if (player_2_display_score >= 100) {
+    player_2_score_box->x = player_2_score_box->x - (int) (hot_config->getInt("wicket_font_size") / 4);
   }
 
   sway = 0.5 * sin((current_time - start_time) / 1000.0f);
@@ -165,6 +203,22 @@ void Game::update() {
       }
     }
   }
+
+  std::stringstream stream;
+  std::string s;
+
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[0]->identity);
+  bear_velocity_1->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[1]->identity);
+  bear_velocity_2->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[2]->identity);
+  bear_velocity_3->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[3]->identity);
+  bear_velocity_4->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[4]->identity);
+  bear_velocity_5->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[5]->identity);
+  bear_velocity_6->setText(stream.str());
   
 }
 
@@ -232,12 +286,16 @@ void Game::handleAction(std::string action) {
         ((action == "player_2_right" && current_character_number % 2 == 1))) {
       printf("Right, I read you\n");
       current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
+      player_1_score += 11;
+      player_2_score += 2;
     }
 
     if ((action == "player_1_left" && current_character_number % 2 == 0) ||
         ((action == "player_2_left" && current_character_number % 2 == 1))) {
       printf("Left, I read you\n");
       current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
+      player_1_score -= 11;
+      player_2_score -= 2;
     }
 
     if ((action == "player_1_up" && current_character_number % 2 == 0) ||
@@ -316,10 +374,9 @@ void Game::render() {
   }
 
   // Wicket info
-  // for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
-  //   (*wicket)->renderInfo();
-  // }
-  wickets[0]->setRenderInfo();
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    (*wicket)->setRenderInfo();
+  }
 
   // Render theme tile
   if (theme == "water") {
@@ -332,40 +389,95 @@ void Game::render() {
   // render 2D overlay
   graphics->start2DDraw();
 
-  wickets[0]->renderInfo();
-
-  // render power mode
-  if (game_mode == k_power_mode) {
-    // render power gauge outline
-    int power_x = 1340;
-    int power_y = 20;
-    textures->setTexture("shot_power_outline");
-    graphics->rectangle(power_x, power_y, 30, 150);
-
-    // render power gauge fill
-    float portion = current_character->shot_power / current_character->default_shot_power;
-    textures->setTexture("shot_power_fill");
-    // custom texture scaling for the fill
-    float vertex_data[12] = {
-      power_x + 0.0f, power_y + 150.0f - 140.0f * portion, 0.0f,
-      power_x + 0.0f, power_y + 150.0f, 0.0f,
-      power_x + 30.0f, power_y + 150.0f, 0.0f,
-      power_x + 30.0f, power_y + 150.0f - 140.0f * portion, 0.0f
-    };
-    float texture_data[8] = {
-      0.0f, 1.0f - 140.0f / 150.0f * portion,
-      0.0f, 1.0f,
-      1.0f, 1.0f,
-      1.0f, 1.0f - 140.0f / 150.0f * portion
-    };
-    graphics->rectangleWithTexture(vertex_data, texture_data);
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    (*wicket)->renderInfo();
   }
 
+  textures->setTexture("player_1_HUD_background");
+  graphics->rectangle(0, 0, 120, k_screen_height);
+
+  textures->setTexture("player_2_HUD_background");
+  graphics->rectangle(k_screen_width - 120, 0, 120, k_screen_height);
+
+  textures->setTexture(player_1_bears[0] + "_box");
+  graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin"), 103, 103);
+  textures->setTexture(player_1_bears[1] + "_box");
+  graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin") + hud_step, 103, 103);
+  textures->setTexture(player_1_bears[2] + "_box");
+  graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin") + 2 * hud_step, 103, 103);
+  
+  textures->setTexture(player_2_bears[0] + "_box");
+  graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin"), 103, 103);
+  textures->setTexture(player_2_bears[1] + "_box");
+  graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin") + hud_step, 103, 103);
+  textures->setTexture(player_2_bears[2] + "_box");
+  graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin") + 2 * hud_step, 103, 103);
+
+  textures->setTexture("bear_selection_box");
+  graphics->rectangle(hot_config->getInt("player_" + std::to_string(current_character_number % 2 + 1) + "_x_margin"), hot_config->getInt("y_margin") + ((int) current_character_number / 2) * hud_step, 103, 103);
+
+  bear_velocity_1->render();
+  bear_velocity_2->render();
+  bear_velocity_3->render();
+  bear_velocity_4->render();
+  bear_velocity_5->render();
+  bear_velocity_6->render();
+
+  int act_margin = hot_config->getInt("player_1_x_margin");
+  int taunt_margin = hot_config->getInt("player_2_x_margin");
+  if (current_character_number % 2 == 1) {
+    act_margin = hot_config->getInt("player_2_x_margin");
+    taunt_margin = hot_config->getInt("player_1_x_margin");
+  }
+
+  if (game_mode == k_prep_mode || game_mode == k_power_mode || game_mode == k_action_mode) {
+    if(current_character->up_shot) {
+      textures->setTexture("up_shot_glyph");
+    } else {
+      textures->setTexture("flat_shot_glyph");
+    }
+    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + 3 * hud_step, 103, 103);
+
+    textures->setTexture("mallet_background_glyph");
+    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + 4 * hud_step, 103, 103);
+
+    textures->setTexture("taunt");
+    graphics->rectangle(taunt_margin, hot_config->getInt("y_margin") + 3 * hud_step, 103, 103);    
+  }
+
+  // render power mode
+  if (game_mode == k_power_mode || game_mode == k_action_mode) {
+    textures->setTexture("mallet_glyph");
+    graphics->pushModelMatrix();
+    graphics->translate(act_margin + 36, hot_config->getInt("y_margin") + 4 * hud_step + 21, 0);
+    graphics->rotate(-90.0 * current_character->shot_power / current_character->default_shot_power, 0.0f, 0.0f, 1.0f);
+    //graphics->printModel();
+    graphics->rectangle(-36, -21, 103, 103);
+    graphics->popModelMatrix();
+  }
+
+  if (game_mode == k_action_mode) {
+    textures->setTexture("special_power");
+    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + 5 * hud_step, 103, 103);
+  }
+
+  textures->setTexture("large_salmon_star");
+  graphics->rectangle(0, k_screen_height - 120, 128, 128);
+
+  textures->setTexture("large_purple_star");
+  graphics->rectangle(k_screen_width - 120, k_screen_height - 120, 128, 128);
+
+  player_1_score_box->render();
+  player_2_score_box->render();
+
+
   // render coordinates
-  int coord_x = 40;
-  int coord_y = k_screen_height - 79 - 40;
-  textures->setTexture("coordinates");
-  graphics->rectangle(coord_x, coord_y, 93, 79);
+  // int coord_x = 40;
+  // int coord_y = k_screen_height - 79 - 40;
+  // textures->setTexture("coordinates");
+  // graphics->rectangle(coord_x, coord_y, 93, 79);
+
+
 
   graphics->end2DDraw();
 }
@@ -421,15 +533,15 @@ bool Game::initializeGamePieces() {
     
     Hazard* hazard;
     if (tile_type == "wicket") {
-      hazard = new Hazard(tile_type, physics,
-        new Point(x, y, z), M_PI + r);
-      hazards.push_front(hazard);
-    } else {
       Wicket* wicket = new Wicket(tile_type, physics,
         new Point(x, y, z), M_PI + r);
       hazard = (Hazard*) wicket;
       hazards.push_front(hazard);
       wickets.push_back(wicket);
+    } else {
+      hazard = new Hazard(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      hazards.push_front(hazard);
     }
 
     if (tile_type == "start") {
@@ -495,6 +607,48 @@ bool Game::initializeTextures() {
   textures->addTexture("clouds", "clouds_soft.png");
   textures->addTexture("water", "water.png");
 
+  textures->addTexture("player_1_HUD_background", "player_1_HUD_background.png");
+  textures->addTexture("player_2_HUD_background", "player_2_HUD_background.png");
+
+  textures->addTexture("large_salmon_star", "large_salmon_star.png");
+  textures->addTexture("large_purple_star", "large_purple_star.png");
+
+  textures->addTexture("bear_selection_box", "bear_selection_box.png");
+
+  textures->addTexture("lil_jon_box", "lil_jon_box.png");
+  textures->addTexture("mortimer_box", "mortimer_box.png");
+  textures->addTexture("gluke_box", "gluke_box.png");
+  textures->addTexture("mags_box", "mags_box.png");
+  textures->addTexture("bob_smith_box", "bob_smith_box.png");
+  textures->addTexture("lord_lonsdale_box", "lord_lonsdale_box.png");
+  textures->addTexture("hpf_swinnerton_dyer_box", "hpf_swinnerton_dyer_box.png");
+  textures->addTexture("jeff_bridges_box", "jeff_bridges_box.png");
+  textures->addTexture("grim_box", "grim_box.png");
+
+  textures->addTexture("flat_shot_glyph", "flat_shot_glyph.png");
+  textures->addTexture("up_shot_glyph", "up_shot_glyph.png");
+  textures->addTexture("mallet_glyph", "mallet_glyph.png");
+  textures->addTexture("mallet_background_glyph", "mallet_background_glyph.png");
+  textures->addTexture("special_power", "special_power.png");
+  textures->addTexture("taunt", "taunt.png");
+
+  player_1_score_box = new TextBox(hot_config->getString("wicket_font"), hot_config->getInt("wicket_font_size"),
+    std::to_string(player_1_display_score), 0, 0, 0, hot_config->getInt("player_1_score_box_x"), hot_config->getInt("player_1_score_box_y"));
+  player_2_score_box = new TextBox(hot_config->getString("wicket_font"), hot_config->getInt("wicket_font_size"),
+    std::to_string(player_2_display_score), 0, 0, 0, hot_config->getInt("player_2_score_box_x"), hot_config->getInt("player_2_score_box_y"));
+
+  bear_velocity_1 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+    hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hot_config->getInt("v_y"));
+  bear_velocity_2 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+    hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hot_config->getInt("v_y"));
+  bear_velocity_3 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+    hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hud_step + hot_config->getInt("v_y"));
+  bear_velocity_4 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+    hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hud_step + hot_config->getInt("v_y"));
+  bear_velocity_5 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+    hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + 2 * hud_step + hot_config->getInt("v_y"));
+  bear_velocity_6 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+    hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + 2 * hud_step + hot_config->getInt("v_y"));
   return true;
 }
 

@@ -75,6 +75,7 @@ class Physics {
     btRigidBody* getBodyById(int identity);
     btTransform getTransform(int identity);
     float getVelocity(int identity);
+    Point* getVelocityVector(int identity);
     bool hasCollision(int identity, int identity2);
     bool checkActive(int identity);
 

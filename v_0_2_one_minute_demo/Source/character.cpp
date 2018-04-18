@@ -37,6 +37,11 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
 // for potential future use.
 void Character::updateFromPhysics() {
   physics->updatePoint(position, identity);
+  Point* v = physics->getVelocityVector(identity);
+  velocity_history.push(v);
+  if (velocity_history.size() > 10) {
+    velocity_history.pop();
+  }
 }
 
 void Character::render(int game_mode) {

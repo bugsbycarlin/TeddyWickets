@@ -358,6 +358,12 @@ float Physics::getVelocity(int identity) {
   return (float) velocity.length();
 }
 
+Point* Physics::getVelocityVector(int identity) {
+  btRigidBody* body = getBodyById(identity);
+  btVector3 velocity = body->getLinearVelocity();
+  return new Point(velocity.x(), velocity.y(), velocity.z());
+}
+
 // Set the transform of a body
 void Physics::setTransform(int identity, btTransform transform) {
   btRigidBody* body = getBodyById(identity);

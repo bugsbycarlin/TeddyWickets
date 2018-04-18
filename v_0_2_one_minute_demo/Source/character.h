@@ -10,6 +10,7 @@
 #define TEDDY_WICKETS_CHARACTER_H_
 
 #include <list>
+#include <queue>
 
 #include "globals.h"
 #include "graphics.h"
@@ -39,6 +40,8 @@ class Character {
     float radius;
 
     std::list<btTransform> future_positions = { };
+
+    std::queue<Point*> velocity_history = { };
 
     Character(Physics* physics, Point* position, std::string model_name);
 
