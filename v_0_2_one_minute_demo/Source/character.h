@@ -11,6 +11,7 @@
 
 #include <list>
 #include <queue>
+#include <deque>
 
 #include "globals.h"
 #include "graphics.h"
@@ -25,6 +26,7 @@ class Character {
     Point* position;
 
     int roster_number;
+    int player_number;
 
     Physics* physics;
     Model* model;
@@ -42,6 +44,7 @@ class Character {
     std::list<btTransform> future_positions = { };
 
     std::queue<Point*> velocity_history = { };
+    std::deque<Point*> position_history = { };
 
     Character(Physics* physics, Point* position, std::string model_name);
 

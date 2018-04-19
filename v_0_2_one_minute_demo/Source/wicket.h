@@ -30,9 +30,15 @@ class Wicket: public Hazard {
 
     int value;
 
+    bool rotated;
+
+    int player_owner;
+
     Wicket(std::string object_type, Physics* physics, Point* position, float rotation);
 
     void render();
+
+    bool flipWicket(Point* last_point, Point* current_point, int player_owner);
 
     void setRenderInfo();
     void renderInfo();

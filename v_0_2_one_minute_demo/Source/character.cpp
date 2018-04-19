@@ -37,10 +37,16 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
 // for potential future use.
 void Character::updateFromPhysics() {
   physics->updatePoint(position, identity);
+  
   Point* v = physics->getVelocityVector(identity);
   velocity_history.push(v);
   if (velocity_history.size() > 10) {
     velocity_history.pop();
+  }
+
+  position_history.push_front(new Point(position->x, position->y, position->z));
+  if (position_history.size() > 10) {
+    position_history.pop_back();
   }
 }
 

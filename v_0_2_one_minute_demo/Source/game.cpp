@@ -38,7 +38,8 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
 
   game_mode = k_drop_mode;
 
-  map_file = "Levels/wawa_shores_1.txt";
+  //map_file = "Levels/wawa_shores_1.txt";
+  map_file = "Levels/test_level_1.txt";
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -202,6 +203,26 @@ void Game::update() {
         physics->activate(current_character->identity);
       }
     }
+
+    // Test character against wickets.
+    if ((*character)->position_history.size() > 1) {
+      for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+        (*wicket)->flipWicket((*character)->position_history[0], (*character)->position_history[1], (*character)->player_number);
+      }
+    }
+  }
+
+  // Calculate scores based on wickets
+  player_1_score = 0;
+  player_2_score = 0;
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    int value = (*wicket)->value;
+    int player_owner = (*wicket)->player_owner;
+    if (player_owner == 1) {
+      player_1_score += value;
+    } else if (player_owner == 2) {
+      player_2_score += value;
+    }
   }
 
   std::stringstream stream;
@@ -286,16 +307,12 @@ void Game::handleAction(std::string action) {
         ((action == "player_2_right" && current_character_number % 2 == 1))) {
       printf("Right, I read you\n");
       current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
-      player_1_score += 11;
-      player_2_score += 2;
     }
 
     if ((action == "player_1_left" && current_character_number % 2 == 0) ||
         ((action == "player_2_left" && current_character_number % 2 == 1))) {
       printf("Left, I read you\n");
       current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
-      player_1_score -= 11;
-      player_2_score -= 2;
     }
 
     if ((action == "player_1_up" && current_character_number % 2 == 0) ||
@@ -385,15 +402,6 @@ void Game::render() {
     //theme_tile->render();
     graphics->popModelMatrix();
   }
-
-  // Rando 3d rectangle
-  // textures->setTexture("water");
-  // graphics->pushModelMatrix();
-  // graphics->translate(0, 12, 9);
-  // //graphics->rotate(-90.0 * current_character->shot_power / current_character->default_shot_power, 0.0f, 0.0f, 1.0f);
-  // //graphics->printModel();
-  // graphics->rectangle(0, 0, 6, 6);
-  // graphics->popModelMatrix();
 
   // render 2D overlay
   graphics->start2DDraw();
@@ -562,6 +570,7 @@ bool Game::initializeGamePieces() {
 
       starts.push_back(hazard);
       character->roster_number = alternating_starts;
+      character->player_number = alternating_starts % 2 + 1;
 
       alternating_starts +=1;
     }

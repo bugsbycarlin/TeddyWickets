@@ -55,8 +55,13 @@
 
 <param>
   <type>float</type>
-  <name>rotato</name>
-  <value>14.0</value>
+  <name>wicket_box_x</name>
+  <value>-1.5</value>
+</param>
+<param>
+  <type>float</type>
+  <name>wicket_box_y</name>
+  <value>-1.5</value>
 </param>
 
 

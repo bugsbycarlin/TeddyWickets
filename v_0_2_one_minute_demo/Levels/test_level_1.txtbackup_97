@@ -1,0 +1,12 @@
+<music>Sound/Golf_Theme.mp3</music>
+
+<theme>No</theme>
+
+<shape>
+    <tile type="tile_flat">
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+        <r>0.0</r>
+    </tile>
+</shape>
