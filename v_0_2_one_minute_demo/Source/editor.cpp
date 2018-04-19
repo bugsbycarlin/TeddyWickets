@@ -23,7 +23,7 @@ Editor::Editor(std::string map_file) {
   last_z = 0;
   sway = 0;
   current_shape_type = 0;
-  num_types = 14;
+  num_types = 15;
   this->map_file = map_file;
   zoom = k_default_zoom;
 }

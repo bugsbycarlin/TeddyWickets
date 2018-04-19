@@ -561,7 +561,7 @@ bool Game::initializeGamePieces() {
       hazards.push_front(hazard);
     }
 
-    if (tile_type == "start") {
+    if (tile_type == "player_1_start" || tile_type == "player_2_start") {
       std::string model_name = "";
       if (alternating_starts % 2 == 1) model_name = "teddy_2.obj";
       Character* character = new Character(physics, new Point(x + hot_config->getInt("x_drop"), y + hot_config->getInt("y_drop"), z + k_character_drop_height), model_name); // 

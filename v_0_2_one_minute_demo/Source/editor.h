@@ -72,7 +72,7 @@ class Editor: public Screen {
 
   Model* theme_tile;
 
-  std::string shape_types[14] = {
+  std::string shape_types[15] = {
     "tile_flat",
     "tile_down_x",
     "tile_down_y",
@@ -86,7 +86,8 @@ class Editor: public Screen {
     "ramp",
     "wicket",
     "boxguy",
-    "start"
+    "player_1_start",
+    "player_2_start",
   };
   int current_shape_type;
 

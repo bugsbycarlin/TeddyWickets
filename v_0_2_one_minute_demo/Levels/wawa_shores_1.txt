@@ -939,37 +939,37 @@
         <z>5</z>
         <r>-1.5707967599206647</r>
     </tile>
-    <tile type="start">
+    <tile type="player_1_start">
         <x>0</x>
         <y>0</y>
         <z>8</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="start">
+    <tile type="player_2_start">
         <x>0</x>
         <y>6</y>
         <z>8</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="start">
+    <tile type="player_1_start">
         <x>0</x>
         <y>12</y>
         <z>8</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="start">
+    <tile type="player_2_start">
         <x>0</x>
         <y>18</y>
         <z>8</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="start">
+    <tile type="player_1_start">
         <x>0</x>
         <y>24</y>
         <z>8</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="start">
+    <tile type="player_2_start">
         <x>0</x>
         <y>30</y>
         <z>8</z>

@@ -34,9 +34,9 @@
   +- Fix the 2d rotation problem
   +- Clean HUD first draft
   +- Fix the major graphics memory leak problem (by translate/rotate)
+  +- Wicket crossing detection and action
   
   A priorities
-  - Wicket crossing detection and action
   - Redo physics/state transitions
   - Refine shot powers and redo level (ie, play and fix to play well)
   - Front Bumpers
