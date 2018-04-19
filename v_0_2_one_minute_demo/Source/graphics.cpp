@@ -610,16 +610,16 @@ void Graphics::drawFullMesh(int cache_id) {
   glDisableVertexAttribArray(3);
 }
 
-int Graphics::cacheRectangle(float x, float y, float w, float h) {
+int Graphics::cacheRectangle(float w, float h) {
   int cache_id = this->next_mesh_cache_id;
 
   buffer_sizes[cache_id] = 4;
 
   GLfloat vertex_data[] = { 
-    x, y, 0.0f,
-    x, y + h, 0.0f,
-    x + w, y + h, 0.0f,
-    x + w, y, 0.0f,
+    0, 0, 0.0f,
+    0, h, 0.0f,
+    w, h, 0.0f,
+    w, 0, 0.0f,
   };
 
   GLfloat texture_data[] = { 
@@ -660,15 +660,21 @@ void Graphics::rectangle(int cache_id) {
 
 // This method draws a rectangle
 void Graphics::rectangle(float x, float y, float w, float h) {
-  std::string id = std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(w) + "," + std::to_string(h);
+  std::string id = std::to_string(w) + "," + std::to_string(h);
+
+  graphics->pushModelMatrix();
+  graphics->translate(x, y, 0);
 
   if (rectangle_cache.find(id) == rectangle_cache.end()) {
-    rectangle_cache[id] = cacheRectangle(x, y, w, h);
+    rectangle_cache[id] = cacheRectangle(w, h);
   } else {
     drawMesh(rectangle_cache[id]);
   }
+
+  graphics->popModelMatrix();
 }
 
+// Avoid using this. It has a memory leak.
 void Graphics::rectangleWithTexture(float vertex_data[], float texture_data[]) {
   if (!initialized_rectangle_buffers) {
     GLfloat normal_data[] = { 

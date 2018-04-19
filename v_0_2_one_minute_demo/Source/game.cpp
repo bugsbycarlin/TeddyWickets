@@ -382,9 +382,18 @@ void Game::render() {
   if (theme == "water") {
     graphics->pushModelMatrix();
     graphics->translate(50, 0 + sway, 0);
-    theme_tile->render();
+    //theme_tile->render();
     graphics->popModelMatrix();
   }
+
+  // Rando 3d rectangle
+  // textures->setTexture("water");
+  // graphics->pushModelMatrix();
+  // graphics->translate(0, 12, 9);
+  // //graphics->rotate(-90.0 * current_character->shot_power / current_character->default_shot_power, 0.0f, 0.0f, 1.0f);
+  // //graphics->printModel();
+  // graphics->rectangle(0, 0, 6, 6);
+  // graphics->popModelMatrix();
 
   // render 2D overlay
   graphics->start2DDraw();

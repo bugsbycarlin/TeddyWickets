@@ -136,7 +136,7 @@ class Graphics {
   int cacheFullMesh(std::vector<float> vertex_data, std::vector<float> normal_data, std::vector<float> texture_data, std::vector<float> color_data);
   void drawFullMesh(int cache_id);
 
-  int cacheRectangle(float x, float y, float w, float h);
+  int cacheRectangle(float w, float h);
   void rectangle(int cache_id);
 
   void lineWidth(int line_width);

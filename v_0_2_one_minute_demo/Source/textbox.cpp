@@ -58,12 +58,6 @@ void TextBox::setTemporaryColor(Uint8 R, Uint8 G, Uint8 B) {
 void TextBox::render() {
   graphics->setTexture(texture);
 
-  // Caching is better, but the ones that move can't be cached. TO DO: Fix that!
-  // if (cache_id == -1) {
-  //   cache_id = graphics->cacheRectangle(x, y, text_surface->w, text_surface->h);
-  // } else {
-  //   graphics->rectangle(cache_id);
-  // }
   graphics->rectangle(x, y, text_surface->w, text_surface->h);
 
   if (countdown > 0) {

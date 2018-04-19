@@ -32,20 +32,30 @@
   +- Decide player base colors
   +- Show scores
   +- Fix the 2d rotation problem
-  - Clean HUD
-  - Control pictures
-  - Fix the graphics memory leak problem (by translate/rotate)
+  +- Clean HUD first draft
+  +- Fix the major graphics memory leak problem (by translate/rotate)
+  
+  A priorities
   - Wicket crossing detection and action
-  - Music loops, multiple music tracks
-  - Final wicket and celebration
   - Redo physics/state transitions
-  - Topspin and backspin
-  - Shot predictions
-  - Splash effects
-  - Bumpers
-  - Ramp colors
   - Refine shot powers and redo level (ie, play and fix to play well)
+  - Front Bumpers
+  - Bear to bear collisions (should not screw up with state transitions; it should not reset the bear to drop mode)
+  - Final wicket and simple celebration
+  - Music loops, multiple music tracks
+
+  B priorities
+  - Move the baddy
+  - Shot predictions
+  - Control glyphs
+  - Topspin and backspin 
+  - Start spot color
+  
+  C priorities
+  - Splash effects
+  - Ramp colors
   - Tutorial comic bubbles?
+  - Fix water
 
 
   
