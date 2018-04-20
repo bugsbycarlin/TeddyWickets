@@ -101,7 +101,11 @@ class Game: public Screen {
   void loop(SDL_Window* window, FMOD::System *sound_system);
 
   void update();
+  void updateScores();
   void afterUpdate();
+
+  bool bearsAreSetup();
+  bool bearsAreExhausted();
 
   void shoot();
 

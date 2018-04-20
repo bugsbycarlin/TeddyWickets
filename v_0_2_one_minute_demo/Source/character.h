@@ -25,6 +25,8 @@ class Character {
     int identity;
     Point* position;
 
+    Point* last_drop_position;
+
     int roster_number;
     int player_number;
 
@@ -39,16 +41,20 @@ class Character {
     float shot_power;
     bool up_shot;
 
+    int status;
+
     float radius;
 
     std::list<btTransform> future_positions = { };
 
-    std::queue<Point*> velocity_history = { };
+    std::deque<Point*> velocity_history = { };
     std::deque<Point*> position_history = { };
 
     Character(Physics* physics, Point* position, std::string model_name);
 
     void updateFromPhysics();
+
+    bool stoppedMoving();
 
     void setShotRotation(float value, bool recompute_trajectory);
 

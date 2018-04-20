@@ -36,12 +36,11 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
   player_2_score = 0;
   player_2_display_score = 0;
 
-  game_mode = k_drop_mode;
+  game_mode = k_setup_mode;
 
   music = "";
 
-  //map_file = "Levels/wawa_shores_1.txt";
-  map_file = "Levels/test_level_1.txt";
+  map_file = hot_config->getString("map_file");
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -81,13 +80,147 @@ void Game::loop(SDL_Window* window, FMOD::System *sound_system) {
 
 void Game::update() {
   // Set time and perform physics update
-  unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+  current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   physics->update(simulation_speed * (current_time - last_time) / 1000.0f);
   last_time = current_time;
   if (simulation_speed > k_default_minimum_speed) {
     simulation_speed *= 0.98f;
   }
 
+  sway = 0.5 * sin((current_time - start_time) / 1000.0f);
+
+  if (current_time - framerate_time > 1000.0f) {
+    printf("Framerate: %d\n", frames_since_last);
+    printf("Mode: %d\n", game_mode);
+    //printf("Ball: %0.2f, %0.2f, %0.2f\n", character->position->x, character->position->y, character->position->z);
+    framerate_time = current_time;
+    frames_since_last = 0;
+  } else {
+    frames_since_last++;
+  }
+
+  // In setup mode, activate all inactive bears and return them to their starting positions, plus drop height
+  if (game_mode == k_setup_mode) {
+    for (auto character = characters.begin(); character != characters.end(); ++character) {
+      if ((*character)->status == k_bear_status_sidelined) {
+        (*character)->status = k_bear_status_normal;
+        (*character)->velocity_history = {};
+        (*character)->position_history = {};
+        physics->setPositionAndRotation((*character)->identity,
+          (*character)->last_drop_position,
+          0, 0, (*character)->default_shot_rotation);
+      }
+    }
+
+    if (bearsAreSetup()) {
+      game_mode = k_aim_mode;
+      current_character->up_shot = false;
+      current_character->setShotRotation(current_character->default_shot_rotation, false);
+    }
+  }
+
+  // Check whether in aim mode, and if so, manually set the position and keep the ball active
+  // in the physics environment. I believe this is necessary to allow the turns to keep happening.
+  if (!physics->checkActive(current_character->identity) && game_mode == k_aim_mode) {
+    physics->setPositionAndRotation(current_character->identity,
+      new Point(current_character->position->x, current_character->position->y, current_character->position->z),
+      0, 0, current_character->shot_rotation);
+    physics->activate(current_character->identity);
+  }
+
+  // In power mode, set the shot power gauge to fluctuate up and down
+  if (game_mode == k_power_mode) {
+    if (shot_rising) {
+      current_character->shot_power += 0.25f;
+    } else {
+      current_character->shot_power -= 0.25f;
+    }
+
+    if (current_character->shot_power > current_character->default_shot_power) {
+      shot_rising = false;
+    }
+
+    if (current_character->shot_power < 0.1f) {
+      shot_rising = true;
+    }
+  }
+
+  // Check whether action has finished, and if so, switch to setup mode
+  if (game_mode == k_action_mode && bearsAreExhausted()) {
+    game_mode = k_setup_mode;
+
+    // update to the next character
+    current_character_number += 1;
+    if (current_character_number > 5) {
+      current_character_number = 0;
+    }
+    current_character = characters[current_character_number];
+  }
+
+  for (auto character = characters.begin(); character != characters.end(); ++character) {
+    // Update the character position (for rendering and game logic) from physics
+    (*character)->updateFromPhysics();
+
+    // If the character has slowed to a crawl, stop the character
+    if (physics->getVelocity((*character)->identity) < 0.02f) {
+      physics->stop((*character)->identity);
+    }
+
+    // If the character has fallen off the world, reset the character to its starting place
+    if (game_mode == k_action_mode && (*character)->position->z < -10) {
+      
+      physics->stop((*character)->identity);
+      // Move out of the game somewhere
+      physics->setPositionAndRotation((*character)->identity,
+        new Point(-1000, -1000, -1000),
+        0, 0, (*character)->default_shot_rotation);
+      (*character)->status = k_bear_status_sidelined;
+    }
+
+    // Test character against wickets.
+    if ((*character)->position_history.size() > 1) {
+      for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+        (*wicket)->flipWicket((*character)->position_history[0], (*character)->position_history[1], (*character)->player_number);
+      }
+    }
+  }
+
+  updateScores();
+
+  std::stringstream stream;
+  std::string s;
+
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[0]->identity);
+  bear_velocity_1->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[1]->identity);
+  bear_velocity_2->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[2]->identity);
+  bear_velocity_3->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[3]->identity);
+  bear_velocity_4->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[4]->identity);
+  bear_velocity_5->setText(stream.str());
+  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[5]->identity);
+  bear_velocity_6->setText(stream.str());
+  
+}
+
+void Game::updateScores() {
+
+  // Calculate scores based on wickets
+  player_1_score = 0;
+  player_2_score = 0;
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    int value = (*wicket)->value;
+    int player_owner = (*wicket)->player_owner;
+    if (player_owner == 1) {
+      player_1_score += value;
+    } else if (player_owner == 2) {
+      player_2_score += value;
+    }
+  }
+
+  // Update score text boxes
   if (player_1_display_score < player_1_score) {
     player_1_display_score += 1;
   } else if (player_1_display_score > player_1_score) {
@@ -115,147 +248,58 @@ void Game::update() {
   if (player_2_display_score >= 100) {
     player_2_score_box->x = player_2_score_box->x - (int) (hot_config->getInt("wicket_font_size") / 4);
   }
-
-  sway = 0.5 * sin((current_time - start_time) / 1000.0f);
-
-  if (current_time - framerate_time > 1000.0f) {
-    printf("Framerate: %d\n", frames_since_last);
-    //printf("Ball: %0.2f, %0.2f, %0.2f\n", character->position->x, character->position->y, character->position->z);
-    framerate_time = current_time;
-    frames_since_last = 0;
-  } else {
-    frames_since_last++;
-  }
-
-  // Check whether in prep mode, and if so, manually set the position and keep the ball active
-  // in the physics environment. I believe this is necessary to allow the turns to keep happening.
-  if (!physics->checkActive(current_character->identity) && game_mode == k_prep_mode) {
-    physics->setPositionAndRotation(current_character->identity,
-      new Point(current_character->position->x, current_character->position->y, current_character->position->z),
-      0, 0, current_character->shot_rotation);
-    physics->activate(current_character->identity);
-  }
-
-  // In power mode, set the shot power gauge to fluctuate up and down
-  if (game_mode == k_power_mode) {
-    if (shot_rising) {
-      current_character->shot_power += 0.25f;
-    } else {
-      current_character->shot_power -= 0.25f;
-    }
-
-    if (current_character->shot_power > current_character->default_shot_power) {
-      shot_rising = false;
-    }
-
-    if (current_character->shot_power < 0.1f) {
-      shot_rising = true;
-    }
-
-    // uncomment this to force a weak shot if the player doesn't activate the power gauge.
-    // if (current_character->shot_power < 0.1f) {
-    //   current_character->shot_power = k_default_shot_power / 10.0f;
-    //   shoot();
-    // }
-  }
-
-  // Check whether action has finished, and if so, switch to drop mode
-  if (!physics->checkActive(current_character->identity) && game_mode == k_action_mode) {
-    game_mode = k_drop_mode;
-    physics->stop(current_character->identity);
-    current_character->shot_rotation = current_character->default_shot_rotation;
-    physics->setPositionAndRotation(current_character->identity,
-      new Point(current_character->position->x, current_character->position->y, current_character->position->z + k_character_drop_height),
-      0, 0, current_character->default_shot_rotation);
-
-    // update to the next character and activate.
-    current_character_number += 1;
-    if (current_character_number > 5) {
-      current_character_number = 0;
-    }
-    current_character = characters[current_character_number];
-    physics->activate(current_character->identity);
-  }
-
-  for (auto character = characters.begin(); character != characters.end(); ++character) {
-    // Update the character position (for rendering and game logic) from physics
-    (*character)->updateFromPhysics();
-
-    // If the character has slowed to a crawl, stop the character
-    if (physics->getVelocity((*character)->identity) < 0.02f) {
-      physics->stop((*character)->identity);
-    }
-
-    // If the character has fallen off the world, reset the character to its starting place
-    if ((*character)->position->z < -10) {
-      Hazard* start = starts[(*character)->roster_number];
-      physics->stop((*character)->identity);
-      physics->setPositionAndRotation((*character)->identity,
-        new Point(start->position->x + 3, start->position->y + 3, start->position->z + k_character_drop_height),
-        0, 0, (*character)->default_shot_rotation);
-      if ((*character)->roster_number == current_character_number) {
-        game_mode = k_drop_mode;
-
-        // update to the next character and activate.
-        current_character_number += 1;
-        if (current_character_number > 5) {
-          current_character_number = 0;
-        }
-        current_character = characters[current_character_number];
-        physics->activate(current_character->identity);
-      }
-    }
-
-    // Test character against wickets.
-    if ((*character)->position_history.size() > 1) {
-      for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
-        (*wicket)->flipWicket((*character)->position_history[0], (*character)->position_history[1], (*character)->player_number);
-      }
-    }
-  }
-
-  // Calculate scores based on wickets
-  player_1_score = 0;
-  player_2_score = 0;
-  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
-    int value = (*wicket)->value;
-    int player_owner = (*wicket)->player_owner;
-    if (player_owner == 1) {
-      player_1_score += value;
-    } else if (player_owner == 2) {
-      player_2_score += value;
-    }
-  }
-
-  std::stringstream stream;
-  std::string s;
-
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[0]->identity);
-  bear_velocity_1->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[1]->identity);
-  bear_velocity_2->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[2]->identity);
-  bear_velocity_3->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[3]->identity);
-  bear_velocity_4->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[4]->identity);
-  bear_velocity_5->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[5]->identity);
-  bear_velocity_6->setText(stream.str());
-  
 }
 
 void Game::afterUpdate() {
+}
 
-  // This is the current way to check for a break out of drop mode
-  // To do: fix this so it doesn't break the drop action, but also doesn't
-  // go back to long, awkward drops.
-  if (game_mode == k_drop_mode && (!physics->checkActive(current_character->identity) ||
-    physics->getVelocity(current_character->identity) < 0.00001)) {
-    game_mode = k_prep_mode;
-    current_character->up_shot = false;
-    current_character->setShotRotation(current_character->default_shot_rotation, false);
+// Return true if no bears are sidelined and all bears have stopped moving 
+bool Game::bearsAreSetup() {
+  bool bearsAreSetup = true;
+  for (auto character = characters.begin(); character != characters.end(); ++character) {
+    if ((*character)->status == k_bear_status_sidelined) {
+      bearsAreSetup = false;
+    }
+
+    if (!(*character)->stoppedMoving()) {
+      bearsAreSetup = false;
+    }
   }
+  return bearsAreSetup;
+}
+
+// Return true if all bears are either sidelined or have stopped moving 
+bool Game::bearsAreExhausted() {
+  bool bearsAreExhausted = true;
+  for (auto character = characters.begin(); character != characters.end(); ++character) {
+    if ((*character)->status != k_bear_status_sidelined && !(*character)->stoppedMoving()) {
+      bearsAreExhausted = false;
+    }
+  }
+  return bearsAreExhausted;
+}
+
+void Game::shoot() {
+  game_mode = k_action_mode;
+  for (auto character = characters.begin(); character != characters.end(); ++character) {
+    (*character)->velocity_history = {};
+    (*character)->position_history = {};
+  }
+  current_character->future_positions.clear();
+  simulation_speed = default_speed_ramping;
+  if (current_character->up_shot) {
+    // an angled shot
+
+    current_character->impulse(cos(k_up_shot_angle) * current_character->shot_power * sin(current_character->shot_rotation),
+      cos(k_up_shot_angle) * -current_character->shot_power * cos(current_character->shot_rotation),
+      sin(k_up_shot_angle) * current_character->shot_power);
+  } else {
+    // a flat shot
+    current_character->impulse(current_character->shot_power * sin(current_character->shot_rotation),
+      -current_character->shot_power * cos(current_character->shot_rotation),
+      0.5);
+  }
+  physics->activate(current_character->identity);
 }
 
 // Handle keyboard input
@@ -289,31 +333,14 @@ void Game::handleController(SDL_Event e) {
 // Handle actions as translated from the control map
 void Game::handleAction(std::string action) {
 
-// if (action == "player_1_down") {
-//       bear_choice += 3;
-//       if (bear_choice > 8) bear_choice -= 9;
-//     } else if (action == "player_1_up") {
-//       bear_choice -= 3;
-//       if (bear_choice < 0) bear_choice += 9;
-//     } else if (action == "player_1_left") {
-//       bear_choice -= 1;
-//       if ((bear_choice + 3) % 3 == 2) bear_choice += 3;
-//     } else if (action == "player_1_right") {
-//       bear_choice += 1;
-//       if (bear_choice % 3 == 0) bear_choice -= 3;
-//     } else if (action == "player_1_shoot_accept") {
-//       if (availab
-
-  if (game_mode == k_prep_mode) {
+  if (game_mode == k_aim_mode) {
     if ((action == "player_1_right" && current_character_number % 2 == 0) ||
         ((action == "player_2_right" && current_character_number % 2 == 1))) {
-      printf("Right, I read you\n");
       current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
     }
 
     if ((action == "player_1_left" && current_character_number % 2 == 0) ||
         ((action == "player_2_left" && current_character_number % 2 == 1))) {
-      printf("Left, I read you\n");
       current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
     }
 
@@ -341,27 +368,12 @@ void Game::handleAction(std::string action) {
   if (game_mode == k_power_mode) {
     if ((action == "player_1_shoot_accept" && current_character_number % 2 == 0) ||
         ((action == "player_2_shoot_accept" && current_character_number % 2 == 1))) {
-      game_mode = k_action_mode;
-      simulation_speed = default_speed_ramping;
-      current_character->future_positions.clear();
-      if (current_character->up_shot) {
-        // an angled shot
-
-        current_character->impulse(cos(k_up_shot_angle) * current_character->shot_power * sin(current_character->shot_rotation),
-          cos(k_up_shot_angle) * -current_character->shot_power * cos(current_character->shot_rotation),
-          sin(k_up_shot_angle) * current_character->shot_power);
-      } else {
-        // a flat shot
-        current_character->impulse(current_character->shot_power * sin(current_character->shot_rotation),
-          -current_character->shot_power * cos(current_character->shot_rotation),
-          0.5);
-      }
-      physics->activate(current_character->identity);
+      shoot();
     }
 
     if ((action == "player_1_cancel_switch" && current_character_number % 2 == 0) ||
         ((action == "player_2_cancel_switch" && current_character_number % 2 == 1))) {
-      game_mode = k_prep_mode;
+      game_mode = k_aim_mode;
     }
   }
 }
@@ -377,10 +389,19 @@ void Game::render() {
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
-  graphics->standardCamera(current_character->position->x + 15, current_character->position->y + 15, 10,
-    current_character->position->x, current_character->position->y, 0);
+  if (current_character->status == k_bear_status_normal) {
+    graphics->standardCamera(current_character->position->x + 15, current_character->position->y + 15, 10,
+      current_character->position->x, current_character->position->y, 0);
+  } else {
+    graphics->standardCamera(current_character->last_drop_position->x + 15, current_character->last_drop_position->y + 15, 10,
+      current_character->last_drop_position->x, current_character->last_drop_position->y, 0);
+  }
 
-  graphics->setLightPosition(50, 0, 15);
+  float cycle = ((current_time - start_time) / 1000.0f) / 100.0f;
+  float distance = 200;
+  float light_z = 200 * cos(cycle);
+  if (light_z < 0) light_z = -1 * light_z;
+  graphics->setLightPosition(200 * sin(cycle), 18, light_z);
 
   // render hazards (this should be something different, like components)
   for (auto hazard = hazards.begin(); hazard != hazards.end(); ++hazard) {
@@ -389,7 +410,9 @@ void Game::render() {
 
   // render characters (balls) (i need to work on my naming)
   for (auto character = characters.begin(); character != characters.end(); ++character) {
-    (*character)->render(0);
+    if ((*character)->status == k_bear_status_normal) {
+      (*character)->render(0);
+    }
   }
 
   // Wicket info
@@ -449,7 +472,7 @@ void Game::render() {
     taunt_margin = hot_config->getInt("player_1_x_margin");
   }
 
-  if (game_mode == k_prep_mode || game_mode == k_power_mode || game_mode == k_action_mode) {
+  if (game_mode == k_aim_mode || game_mode == k_power_mode || game_mode == k_action_mode) {
     if(current_character->up_shot) {
       textures->setTexture("up_shot_glyph");
     } else {

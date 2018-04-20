@@ -9,6 +9,8 @@
 #ifndef TEDDY_WICKETS_POINT_H_
 #define TEDDY_WICKETS_POINT_H_
 
+#include <math.h>
+
 #include "globals.h"
 
 class Point {
@@ -20,6 +22,8 @@ class Point {
   Point(float x, float y, float z);
 
   Point(Point* p);
+
+  float magnitude();
 
   void add(Point* p2);
 };

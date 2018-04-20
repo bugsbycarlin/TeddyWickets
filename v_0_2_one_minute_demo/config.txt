@@ -1,4 +1,12 @@
 <param>
+  <type>string</type>
+  <name>map_file</name>
+  <value>Levels/wawa_shores_1.txt</value>
+  <!-- <value>Levels/wawa_shores_1.txt</value> -->
+  <!-- <value>Levels/test_level_1.txt</value> -->
+</param>
+
+<param>
   <type>int</type>
   <name>use_music</name>
   <value>1</value>

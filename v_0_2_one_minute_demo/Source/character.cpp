@@ -9,6 +9,7 @@
 
 Character::Character(Physics* physics, Point* position, std::string model_name) {
   this->position = position;
+  this->last_drop_position = new Point(position->x, position->y, position->z);
 
   this->physics = physics;
 
@@ -19,6 +20,8 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
   }
 
   this->shot_arrow = model_cache->getModel("arrow.obj");
+
+  this->status = k_bear_status_sidelined;
 
   default_shot_rotation = k_default_shot_rotation;
   shot_rotation = default_shot_rotation;
@@ -39,15 +42,27 @@ void Character::updateFromPhysics() {
   physics->updatePoint(position, identity);
   
   Point* v = physics->getVelocityVector(identity);
-  velocity_history.push(v);
+  velocity_history.push_front(v);
   if (velocity_history.size() > 10) {
-    velocity_history.pop();
+    velocity_history.pop_back();
   }
 
   position_history.push_front(new Point(position->x, position->y, position->z));
   if (position_history.size() > 10) {
     position_history.pop_back();
   }
+}
+
+bool Character::stoppedMoving() {
+  if (velocity_history.size() < 10) return false;
+  bool stoppedMoving = true;
+  for (auto velocity = velocity_history.begin(); velocity != velocity_history.end(); ++velocity) {
+    //printf("Velocity magnitude: %0.5f\n", (*velocity)->magnitude());
+    if ((*velocity)->magnitude() > 0.0001f) {
+      stoppedMoving = false;
+    }
+  }
+  return stoppedMoving;
 }
 
 void Character::render(int game_mode) {
@@ -65,7 +80,7 @@ void Character::render(int game_mode) {
   graphics->popModelMatrix();
 
   // future positions (to help the player predict the shot)
-  if (game_mode == k_prep_mode) {
+  if (game_mode == k_aim_mode) {
     textures->setTexture("plain");
 
     // balls marking future positions

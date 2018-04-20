@@ -1,6 +1,6 @@
 <music>Sound/Golf_Theme.mp3</music>
 
-<theme>water</theme>
+<theme>cloud</theme>
 
 <shape>
     <tile type="tile_flat">
@@ -973,6 +973,78 @@
         <x>0</x>
         <y>30</y>
         <z>8</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>36</x>
+        <y>0</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>36</x>
+        <y>6</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>36</x>
+        <y>24</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>36</x>
+        <y>30</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>84</x>
+        <y>0</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>84</x>
+        <y>6</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>84</x>
+        <y>24</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>84</x>
+        <y>30</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>114</x>
+        <y>6</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>114</x>
+        <y>12</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>114</x>
+        <y>18</y>
+        <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>114</x>
+        <y>24</y>
+        <z>2</z>
         <r>8.7422780126189537e-08</r>
     </tile>
 </shape>

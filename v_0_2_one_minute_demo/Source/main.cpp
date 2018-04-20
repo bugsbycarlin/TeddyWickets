@@ -35,14 +35,14 @@
   +- Clean HUD first draft
   +- Fix the major graphics memory leak problem (by translate/rotate)
   +- Wicket crossing detection and action
-  
-  A priorities
-  - Redo physics/state transitions
-  - Refine shot powers and redo level (ie, play and fix to play well)
-  - Front Bumpers
-  - Bear to bear collisions (should not screw up with state transitions; it should not reset the bear to drop mode)
-  - Final wicket and simple celebration
+  +- Redo physics/state transitions
+  +- Bear to bear collisions (should not screw up with state transitions; it should not reset the bear to drop mode)
+  +- Front Bumpers
+  +- Ramp colors
 
+  A priorities
+  - Refine shot powers and redo level (ie, play and fix to play well)
+  - Final wicket and simple celebration
 
   B priorities
   - Move the baddy
@@ -53,9 +53,9 @@
   
   C priorities
   - Splash effects
-  - Ramp colors
-  - Tutorial comic bubbles?
   - Fix water
+  - Tutorial comic bubbles?
+
 
 
   

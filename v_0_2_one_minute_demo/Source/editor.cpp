@@ -23,7 +23,7 @@ Editor::Editor(std::string map_file) {
   last_z = 0;
   sway = 0;
   current_shape_type = 0;
-  num_types = 15;
+  num_types = 16;
   this->map_file = map_file;
   zoom = k_default_zoom;
   music = "";
@@ -54,7 +54,7 @@ void Editor::loop(SDL_Window* window, FMOD::System *sound_system) {
 
 void Editor::update() {
   // Set time and perform physics update
-  unsigned long current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+  current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   physics->update(k_default_minimum_speed * (current_time - last_time) / 1000.0f);
   last_time = current_time;
 
@@ -222,7 +222,11 @@ void Editor::render() {
       last_x, last_y, last_z);
   }
 
-  graphics->setLightPosition(50, 0, 15);
+  float cycle = ((current_time - start_time) / 1000.0f) / 100.0f;
+  float distance = 200;
+  float light_z = 200 * cos(cycle);
+  if (light_z < 0) light_z = -1 * light_z;
+  graphics->setLightPosition(200 * sin(cycle), 18, light_z);
 
   // render surfaces (walls and floors)
   for (auto surface = surfaces.begin(); surface != surfaces.end(); ++surface) {

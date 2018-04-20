@@ -22,6 +22,10 @@ Point::Point(Point* p) {
   this->z = p->z;
 }
 
+float Point::magnitude() {
+  return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+}
+
 void Point::add(Point* p2) {
   this->x += p2->x;
   this->y += p2->y;
