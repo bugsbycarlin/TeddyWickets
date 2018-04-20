@@ -25,7 +25,7 @@
   +- Level editor (save, load, make levels)
   +- HotConfig
   +- Remove mouse support
-
+  +- Music loops, multiple music tracks
 
 
   Demo day to-do:
@@ -42,7 +42,7 @@
   - Front Bumpers
   - Bear to bear collisions (should not screw up with state transitions; it should not reset the bear to drop mode)
   - Final wicket and simple celebration
-  - Music loops, multiple music tracks
+
 
   B priorities
   - Move the baddy
@@ -83,6 +83,7 @@
 */
 
 #include <string>
+#include <list>
 
 #include "fmod.hpp"
 #include "fmod_errors.h"
@@ -107,7 +108,46 @@ FMOD_RESULT result;
 FMOD::Sound *audio_stream;
 FMOD::System *sound_system = NULL;
 
+std::string music = "";
+
+static std::vector<std::string> hot_loads;
+int hot_loads_counter = 0;
+int loop_counter = 0;
+
 bool initialize() {
+
+  hot_loads = {
+    // "model", "teddy_2.obj",
+    // "model", "tile_flat.obj",
+    // "model", "wicket.obj",
+    // "model", "player_1_start.obj",
+    // "model", "teddy_bear_draft_3.obj",
+    // "model", "arrow.obj",
+    // "model", "player_2_start.obj",
+    // "texture", "coordinates",  
+    // "texture", "clouds",
+    // "texture", "water",
+    // "texture", "player_1_HUD_background",
+    // "texture", "player_2_HUD_background",
+    // "texture", "large_salmon_star",
+    // "texture", "large_purple_star",
+    // "texture", "bear_selection_box",
+    // "texture", "lil_jon_box",
+    // "texture", "mortimer_box",
+    // "texture", "gluke_box",
+    // "texture", "mags_box",
+    // "texture", "bob_smith_box",
+    // "texture", "lord_lonsdale_box",
+    // "texture", "hpf_swinnerton_dyer_box",
+    // "texture", "jeff_bridges_box",
+    // "texture", "grim_box",
+    // "texture", "flat_shot_glyph",
+    // "texture", "up_shot_glyph",
+    // "texture", "mallet_glyph",
+    // "texture", "mallet_background_glyph",
+    // "texture", "special_power",
+    // "texture", "taunt",
+  };
 
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_GAMECONTROLLER) < 0) {
@@ -184,11 +224,6 @@ void shutdown() {
 int main(int argc, char* args[]) {
   initialize();
 
-  //  sound_system->createStream("Sound/Bias_Groove.mp3", FMOD_DEFAULT, 0, &audio_stream);
-
-  // Sound disabled for the moment.
-  // sound_system->playSound(audio_stream, NULL, false, 0);
-
   // Enable text input
   SDL_StartTextInput();
 
@@ -218,9 +253,14 @@ int main(int argc, char* args[]) {
     std::string(args[1]) == "E")) {
     current_screen = k_editor_screen;
     arg2 = std::string(args[2]);
-  } else {
+  } else if (argc > 1 &&
+    (std::string(args[1]) == "game" ||
+    std::string(args[1]) == "Game" ||
+    std::string(args[1]) == "G")) {
     current_screen = k_2p_game_screen;
-    //current_screen = k_bear_select_screen;
+  } else {
+    //current_screen = k_2p_game_screen;
+    current_screen = k_title_screen;
   }
 
   Screen* screen = NULL;
@@ -254,7 +294,32 @@ int main(int argc, char* args[]) {
 
     last_screen = current_screen;
 
+    if (hot_config->getInt("use_music") == 1) {
+      if (screen->music != "" && screen->music != music) {
+        if (audio_stream != NULL) {
+          sound_system->close();
+          sound_system->init(512, FMOD_INIT_NORMAL, 0);
+        }
+        music = screen->music;
+        sound_system->createStream(music.c_str(), FMOD_LOOP_NORMAL, 0, &audio_stream);
+        sound_system->playSound(audio_stream, NULL, false, 0);
+      }
+    }
+
+    loop_counter += 1;
+
     screen->loop(window, sound_system);
+
+    if (loop_counter % 30 == 0 && hot_loads_counter + 1 < hot_loads.size()) {
+      if (hot_loads[hot_loads_counter] == "model") {
+        Model* model = model_cache->getModel(hot_loads[hot_loads_counter + 1]);
+        //model->render();
+      } else if (hot_loads[hot_loads_counter] == "texture") {
+        textures->addTexture(hot_loads[hot_loads_counter + 1], hot_loads[hot_loads_counter + 1] + ".png");
+      }
+
+      hot_loads_counter += 2;
+    }
 
     if (last_screen == k_bear_select_screen && current_screen == k_2p_game_screen) {
       player_1_bears = ((BearSelect*) screen)->player_1_bears;

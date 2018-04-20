@@ -11,6 +11,7 @@
 ControlSetup::ControlSetup() {
   quit = false;
   current_screen = k_control_setup_screen;
+  music = "";
   mode = k_control_view_mode;
 }
 

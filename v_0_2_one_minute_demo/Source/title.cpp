@@ -13,6 +13,7 @@ Title::Title() {
   selection = 0;
   current_screen = k_title_screen;
   mode = k_title_presents_mode;
+  music = "Sound/Nothing_To_Fear.mp3";
 }
 
 // Title loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.

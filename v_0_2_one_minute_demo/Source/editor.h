@@ -67,7 +67,6 @@ class Editor: public Screen {
 
   std::string map_file;
 
-  std::string music;
   std::string theme;
 
   Model* theme_tile;

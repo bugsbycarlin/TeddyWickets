@@ -26,6 +26,7 @@ class Screen {
 
   int current_screen;
   bool quit;
+  std::string music;
   FMOD::System* sound_system;
 
   unsigned long start_time;

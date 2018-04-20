@@ -13,6 +13,8 @@ BearSelect::BearSelect() {
   current_screen = k_bear_select_screen;
   game_mode = k_bear_select_mode;
 
+  music = "";
+
   available_bear_choices = {
     {0, 1},
     {1, 1},

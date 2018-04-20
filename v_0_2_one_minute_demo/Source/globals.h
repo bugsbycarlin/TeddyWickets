@@ -67,10 +67,15 @@ enum {
 enum  {
   k_bear_select_mode = 0,
   k_lets_go_mode = 1,
-  k_drop_mode = 2,
-  k_prep_mode = 3,
-  k_power_mode = 4,
-  k_action_mode = 5
+
+  // k_setup_mode = 100,
+  // k_aim_mode = 101,
+  // k_power_mode = 102,
+  // k_action_mode = 103
+  k_drop_mode = 100,
+  k_prep_mode = 101,
+  k_power_mode = 102,
+  k_action_mode = 103
 };
 
 // Controller Config screen modes

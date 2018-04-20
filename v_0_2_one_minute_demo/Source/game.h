@@ -77,7 +77,6 @@ class Game: public Screen {
 
   int hud_step;
 
-  std::string music;
   std::string theme;
 
   Model* theme_tile;

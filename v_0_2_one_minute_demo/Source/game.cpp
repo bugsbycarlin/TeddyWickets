@@ -38,6 +38,8 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
 
   game_mode = k_drop_mode;
 
+  music = "";
+
   //map_file = "Levels/wawa_shores_1.txt";
   map_file = "Levels/test_level_1.txt";
 }

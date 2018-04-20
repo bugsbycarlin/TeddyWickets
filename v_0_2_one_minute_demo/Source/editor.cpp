@@ -26,6 +26,7 @@ Editor::Editor(std::string map_file) {
   num_types = 15;
   this->map_file = map_file;
   zoom = k_default_zoom;
+  music = "";
 }
 
 // Editor loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -349,11 +350,11 @@ bool Editor::initialize() {
   last_time = start_time;
   framerate_time = start_time;
 
-  if (hot_config->getInt("use_music") == 1) {
-    FMOD::Sound *audio_stream;
-    sound_system->createStream(music.c_str(), FMOD_DEFAULT, 0, &audio_stream);
-    sound_system->playSound(audio_stream, NULL, false, 0);
-  }
+  // if (hot_config->getInt("use_music") == 1) {
+  //   FMOD::Sound *audio_stream;
+  //   sound_system->createStream(music.c_str(), FMOD_DEFAULT, 0, &audio_stream);
+  //   sound_system->playSound(audio_stream, NULL, false, 0);
+  // }
 
   return true;
 }
