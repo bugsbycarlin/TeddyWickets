@@ -23,10 +23,10 @@ Editor::Editor(std::string map_file) {
   last_z = 0;
   sway = 0;
   current_shape_type = 0;
-  num_types = 18;
+  //num_types = 18;
   this->map_file = map_file;
   zoom = k_default_zoom;
-  music = "";
+  music = ""; 
 }
 
 // Editor loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -90,10 +90,18 @@ void Editor::handleKeys(SDL_Event e) {
         new Point(last_x, last_y + 6, last_z), M_PI);
   }
 
+  if (e.key.keysym.sym == SDLK_z) {
+    if (current_shape != nullptr) {
+      current_shape = nullptr;
+    } else if (hazards.size() > 0) {
+      hazards.pop_back();
+    }
+  }
+
   if (current_shape != nullptr) {
     if (e.key.keysym.sym == SDLK_t) {
       current_shape_type += 1;
-      if (current_shape_type >= num_types) {
+      if (current_shape_type >= shape_types.size()) {
         current_shape_type = 0;
       }
       current_shape->object_type = shape_types[current_shape_type];
@@ -143,9 +151,9 @@ void Editor::handleKeys(SDL_Event e) {
     }
   }
 
-  if (e.key.keysym.sym == SDLK_z) {
+  if (e.key.keysym.sym == SDLK_o) {
     zoom += 1.0f;
-  } else if (e.key.keysym.sym == SDLK_x) {
+  } else if (e.key.keysym.sym == SDLK_p) {
     zoom -= 1.0f;
   }
 
@@ -157,6 +165,7 @@ void Editor::handleKeys(SDL_Event e) {
 }
 
 bool Editor::saveMap() {
+  printf("Saving 1\n");
   // back up the map
   std::string copy_command = "cp " + map_file + " " + map_file + "backup_" + std::to_string(hazards.size());
   system(copy_command.c_str());
@@ -164,20 +173,49 @@ bool Editor::saveMap() {
 
   XMLDocument saveDoc;
 
+  printf("Saving 2\n");
+
   XMLElement* music_element = saveDoc.NewElement("music");
   music_element->SetText(this->music.c_str());
   saveDoc.InsertEndChild(music_element);
+
+  printf("Saving 3\n");
 
   XMLElement* theme_element = saveDoc.NewElement("theme");
   theme_element->SetText(this->theme.c_str());
   saveDoc.InsertEndChild(theme_element);
 
+  printf("Saving 4\n");
+
   XMLElement* bpm_element = saveDoc.NewElement("bpm");
   bpm_element->SetText(this->bpm.c_str());
   saveDoc.InsertEndChild(bpm_element);
 
+  printf("Saving 5\n");
+
+  XMLNode* types = saveDoc.NewElement("types");
+  printf("Saving 5a\n");
+  saveDoc.InsertEndChild(types);
+  printf("Saving 5b\n");
+  printf("Saving 5c\n");
+  for (int i = 0; i < shape_types.size(); i++) {
+    printf("Saving 5d %s\n", shape_types[i].c_str());
+    XMLElement* new_type_element = saveDoc.NewElement("type");
+    printf("Saving 5e\n");
+    printf("Element %s\n", shape_types[i].c_str());
+    printf("Saving 5f\n");
+    new_type_element->SetText(shape_types[i].c_str());
+    printf("Saving 5g\n");
+    types->InsertEndChild(new_type_element);
+    printf("Saving 5h\n");
+  }
+
+  printf("Saving 6\n");
+
   XMLNode* shape_element = saveDoc.NewElement("shape");
   saveDoc.InsertEndChild(shape_element);
+
+  printf("Saving 7\n");
 
   for (auto hazard = hazards.begin(); hazard != hazards.end(); ++hazard) {
     XMLElement* tile_element = saveDoc.NewElement("tile");
@@ -202,8 +240,12 @@ bool Editor::saveMap() {
     shape_element->InsertFirstChild(tile_element);
   }
 
+  printf("Saving 8\n");
+
   XMLError result = saveDoc.SaveFile(map_file.c_str());
   XMLCheckResult(result);
+
+  printf("Saving 9\n");
 
   printf("Saved map to %s\n", map_file.c_str());
 }
@@ -303,6 +345,14 @@ bool Editor::initializeLevel() {
 
   this->bpm = doc.FirstChildElement("bpm")->GetText();
   printf("bpm: %s\n", this->bpm.c_str());
+
+  this->types = doc.FirstChildElement("types");
+  XMLElement * type_element = types->FirstChildElement("type");
+  while (type_element != nullptr) {
+    shape_types.push_back(type_element->GetText());
+
+    type_element = type_element->NextSiblingElement("type");
+  }
 
   // Level Shape
   XMLElement* level_shape = doc.FirstChildElement("shape");

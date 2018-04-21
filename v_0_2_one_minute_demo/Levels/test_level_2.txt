@@ -4,6 +4,27 @@
 
 <bpm>180.0</bpm>
 
+<types>
+    <type>tile_flat</type>
+    <type>tile_down_x</type>
+    <type>tile_down_y</type>
+    <type>tile_up_x</type>
+    <type>tile_up_y</type>
+    <type>tile_down_x_y</type>
+    <type>flat_siding</type>
+    <type>flat_siding_down_x</type>
+    <type>flat_siding_up_x</type>
+    <type>flat_siding_sideways</type>
+    <type>flat_siding_filigree</type>
+    <type>ramp</type>
+    <type>wicket</type>
+    <type>last_wicket</type>
+    <type>boxguy</type>
+    <type>player_1_start</type>
+    <type>player_2_start</type>
+    <type>bumper</type>
+</types>
+
 <shape>
     <tile type="tile_flat">
         <x>0</x>

@@ -38,6 +38,8 @@
 #include "textures.h"
 #include "hazard.h"
 
+using namespace tinyxml2;
+
 class Editor: public Screen {
  public:
   // Stuff
@@ -71,28 +73,31 @@ class Editor: public Screen {
 
   std::string bpm;
 
+  XMLElement* types;
+
   Model* theme_tile;
 
-  std::string shape_types[18] = {
-    "tile_flat",
-    "tile_down_x",
-    "tile_down_y",
-    "tile_up_x",
-    "tile_up_y",
-    "tile_down_x_y",
-    "flat_siding",
-    "flat_siding_down_x",
-    "flat_siding_up_x",
-    "flat_siding_sideways",
-    "flat_siding_filigree",
-    "ramp",
-    "wicket",
-    "last_wicket",
-    "boxguy",
-    "player_1_start",
-    "player_2_start",
-    "bumper"
-  };
+  // std::string shape_types[18] = {
+  //   "tile_flat",
+  //   "tile_down_x",
+  //   "tile_down_y",
+  //   "tile_up_x",
+  //   "tile_up_y",
+  //   "tile_down_x_y",
+  //   "flat_siding",
+  //   "flat_siding_down_x",
+  //   "flat_siding_up_x",
+  //   "flat_siding_sideways",
+  //   "flat_siding_filigree",
+  //   "ramp",
+  //   "wicket",
+  //   "last_wicket",
+  //   "boxguy",
+  //   "player_1_start",
+  //   "player_2_start",
+  //   "bumper"
+  // };
+  std::vector<std::string> shape_types;
   int current_shape_type;
 
   Editor(std::string map_file);

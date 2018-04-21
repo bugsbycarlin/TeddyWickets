@@ -1,7 +1,7 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/test_level_2.txt</value>
+  <value>Levels/wawa_shores_1.txt</value>
   <!-- <value>Levels/wawa_shores_1.txt</value> -->
   <!-- <value>Levels/test_level_1.txt</value> -->
 </param>

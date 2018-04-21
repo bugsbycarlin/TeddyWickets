@@ -42,18 +42,13 @@
   +- Take out velocity lines
   +- Final wicket and simple celebration
 
-  
 
-  A priorities
+  Demo day remainder:
+  - Grey out bears that are not the current bear somehow (or indicate the selected bear more)
   - Make sure shot powers and level size work together
-
-  B priorities
   - Control glyphs
   - Filigree on the level sides
   - more squish and bounce!
-  
-  C priorities
-  - Grey out bears that are not the current bear somehow (or indicate the selected bear more)
   - Topspin and backspin 
   - Tutorial comic bubbles
   - Fix alternating starts issue (see test level 2)
