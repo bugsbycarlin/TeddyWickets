@@ -7,6 +7,46 @@ Copyright 2017 - Matthew Carlin
 
 Version history:
 
+
+April 2018 - V0.2 - One Minute Demo
+
+This is the first playable version of the game, from title screen to win condition. Changes:
+
+- Support for multiple modes (ie different screens)
+- Title screen
+- Model loader (models come from MayaLT)
+- Model viewer (separate program)
+- Add font support with SDL2_ttf
+- Controller support
+- Keymapping / controller mapping
+- Game controller / keyboard setup screen
+- Bear selection mode in the 2p game
+- Improved lighting model
+- Abstract away OpenGL in wrappers
+- Upgrade from OpenGL 2.1 to OpenGL 4.1 and rewrite graphics to fit
+- Cel shading
+- Improved color palette
+- Model caching
+- Level editor (save, load, make levels)
+- HotConfig
+- Remove mouse support
+- Music loops, multiple music tracks
+- Player base colors
+- Show scores
+- Fix the 2d rotation problem
+- Clean HUD first draft
+- Fix the major graphics memory leak problem (by translate/rotate)
+- Wicket crossing detection and action
+- Redo physics/state transitions
+- Bear to bear collisions (should not screw up with state transitions; it should not reset the bear to drop mode)
+- Front Bumpers
+- Ramp colors
+- Start spot color
+- Shot predictions
+- Move the baddy
+- Take out velocity lines
+- Final wicket and simple celebration
+
 ------
 
 December 2017 - V0.1 - Clean Organized Rewrite
