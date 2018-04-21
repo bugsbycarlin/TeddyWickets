@@ -32,7 +32,8 @@ class Hazard {
 
     Hazard(std::string object_type, Physics* physics, Point* position, float rotation);
 
-    void render();
+    virtual void render();
+    virtual void update(float time_step);
 };
 
 #endif

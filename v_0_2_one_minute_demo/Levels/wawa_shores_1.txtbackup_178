@@ -2,6 +2,8 @@
 
 <theme>cloud</theme>
 
+<bpm>180.0</bpm>
+
 <shape>
     <tile type="tile_flat">
         <x>0</x>
@@ -568,36 +570,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="flat_siding">
-        <x>117</x>
-        <y>30</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>111</x>
-        <y>30</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>105</x>
-        <y>30</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>99</x>
-        <y>30</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>87</x>
-        <y>36</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
         <x>81</x>
         <y>36</y>
         <z>1</z>
@@ -617,42 +589,6 @@
     </tile>
     <tile type="flat_siding">
         <x>69</x>
-        <y>36</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>63</x>
-        <y>36</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>57</x>
-        <y>36</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>75</x>
-        <y>36</y>
-        <z>3</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>39</x>
-        <y>36</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>33</x>
-        <y>36</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="flat_siding">
-        <x>27</x>
         <y>36</y>
         <z>1</z>
         <r>8.7422780126189537e-08</r>
@@ -693,7 +629,7 @@
         <z>5</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="flat_siding">
+    <tile type="flat_siding_filigree">
         <x>3</x>
         <y>36</y>
         <z>7</z>
@@ -1045,6 +981,72 @@
         <x>114</x>
         <y>24</y>
         <z>2</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>117</x>
+        <y>30</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>111</x>
+        <y>30</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>105</x>
+        <y>30</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>99</x>
+        <y>30</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>87</x>
+        <y>36</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>75</x>
+        <y>36</y>
+        <z>3</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>63</x>
+        <y>36</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>57</x>
+        <y>36</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>39</x>
+        <y>36</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>33</x>
+        <y>36</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="flat_siding_filigree">
+        <x>27</x>
+        <y>36</y>
+        <z>1</z>
         <r>8.7422780126189537e-08</r>
     </tile>
 </shape>

@@ -75,7 +75,8 @@ enum  {
   k_setup_mode = 100,
   k_aim_mode = 101,
   k_power_mode = 102,
-  k_action_mode = 103
+  k_action_mode = 103,
+  k_end_mode = 104
 };
 
 
@@ -83,6 +84,8 @@ enum  {
 enum  {
   k_bear_status_normal = 0,
   k_bear_status_sidelined = 1,
+  k_bear_status_finishing = 2,
+  k_bear_status_finished = 3
 };
 
 // Controller Config screen modes

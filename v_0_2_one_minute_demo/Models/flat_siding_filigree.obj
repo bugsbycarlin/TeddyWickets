@@ -1,15 +1,19 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib flat_siding_down_x.mtl
+mtllib flat_siding_filigree.mtl
+v -0.000000 1.000000 3.000000
 v 0.000000 -1.000000 3.000000
 v -0.000000 1.000000 -3.000000
 v 0.000000 -1.000000 -3.000000
 vt 0.000000 0.000000
+vt 0.000000 -1.000000
 vt 1.000000 0.000000
 vt 1.000000 -1.000000
 vn 1.000000 0.000000 0.000000
 vn 1.000000 0.000000 0.000000
 vn 1.000000 0.000000 0.000000
+vn 1.000000 0.000000 0.000000
 g pPlane1
 usemtl phong2SG
-f 2/2/1 1/1/2 3/3/3
+f 1/1/1 2/2/2 3/3/3
+f 3/3/3 2/2/2 4/4/4

@@ -1,0 +1,15 @@
+<music>Sound/Golf_Theme.mp3</music>
+
+<theme>No</theme>
+
+<bpm>180.0</bpm>
+
+<shape>
+    <tile type="tile_flat">
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    
+</shape>

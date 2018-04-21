@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib wicket.mtl
+mtllib last_wicket.mtl
 v 0.000000 0.000000 -1.909877
 v -0.000000 0.778662 -1.816401
 v -0.000000 1.481102 -1.545122

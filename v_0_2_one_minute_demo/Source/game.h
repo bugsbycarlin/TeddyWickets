@@ -34,6 +34,7 @@
 #include "control_map.h"
 #include "character.h"
 #include "globals.h"
+#include "colors.h"
 #include "graphics.h"
 #include "physics.h"
 #include "screen.h"
@@ -41,6 +42,7 @@
 #include "textures.h"
 #include "hazard.h"
 #include "wicket.h"
+#include "boxguy.h"
 
 class Game: public Screen {
  public:
@@ -54,8 +56,11 @@ class Game: public Screen {
   std::vector<Character*> characters = { };
   std::vector<Hazard*> starts = { };
   std::vector<Wicket*> wickets = { };
+  Wicket* last_wicket;
 
   Character* current_character;
+
+  Model* shot_marker;
 
   bool shot_rising = false;
 
@@ -79,6 +84,10 @@ class Game: public Screen {
 
   std::string theme;
 
+  float bpm;
+
+  bool recompute_trajectory;
+
   Model* theme_tile;
 
   std::string map_file;
@@ -93,8 +102,12 @@ class Game: public Screen {
   TextBox* player_1_score_box;
   TextBox* player_2_score_box;
 
+  TextBox* end_mode_box;
+
   std::vector<std::string> player_1_bears;
   std::vector<std::string> player_2_bears;
+
+  std::list<btTransform> future_positions = { };
 
   Game(std::vector<std::string> player_1_bears, std::vector<std::string> player_2_bears);
 

@@ -30,7 +30,10 @@ class Wicket: public Hazard {
 
     int value;
 
+    float bpm;
+
     bool rotated;
+    bool active;
 
     int player_owner;
 
@@ -40,8 +43,9 @@ class Wicket: public Hazard {
 
     bool flipWicket(Point* last_point, Point* current_point, int player_owner);
 
-    void setRenderInfo();
+    void setRenderInfo(float time_step);
     void renderInfo();
+    void renderLastWicketInfo();
 };
 
 #endif

@@ -18,6 +18,9 @@ Colors::Colors() {
   palette["polar_grey"] = new Point(248, 245, 239);
   palette["soft_blue"] = new Point(123, 125, 157);
 
+  palette["mint_green"] = new Point(162, 237, 169);
+  palette["salmon"] = new Point(255, 167, 123);
+  palette["purple"] = new Point(167, 123, 255);
 }
 
 Point* Colors::color(std::string name) {

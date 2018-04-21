@@ -69,9 +69,11 @@ class Editor: public Screen {
 
   std::string theme;
 
+  std::string bpm;
+
   Model* theme_tile;
 
-  std::string shape_types[16] = {
+  std::string shape_types[18] = {
     "tile_flat",
     "tile_down_x",
     "tile_down_y",
@@ -82,8 +84,10 @@ class Editor: public Screen {
     "flat_siding_down_x",
     "flat_siding_up_x",
     "flat_siding_sideways",
+    "flat_siding_filigree",
     "ramp",
     "wicket",
+    "last_wicket",
     "boxguy",
     "player_1_start",
     "player_2_start",

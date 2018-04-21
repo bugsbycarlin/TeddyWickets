@@ -1,7 +1,7 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/wawa_shores_1.txt</value>
+  <value>Levels/test_level_2.txt</value>
   <!-- <value>Levels/wawa_shores_1.txt</value> -->
   <!-- <value>Levels/test_level_1.txt</value> -->
 </param>
@@ -18,12 +18,22 @@
   <value>3</value>
 </param>
 
+<param>
+  <type>int</type>
+  <name>use_shot_trajectories</name>
+  <value>1</value>
+</param>
+
 
 <param>
   <type>int</type>
   <name>velocity_font_size</name>
   <value>30</value>
 </param>
+
+
+
+
 
 
 <param>
@@ -96,6 +106,30 @@
 </param>
 
 
+
+<param>
+  <type>int</type>
+  <name>player_1_end_score_box_x</name>
+  <value>452</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_1_end_score_box_y</name>
+  <value>535</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_end_score_box_x</name>
+  <value>972</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_end_score_box_y</name>
+  <value>535</value>
+</param>
+
+
+
 <param>
   <type>string</type>
   <name>wicket_font</name>
@@ -107,6 +141,27 @@
   <name>wicket_font_size</name>
   <value>40</value>
 </param>
+
+<param>
+  <type>int</type>
+  <name>end_mode_font_size</name>
+  <value>80</value>
+</param>
+
+
+<param>
+  <type>int</type>
+  <name>end_mode_box_x</name>
+  <value>450</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>end_mode_box_y</name>
+  <value>350</value>
+</param>
+
+
 
 <param>
   <type>int</type>
@@ -148,4 +203,16 @@
   <type>string</type>
   <name>water_texture</name>
   <value>water_old.png</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>boxguy_squish</name>
+  <value>0.05</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>boxguy_rise</name>
+  <value>0.2</value>
 </param>

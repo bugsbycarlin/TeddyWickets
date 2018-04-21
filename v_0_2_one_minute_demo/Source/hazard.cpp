@@ -36,3 +36,7 @@ void Hazard::render() {
   model->render();
   graphics->popModelMatrix();
 }
+
+void Hazard::update(float time_step) {
+  
+}

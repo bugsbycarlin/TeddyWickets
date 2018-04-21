@@ -33,19 +33,17 @@ class Character {
     Physics* physics;
     Model* model;
 
-    Model* shot_arrow;
-
     float default_shot_rotation;
     float shot_rotation;
     float default_shot_power;
     float shot_power;
     bool up_shot;
 
+    btTransform save_transform;
+
     int status;
 
     float radius;
-
-    std::list<btTransform> future_positions = { };
 
     std::deque<Point*> velocity_history = { };
     std::deque<Point*> position_history = { };

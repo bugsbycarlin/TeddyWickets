@@ -23,7 +23,7 @@ Editor::Editor(std::string map_file) {
   last_z = 0;
   sway = 0;
   current_shape_type = 0;
-  num_types = 16;
+  num_types = 18;
   this->map_file = map_file;
   zoom = k_default_zoom;
   music = "";
@@ -172,6 +172,10 @@ bool Editor::saveMap() {
   theme_element->SetText(this->theme.c_str());
   saveDoc.InsertEndChild(theme_element);
 
+  XMLElement* bpm_element = saveDoc.NewElement("bpm");
+  bpm_element->SetText(this->bpm.c_str());
+  saveDoc.InsertEndChild(bpm_element);
+
   XMLNode* shape_element = saveDoc.NewElement("shape");
   saveDoc.InsertEndChild(shape_element);
 
@@ -296,6 +300,9 @@ bool Editor::initializeLevel() {
   if (theme == "water") {
     theme_tile = model_cache->getModel("huge_water_tile.obj");
   }
+
+  this->bpm = doc.FirstChildElement("bpm")->GetText();
+  printf("bpm: %s\n", this->bpm.c_str());
 
   // Level Shape
   XMLElement* level_shape = doc.FirstChildElement("shape");

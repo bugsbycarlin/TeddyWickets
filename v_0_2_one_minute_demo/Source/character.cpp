@@ -19,8 +19,6 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
     this->model = model_cache->getModel("teddy_bear_draft_3.obj");
   }
 
-  this->shot_arrow = model_cache->getModel("arrow.obj");
-
   this->status = k_bear_status_sidelined;
 
   default_shot_rotation = k_default_shot_rotation;
@@ -80,21 +78,21 @@ void Character::render(int game_mode) {
   graphics->popModelMatrix();
 
   // future positions (to help the player predict the shot)
-  if (game_mode == k_aim_mode) {
-    textures->setTexture("plain");
+  //if (game_mode == k_aim_mode) {
+    //textures->setTexture("plain");
 
     // balls marking future positions
-    for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
-      btScalar transform_matrix[16];
-      position->getOpenGLMatrix(transform_matrix);
-      graphics->pushModelMatrix();
-      graphics->multMatrix(transform_matrix);
-      //graphics->sphere(radius * 0.15);
-      graphics->scale(1.0f, 1.0f, 1.0f);
-      graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
-      shot_arrow->render();
-      graphics->popModelMatrix();
-    }
+    // for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
+    //   btScalar transform_matrix[16];
+    //   position->getOpenGLMatrix(transform_matrix);
+    //   graphics->pushModelMatrix();
+    //   graphics->multMatrix(transform_matrix);
+    //   //graphics->sphere(radius * 0.15);
+    //   graphics->scale(1.0f, 1.0f, 1.0f);
+    //   graphics->rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+    //   shot_arrow->render();
+    //   graphics->popModelMatrix();
+    // }
 
     // lines between balls
 
@@ -109,7 +107,7 @@ void Character::render(int game_mode) {
     //   line_data.push_back(position->getOrigin().getZ());
     // }
     // graphics->lineStrip(line_data);
-  }
+  //}
 }
 
 // This is sort of a hack. Force the physics of the ball to a particular angle.
@@ -119,31 +117,6 @@ void Character::render(int game_mode) {
 void Character::setShotRotation(float value, bool recompute_trajectory) {
   shot_rotation = value;
   physics->setRotation(identity, 0, 0, shot_rotation);
-
-  if (recompute_trajectory) {
-    // calculate future points...
-    future_positions.clear();
-    if (up_shot) {
-      // ... using an angled degree shot
-      impulse(cos(k_up_shot_angle) * default_shot_power * sin(shot_rotation),
-        cos(k_up_shot_angle) * -default_shot_power * cos(shot_rotation),
-        sin(k_up_shot_angle) * default_shot_power);
-    } else {
-      // ... using a flat shot
-      impulse(default_shot_power * sin(shot_rotation), -default_shot_power * cos(shot_rotation), 0.5);
-    }
-    physics->activate(identity);
-    btTransform current_transform = physics->getTransform(identity);
-    for (int i = 0; i < 300; i++) {
-      physics->update(1.0f / 60.f);
-      if (i > 0 && i % 8 == 0) future_positions.push_front(btTransform(physics->getTransform(identity)));
-    }
-    physics->setTransform(identity, current_transform);
-    physics->stop(identity);
-    physics->setPositionAndRotation(identity,
-        new Point(position->x, position->y, position->z + 0.001f),
-        0, 0, shot_rotation);
-  }
 }
 
 

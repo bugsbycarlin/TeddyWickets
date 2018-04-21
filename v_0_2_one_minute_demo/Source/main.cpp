@@ -26,10 +26,7 @@
   +- HotConfig
   +- Remove mouse support
   +- Music loops, multiple music tracks
-
-
-  Demo day to-do:
-  +- Decide player base colors
+  +- Player base colors
   +- Show scores
   +- Fix the 2d rotation problem
   +- Clean HUD first draft
@@ -39,23 +36,27 @@
   +- Bear to bear collisions (should not screw up with state transitions; it should not reset the bear to drop mode)
   +- Front Bumpers
   +- Ramp colors
+  +- Start spot color
+  +- Shot predictions
+  +- Move the baddy
+  +- Take out velocity lines
+  +- Final wicket and simple celebration
+
+  
 
   A priorities
-  - Refine shot powers and redo level (ie, play and fix to play well)
-  - Final wicket and simple celebration
+  - Make sure shot powers and level size work together
 
   B priorities
-  - Move the baddy
-  - Shot predictions
   - Control glyphs
-  - Topspin and backspin 
-  - Start spot color
+  - Filigree on the level sides
+  - more squish and bounce!
   
   C priorities
-  - Splash effects
-  - Fix water
-  - Tutorial comic bubbles?
-
+  - Grey out bears that are not the current bear somehow (or indicate the selected bear more)
+  - Topspin and backspin 
+  - Tutorial comic bubbles
+  - Fix alternating starts issue (see test level 2)
 
 
   
@@ -64,8 +65,8 @@
   - cel shade outlining
   
   - improve color palette even more
-
-
+  - Splash effects
+  - Fix water
 
   - Fully realized game mechanic
   - Two single player levels (?)
