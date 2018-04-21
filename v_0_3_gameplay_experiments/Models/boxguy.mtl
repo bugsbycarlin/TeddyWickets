@@ -1,0 +1,27 @@
+newmtl phong2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd boxguy_side_grey.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl phong3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd boxguy_face_grey.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl phong4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd soft_pink.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00

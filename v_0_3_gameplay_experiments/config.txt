@@ -1,0 +1,218 @@
+<param>
+  <type>string</type>
+  <name>map_file</name>
+  <value>Levels/wawa_shores_1.txt</value>
+  <!-- <value>Levels/wawa_shores_1.txt</value> -->
+  <!-- <value>Levels/test_level_1.txt</value> -->
+</param>
+
+<param>
+  <type>int</type>
+  <name>use_music</name>
+  <value>1</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>x_drop</name>
+  <value>3</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>use_shot_trajectories</name>
+  <value>1</value>
+</param>
+
+
+<param>
+  <type>int</type>
+  <name>velocity_font_size</name>
+  <value>30</value>
+</param>
+
+
+
+
+
+
+<param>
+  <type>int</type>
+  <name>player_1_x_margin</name>
+  <value>8</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_x_margin</name>
+  <value>1329</value>
+</param>
+<param>
+  <type>int</type>
+  <name>y_margin</name>
+  <value>8</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>hud_step</name>
+  <value>110</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>v_x</name>
+  <value>5</value>
+</param>
+<param>
+  <type>int</type>
+  <name>v_y</name>
+  <value>70</value>
+</param>
+
+
+
+<param>
+  <type>float</type>
+  <name>wicket_box_x</name>
+  <value>-1.5</value>
+</param>
+<param>
+  <type>float</type>
+  <name>wicket_box_y</name>
+  <value>-1.5</value>
+</param>
+
+
+
+<param>
+  <type>int</type>
+  <name>player_1_score_box_x</name>
+  <value>52</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_1_score_box_y</name>
+  <value>835</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_score_box_x</name>
+  <value>1372</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_score_box_y</name>
+  <value>835</value>
+</param>
+
+
+
+<param>
+  <type>int</type>
+  <name>player_1_end_score_box_x</name>
+  <value>452</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_1_end_score_box_y</name>
+  <value>535</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_end_score_box_x</name>
+  <value>972</value>
+</param>
+<param>
+  <type>int</type>
+  <name>player_2_end_score_box_y</name>
+  <value>535</value>
+</param>
+
+
+
+<param>
+  <type>string</type>
+  <name>wicket_font</name>
+  <value>candy_crayon.ttf</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_font_size</name>
+  <value>40</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>end_mode_font_size</name>
+  <value>80</value>
+</param>
+
+
+<param>
+  <type>int</type>
+  <name>end_mode_box_x</name>
+  <value>450</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>end_mode_box_y</name>
+  <value>350</value>
+</param>
+
+
+
+<param>
+  <type>int</type>
+  <name>wicket_font_x</name>
+  <value>-17</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_font_y</name>
+  <value>-135</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_star_x</name>
+  <value>-32</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>wicket_star_y</name>
+  <value>-32</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>y_drop</name>
+  <value>3</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>shot_power</name>
+  <value>15.0</value>
+</param>
+
+<param>
+  <type>string</type>
+  <name>water_texture</name>
+  <value>water_old.png</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>boxguy_squish</name>
+  <value>0.05</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>boxguy_rise</name>
+  <value>0.2</value>
+</param>
