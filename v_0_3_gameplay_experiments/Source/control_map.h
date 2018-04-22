@@ -26,6 +26,8 @@
 // Teddy Wickets includes
 #include "globals.h"
 #include "graphics.h"
+#include "textbox.h"
+#include "textures.h"
 
 class ControlMap {
  public:
@@ -35,6 +37,9 @@ class ControlMap {
   std::list<std::string> ordered_controls;
   std::map<std::string, std::string> new_control_map;
 
+  TextBox* info_box;
+  TextBox* info_box_small;
+
   ControlMap();
 
   std::string getAction(std::string input);
@@ -42,6 +47,10 @@ class ControlMap {
 
   std::string translateControllerEvent(SDL_Event e);
   std::string translateKeyEvent(SDL_Event e);
+
+  void render(int x, int y, std::string action);
+
+  unsigned long hash(const std::string& str);
 };
 
 #endif

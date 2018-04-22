@@ -45,6 +45,8 @@ const std::string k_shader_root_path = "Shaders/";
 //const int k_cel_shader_id = 17;
 const int k_shader_id = 53;
 
+const int k_total_taunt_time = 90;
+
 // Screen modes
 enum {
   k_title_screen = 0,

@@ -17,6 +17,8 @@ using namespace tinyxml2;
 
 // Game constructor
 Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> player_2_bears) {
+  srand (time(NULL));
+
   quit = false;
   current_screen = k_2p_game_screen;
 
@@ -40,11 +42,23 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
   player_2_score = 0;
   player_2_display_score = 0;
 
+  look = false;
+  look_x = 0;
+  look_y = 0;
+
   game_mode = k_setup_mode;
 
   music = "";
 
   map_file = hot_config->getString("map_file");
+
+  taunts.push_back("Your mother was a dope dealer!");
+  taunts.push_back("The best bears are me and not you!");
+  taunts.push_back("Sonny is gonna have a day with you!");
+  taunts.push_back("Eggs! Eggs! Eggs! Eggs! Eggs! Wad.");
+  taunts.push_back("DABAAA DABAAAA de doo doo doo doo");
+  taunts.push_back("Tweet about it, douche!");
+  taunt_time = 0;
 }
 
 // Game loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -103,6 +117,10 @@ void Game::update() {
     frames_since_last++;
   }
 
+  if (taunt_time > 0) {
+    taunt_time -= 1;
+  }
+
   // Move the moving hazards
   for (auto hazard = hazards.begin(); hazard != hazards.end(); ++hazard) {
     (*hazard)->update((current_time - start_time) / 1000.0f);
@@ -126,6 +144,7 @@ void Game::update() {
 
     if (bearsAreSetup()) {
       game_mode = k_aim_mode;
+      look = false;
       current_character->up_shot = false;
       current_character->setShotRotation(current_character->default_shot_rotation, false);
       recompute_trajectory = true;
@@ -210,7 +229,7 @@ void Game::update() {
 
     // update to the next character
     current_character_number += 1;
-    if (current_character_number > 5) {
+    if (current_character_number >= characters.size()) {
       current_character_number = 0;
     }
     current_character = characters[current_character_number];
@@ -221,7 +240,7 @@ void Game::update() {
   if (game_mode == k_setup_mode && current_character->status == k_bear_status_finished) {
     // update to the next character
     current_character_number += 1;
-    if (current_character_number > 5) {
+    if (current_character_number >= characters.size()) {
       current_character_number = 0;
     }
     current_character = characters[current_character_number];
@@ -247,10 +266,14 @@ void Game::update() {
       (*character)->status = k_bear_status_sidelined;
     }
 
-    // Test character against wickets.
+    // Test character against wickets and free stars
     if ((*character)->position_history.size() > 1) {
       for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
         (*wicket)->flipWicket((*character)->position_history[0], (*character)->position_history[1], (*character)->player_number);
+      }
+
+      for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
+        (*free_star)->flipWicket((*character)->position_history[0], (*character)->radius, (*character)->player_number);
       }
 
       // Test character against final wicket
@@ -273,18 +296,18 @@ void Game::update() {
   std::stringstream stream;
   std::string s;
 
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[0]->identity);
-  bear_velocity_1->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[1]->identity);
-  bear_velocity_2->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[2]->identity);
-  bear_velocity_3->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[3]->identity);
-  bear_velocity_4->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[4]->identity);
-  bear_velocity_5->setText(stream.str());
-  stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[5]->identity);
-  bear_velocity_6->setText(stream.str());
+  // stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[0]->identity);
+  // bear_velocity_1->setText(stream.str());
+  // stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[1]->identity);
+  // bear_velocity_2->setText(stream.str());
+  // stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[2]->identity);
+  // bear_velocity_3->setText(stream.str());
+  // stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[3]->identity);
+  // bear_velocity_4->setText(stream.str());
+  // stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[4]->identity);
+  // bear_velocity_5->setText(stream.str());
+  // stream.str(std::string()); stream.clear(); stream << std::fixed << std::setprecision(2) << physics->getVelocity(characters[5]->identity);
+  // bear_velocity_6->setText(stream.str());
   
 }
 
@@ -306,21 +329,39 @@ void Game::updateScores() {
     }
   }
 
+  for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
+    int value = (*free_star)->value;
+    int player_owner = (*free_star)->player_owner;
+    if (player_owner == 1) {
+      player_1_score += value;
+    } else if (player_owner == 2) {
+      player_2_score += value;
+    }
+  }
+
   if (!remaining_wickets) {
     last_wicket->active = true;
   }
 
   bool end_game = false;
-  if (characters[0]->status == k_bear_status_finished &&
-    characters[2]->status == k_bear_status_finished &&
-    characters[4]->status == k_bear_status_finished) {
+  bool player_1_finished = true;
+  bool player_2_finished = true;
+  for (auto character = characters.begin(); character != characters.end(); ++character) {
+    if ((*character)->player_number == 1 && (*character)->status != k_bear_status_finished) {
+      player_1_finished = false;
+    }
+    if ((*character)->player_number == 2 && (*character)->status != k_bear_status_finished) {
+      player_2_finished = false;
+    }
+  }
+
+  // Note it is possible for both sides to get full credit for the last wicket
+  if (player_1_finished) {
     player_1_score += last_wicket->value;
     end_game = true;
   }
 
-  if (characters[1]->status == k_bear_status_finished &&
-    characters[3]->status == k_bear_status_finished &&
-    characters[5]->status == k_bear_status_finished) {
+  if (player_2_finished) {
     player_2_score += last_wicket->value;
     end_game = true;
   }
@@ -455,7 +496,7 @@ void Game::handleKeys(SDL_Event e) {
 
 // Handle controller input
 void Game::handleController(SDL_Event e) {
-  std::string value = control_map->translateKeyEvent(e);
+  std::string value = control_map->translateControllerEvent(e);
 
   for (auto item = control_map->ordered_controls.begin(); item != control_map->ordered_controls.end(); ++item) {
     if (control_map->control_map[*item] == value) {
@@ -467,36 +508,97 @@ void Game::handleController(SDL_Event e) {
 
 // Handle actions as translated from the control map
 void Game::handleAction(std::string action) {
+  printf("Got action %s\n", action.c_str());
+
+  if (game_mode == k_aim_mode || game_mode == k_power_mode || game_mode == k_action_mode) {
+    // Taunt
+    if ((action == "player_1_view_taunt" && current_character_number % 2 == 1) ||
+        ((action == "player_2_view_taunt" && current_character_number % 2 == 0))) {
+      taunt_time = k_total_taunt_time;
+      if (current_character_number % 2 == 1) {
+        taunt_bear = player_1_bears[0];
+      } else {
+        taunt_bear = player_2_bears[0];
+      }
+      taunt_box->setText(taunts[rand() % taunts.size()]);
+    }
+  }
 
   if (game_mode == k_aim_mode) {
-    if ((action == "player_1_right" && current_character_number % 2 == 0) ||
-        ((action == "player_2_right" && current_character_number % 2 == 1))) {
-      current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
-      recompute_trajectory = true;
+    if (!look) {
+      if ((action == "player_1_right" && current_character_number % 2 == 0) ||
+          ((action == "player_2_right" && current_character_number % 2 == 1))) {
+        current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
+        recompute_trajectory = true;
+      }
+
+      if ((action == "player_1_left" && current_character_number % 2 == 0) ||
+          ((action == "player_2_left" && current_character_number % 2 == 1))) {
+        current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
+        recompute_trajectory = true;
+      }
+
+      if ((action == "player_1_up" && current_character_number % 2 == 0) ||
+          ((action == "player_2_up" && current_character_number % 2 == 1))) {
+        current_character->up_shot = true;
+        current_character->setShotRotation(current_character->shot_rotation, false);
+        recompute_trajectory = true;
+      }
+
+      if ((action == "player_1_down" && current_character_number % 2 == 0) ||
+          ((action == "player_2_down" && current_character_number % 2 == 1))) {
+        current_character->up_shot = false;
+        current_character->setShotRotation(current_character->shot_rotation, false);
+        recompute_trajectory = true;
+      }
+    } else if (look) {
+
+      if ((action == "player_1_right" && current_character_number % 2 == 0) ||
+          ((action == "player_2_right" && current_character_number % 2 == 1))) {
+        look_y += 3;
+        look_x -= 3;
+      }
+
+      if ((action == "player_1_left" && current_character_number % 2 == 0) ||
+          ((action == "player_2_left" && current_character_number % 2 == 1))) {
+        look_y -= 3;
+        look_x += 3;
+      }
+
+      if ((action == "player_1_up" && current_character_number % 2 == 0) ||
+          ((action == "player_2_up" && current_character_number % 2 == 1))) {
+        look_y -= 3;
+        look_x -= 3;
+      }
+
+      if ((action == "player_1_down" && current_character_number % 2 == 0) ||
+          ((action == "player_2_down" && current_character_number % 2 == 1))) {
+        look_y += 3;
+        look_x += 3;
+      }
     }
 
-    if ((action == "player_1_left" && current_character_number % 2 == 0) ||
-        ((action == "player_2_left" && current_character_number % 2 == 1))) {
-      current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
-      recompute_trajectory = true;
+    // View
+    if ((action == "player_1_view_taunt" && current_character_number % 2 == 0) ||
+        ((action == "player_2_view_taunt" && current_character_number % 2 == 1))) {
+      if (game_mode == k_aim_mode && !look) {
+        look = true;
+        look_x = 0;
+        look_y = 0;
+      } else if (look) {
+        look = false;
+      }
     }
 
-    if ((action == "player_1_up" && current_character_number % 2 == 0) ||
-        ((action == "player_2_up" && current_character_number % 2 == 1))) {
-      current_character->up_shot = true;
-      current_character->setShotRotation(current_character->shot_rotation, false);
-      recompute_trajectory = true;
-    }
-
-    if ((action == "player_1_down" && current_character_number % 2 == 0) ||
-        ((action == "player_2_down" && current_character_number % 2 == 1))) {
-      current_character->up_shot = false;
-      current_character->setShotRotation(current_character->shot_rotation, false);
-      recompute_trajectory = true;
+    // Cancel look
+    if ((action == "player_1_cancel_switch" && current_character_number % 2 == 0) ||
+        ((action == "player_2_cancel_switch" && current_character_number % 2 == 1))) {
+      look = false;
     }
 
     if ((action == "player_1_shoot_accept" && current_character_number % 2 == 0) ||
         ((action == "player_2_shoot_accept" && current_character_number % 2 == 1))) {
+      look = false;
       game_mode = k_power_mode;
       current_character->shot_power = 0;
       shot_rising = true;
@@ -513,6 +615,7 @@ void Game::handleAction(std::string action) {
     if ((action == "player_1_cancel_switch" && current_character_number % 2 == 0) ||
         ((action == "player_2_cancel_switch" && current_character_number % 2 == 1))) {
       game_mode = k_aim_mode;
+      look = false;
     }
   }
 }
@@ -528,12 +631,18 @@ void Game::render() {
 
   // Set the camera to look down at the character.
   // For fun, change the z-value to change the viewing angle of the game.
+  int look_adjust_x = 0;
+  int look_adjust_y = 0;
+  if (game_mode == k_aim_mode && look) {
+    look_adjust_x = look_x;
+    look_adjust_y = look_y;
+  }
   if (current_character->status == k_bear_status_normal) {
-    graphics->standardCamera(current_character->position->x + 15, current_character->position->y + 15, 10,
-      current_character->position->x, current_character->position->y, 0);
+    graphics->standardCamera(current_character->position->x + 15 + look_adjust_x, current_character->position->y + 15 + look_adjust_y, 10,
+      current_character->position->x + look_adjust_x, current_character->position->y + look_adjust_y, 0);
   } else {
-    graphics->standardCamera(current_character->last_drop_position->x + 15, current_character->last_drop_position->y + 15, 10,
-      current_character->last_drop_position->x, current_character->last_drop_position->y, 0);
+    graphics->standardCamera(current_character->last_drop_position->x + 15 + look_adjust_x, current_character->last_drop_position->y + 15 + look_adjust_y, 10,
+      current_character->last_drop_position->x + look_adjust_x, current_character->last_drop_position->y + look_adjust_y, 0);
   }
 
   float cycle = ((current_time - start_time) / 1000.0f) / 100.0f;
@@ -572,6 +681,10 @@ void Game::render() {
   }
   last_wicket->setRenderInfo((current_time - start_time) / 1000.0f);
 
+  for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
+    (*free_star)->setRenderInfo((current_time - start_time) / 1000.0f);
+  }
+
   // Render theme tile
   if (theme == "water") {
     graphics->pushModelMatrix();
@@ -587,6 +700,9 @@ void Game::render() {
     (*wicket)->renderInfo();
   }
   last_wicket->renderLastWicketInfo();
+  for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
+    (*free_star)->renderInfo();
+  }
 
   textures->setTexture("player_1_HUD_background");
   graphics->rectangle(0, 0, 120, k_screen_height);
@@ -594,22 +710,21 @@ void Game::render() {
   textures->setTexture("player_2_HUD_background");
   graphics->rectangle(k_screen_width - 120, 0, 120, k_screen_height);
 
-  textures->setTexture(player_1_bears[0] + "_box");
-  graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin"), 103, 103);
-  textures->setTexture(player_1_bears[1] + "_box");
-  graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin") + hud_step, 103, 103);
-  textures->setTexture(player_1_bears[2] + "_box");
-  graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin") + 2 * hud_step, 103, 103);
-  
-  textures->setTexture(player_2_bears[0] + "_box");
-  graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin"), 103, 103);
-  textures->setTexture(player_2_bears[1] + "_box");
-  graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin") + hud_step, 103, 103);
-  textures->setTexture(player_2_bears[2] + "_box");
-  graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin") + 2 * hud_step, 103, 103);
+  //if ((int) ((current_time - start_time) / 20.0f) % 2 == 0) {
+    textures->setTexture("selection_2");
+    graphics->rectangle(hot_config->getInt("player_" + std::to_string(current_character_number % 2 + 1) + "_x_margin"), hot_config->getInt("y_margin") + ((int) current_character_number / 2) * hud_step, 103, 103);
+  //}
 
-  textures->setTexture("bear_selection_box");
-  graphics->rectangle(hot_config->getInt("player_" + std::to_string(current_character_number % 2 + 1) + "_x_margin"), hot_config->getInt("y_margin") + ((int) current_character_number / 2) * hud_step, 103, 103);
+  for (int i = 0; i < player_1_bears.size(); i++) {
+    textures->setTexture(player_1_bears[i] + "_box");
+    graphics->rectangle(hot_config->getInt("player_1_x_margin"), hot_config->getInt("y_margin") + i * hud_step, 103, 103);
+  }
+
+  for (int i = 0; i < player_2_bears.size(); i++) {
+    textures->setTexture(player_2_bears[i] + "_box");
+    graphics->rectangle(hot_config->getInt("player_2_x_margin"), hot_config->getInt("y_margin") + i * hud_step, 103, 103);
+  }
+
 
   // bear_velocity_1->render();
   // bear_velocity_2->render();
@@ -620,9 +735,13 @@ void Game::render() {
 
   int act_margin = hot_config->getInt("player_1_x_margin");
   int taunt_margin = hot_config->getInt("player_2_x_margin");
+  int act_step = player_1_bears.size();
+  int taunt_step = player_2_bears.size();
   if (current_character_number % 2 == 1) {
     act_margin = hot_config->getInt("player_2_x_margin");
     taunt_margin = hot_config->getInt("player_1_x_margin");
+    act_step = player_2_bears.size();
+    taunt_step = player_1_bears.size();
   }
 
   if (game_mode == k_aim_mode || game_mode == k_power_mode || game_mode == k_action_mode) {
@@ -631,30 +750,72 @@ void Game::render() {
     } else {
       textures->setTexture("flat_shot_glyph");
     }
-    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + 3 * hud_step, 103, 103);
-
-    textures->setTexture("mallet_background_glyph");
-    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + 4 * hud_step, 103, 103);
+    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + act_step * hud_step, 103, 103);
 
     textures->setTexture("taunt");
-    graphics->rectangle(taunt_margin, hot_config->getInt("y_margin") + 3 * hud_step, 103, 103);    
+    graphics->rectangle(taunt_margin, hot_config->getInt("y_margin") + taunt_step * hud_step, 103, 103);  
+
+    control_map->render(taunt_margin + 18, hot_config->getInt("y_margin") + (act_step + 1) * hud_step, "player_" + std::to_string((current_character_number+1) % 2 + 1) + "_view_taunt");      
+  }
+
+  if (game_mode == k_aim_mode) {
+    control_map->render(act_margin - 10, hot_config->getInt("y_margin") + (act_step + 1) * hud_step, "player_" + std::to_string(current_character_number % 2 + 1) + "_up");
+    control_map->render(act_margin - 10 + 55, hot_config->getInt("y_margin") + (act_step + 1) * hud_step, "player_" + std::to_string(current_character_number % 2 + 1) + "_down");
+  
+    control_map->render(act_margin + 18, hot_config->getInt("y_margin") + (act_step + 1) * hud_step + 55, "player_" + std::to_string(current_character_number % 2 + 1) + "_shoot_accept");
   }
 
   // render power mode
   if (game_mode == k_power_mode || game_mode == k_action_mode) {
+    textures->setTexture("mallet_background_glyph");
+    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + (act_step + 1) * hud_step, 103, 103);
+
     textures->setTexture("mallet_glyph");
     graphics->pushModelMatrix();
-    graphics->translate(act_margin + 36, hot_config->getInt("y_margin") + 4 * hud_step + 21, 0);
+    graphics->translate(act_margin + 36, hot_config->getInt("y_margin") + (act_step + 1) * hud_step + 21, 0);
     graphics->rotate(-90.0 * current_character->shot_power / current_character->default_shot_power, 0.0f, 0.0f, 1.0f);
     //graphics->printModel();
     graphics->rectangle(-36, -21, 103, 103);
     graphics->popModelMatrix();
   }
 
+  if (game_mode == k_power_mode) {
+    control_map->render(act_margin - 10, hot_config->getInt("y_margin") + (act_step + 2) * hud_step, "player_" + std::to_string(current_character_number % 2 + 1) + "_shoot_accept");
+    control_map->render(act_margin - 10 + 55, hot_config->getInt("y_margin") + (act_step + 2) * hud_step, "player_" + std::to_string(current_character_number % 2 + 1) + "_cancel_switch");
+  }
+
+  if (game_mode == k_aim_mode && look) {
+    if (current_character_number % 2 == 0) {
+      control_map->render(hot_config->getInt("look_left_x"), hot_config->getInt("look_left_y"), "player_1_left");
+      control_map->render(hot_config->getInt("look_right_x"), hot_config->getInt("look_right_y"), "player_1_right");
+      control_map->render(hot_config->getInt("look_up_x"), hot_config->getInt("look_up_y"), "player_1_up");
+      control_map->render(hot_config->getInt("look_down_x"), hot_config->getInt("look_down_y"), "player_1_down");
+    } else {
+      control_map->render(hot_config->getInt("look_left_x"), hot_config->getInt("look_left_y"), "player_2_left");
+      control_map->render(hot_config->getInt("look_right_x"), hot_config->getInt("look_right_y"), "player_2_right");
+      control_map->render(hot_config->getInt("look_up_x"), hot_config->getInt("look_up_y"), "player_2_up");
+      control_map->render(hot_config->getInt("look_down_x"), hot_config->getInt("look_down_y"), "player_2_down");
+    }
+  }
+
   if (game_mode == k_action_mode) {
     textures->setTexture("special_power");
-    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + 5 * hud_step, 103, 103);
+    graphics->rectangle(act_margin, hot_config->getInt("y_margin") + (act_step + 2) * hud_step, 103, 103);
+
+    control_map->render(act_margin + 18, hot_config->getInt("y_margin") + (act_step + 3) * hud_step, "player_" + std::to_string(current_character_number % 2 + 1) + "_shoot_accept");
   }
+
+
+  if (taunt_time > 0) {
+    textures->setTexture(taunt_bear + "_box");
+    graphics->rectangle(201, 777, 103, 103);
+
+    textures->setTexture("speech_bubble");
+    graphics->rectangle(306, 649, 640, 140);
+
+    taunt_box->render();
+  }
+
 
   if (game_mode == k_end_mode) {
     graphics->fadeInOut(0.0f, 1.0f, 0.1666f);
@@ -730,7 +891,11 @@ bool Game::initializeGamePieces() {
   // Level Shape
   XMLElement* level_shape = doc.FirstChildElement("shape");
 
-  int alternating_starts = 0;
+  int player_1_starts = 0;
+  int player_2_starts = 0;
+  int total_starts = 0;
+
+  characters.resize(player_1_bears.size() + player_2_bears.size());
 
   XMLElement * tile_element = level_shape->FirstChildElement("tile");
   while (tile_element != nullptr) {
@@ -751,13 +916,19 @@ bool Game::initializeGamePieces() {
       hazard = (Hazard*) wicket;
       hazards.push_front(hazard);
       wickets.push_back(wicket);
-    } if (tile_type == "last_wicket") {
+    } else if (tile_type == "free_star") {
+      FreeStar* free_star = new FreeStar(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      free_star->bpm = bpm;
+      hazard = (Hazard*) free_star;
+      hazards.push_front(hazard);
+      free_stars.push_back(free_star);
+    } else if (tile_type == "last_wicket") {
       Wicket* wicket = new Wicket(tile_type, physics,
         new Point(x, y, z), M_PI + r);
       wicket->bpm = bpm;
       hazard = (Hazard*) wicket;
       hazards.push_front(hazard);
-      //wickets.push_back(wicket);
       last_wicket = wicket;
       last_wicket->value = 9;
       last_wicket->wicket_value_text->setText("9");
@@ -774,23 +945,48 @@ bool Game::initializeGamePieces() {
       hazards.push_front(hazard);
     }
 
-    if (tile_type == "player_1_start" || tile_type == "player_2_start") {
+    printf("Here\n");
+    if (tile_type == "player_1_start") {
       std::string model_name = "";
-      if (alternating_starts % 2 == 1) model_name = "teddy_2.obj";
+
       Character* character = new Character(physics, new Point(x + hot_config->getInt("x_drop"), y + hot_config->getInt("y_drop"), z + k_character_drop_height), model_name); // 
       physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
-      characters.push_back(character);
 
       starts.push_back(hazard);
-      character->roster_number = alternating_starts;
-      character->player_number = alternating_starts % 2 + 1;
 
-      alternating_starts +=1;
+      character->roster_number = player_1_starts * 2;
+      character->player_number = 1;
+      characters[player_1_starts * 2] = character;
+      player_1_starts += 1;
+      total_starts +=1;
+
+    } else if (tile_type == "player_2_start") {
+      std::string model_name = "teddy_2.obj";
+
+      Character* character = new Character(physics, new Point(x + hot_config->getInt("x_drop"), y + hot_config->getInt("y_drop"), z + k_character_drop_height), model_name); // 
+      physics->setRotation(character->identity, 0, 0, character->default_shot_rotation);
+
+      starts.push_back(hazard);
+      
+      character->roster_number = player_2_starts * 2 + 1;
+      character->player_number = 2;
+      characters[player_2_starts * 2 + 1] = character;
+      player_2_starts += 1;
+      total_starts += 1;
     }
 
     tile_element = tile_element->NextSiblingElement("tile");
   }
 
+  if (total_starts < player_1_bears.size() + player_2_bears.size()) {
+    characters.resize(total_starts);
+  }
+  if (player_1_starts < player_1_bears.size()) {
+    player_1_bears.resize(player_1_starts);
+  }
+  if (player_2_starts < player_2_bears.size()) {
+    player_2_bears.resize(player_2_starts);
+  }
   current_character_number = 0;
   current_character = characters[current_character_number];
 
@@ -846,6 +1042,10 @@ bool Game::initializeTextures() {
 
   textures->addTexture("bear_selection_box", "bear_selection_box.png");
 
+  textures->addTexture("selection_2", "selection_2.png");  
+
+  textures->addTexture("speech_bubble", "speech_bubble.png");  
+
   textures->addTexture("lil_jon_box", "lil_jon_box.png");
   textures->addTexture("mortimer_box", "mortimer_box.png");
   textures->addTexture("gluke_box", "gluke_box.png");
@@ -871,18 +1071,23 @@ bool Game::initializeTextures() {
   end_mode_box = new TextBox(hot_config->getString("wicket_font"), hot_config->getInt("end_mode_font_size"),
     "aok", 0, 0, 0, hot_config->getInt("end_mode_box_x"), hot_config->getInt("end_mode_box_y"));
 
-  bear_velocity_1 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
-    hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hot_config->getInt("v_y"));
-  bear_velocity_2 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
-    hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hot_config->getInt("v_y"));
-  bear_velocity_3 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
-    hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hud_step + hot_config->getInt("v_y"));
-  bear_velocity_4 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
-    hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hud_step + hot_config->getInt("v_y"));
-  bear_velocity_5 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
-    hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + 2 * hud_step + hot_config->getInt("v_y"));
-  bear_velocity_6 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
-    hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + 2 * hud_step + hot_config->getInt("v_y"));
+  taunt_box = new TextBox(hot_config->getString("wicket_font"), 40,
+    "g", 0, 0, 0, 340, 692);
+
+  // TO DO: if this gets brought back for another reason, redo it as a vector so it can have variable size
+  // bear_velocity_1 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+  //   hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hot_config->getInt("v_y"));
+  // bear_velocity_2 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+  //   hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hot_config->getInt("v_y"));
+  // bear_velocity_3 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+  //   hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hud_step + hot_config->getInt("v_y"));
+  // bear_velocity_4 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+  //   hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + hud_step + hot_config->getInt("v_y"));
+  // bear_velocity_5 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+  //   hot_config->getInt("player_1_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + 2 * hud_step + hot_config->getInt("v_y"));
+  // bear_velocity_6 = new TextBox("alien_planet.ttf", hot_config->getInt("velocity_font_size"), "000", 0, 0, 0,
+  //   hot_config->getInt("player_2_x_margin") + hot_config->getInt("v_x"), hot_config->getInt("y_margin") + 2 * hud_step + hot_config->getInt("v_y"));
+
   return true;
 }
 

@@ -26,6 +26,8 @@ class Point {
   float magnitude();
 
   void add(Point* p2);
+
+  float distance(Point* p2);
 };
 
 #endif

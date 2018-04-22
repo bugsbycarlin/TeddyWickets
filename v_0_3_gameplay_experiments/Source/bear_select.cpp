@@ -104,7 +104,7 @@ void BearSelect::handleKeys(SDL_Event e) {
 
 // Handle controller input
 void BearSelect::handleController(SDL_Event e) {
-  std::string value = control_map->translateKeyEvent(e);
+  std::string value = control_map->translateControllerEvent(e);
 
   for (auto item = control_map->ordered_controls.begin(); item != control_map->ordered_controls.end(); ++item) {
     if (control_map->control_map[*item] == value) {

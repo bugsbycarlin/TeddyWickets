@@ -42,6 +42,7 @@
 #include "textures.h"
 #include "hazard.h"
 #include "wicket.h"
+#include "free_star.h"
 #include "boxguy.h"
 
 class Game: public Screen {
@@ -55,6 +56,7 @@ class Game: public Screen {
 
   std::vector<Character*> characters = { };
   std::vector<Hazard*> starts = { };
+  std::vector<FreeStar*> free_stars = { };
   std::vector<Wicket*> wickets = { };
   Wicket* last_wicket;
 
@@ -88,6 +90,10 @@ class Game: public Screen {
 
   bool recompute_trajectory;
 
+  bool look;
+  int look_x;
+  int look_y;
+
   Model* theme_tile;
 
   std::string map_file;
@@ -104,8 +110,14 @@ class Game: public Screen {
 
   TextBox* end_mode_box;
 
+  TextBox* taunt_box;
+  std::string taunt_bear;
+  int taunt_time;
+
   std::vector<std::string> player_1_bears;
   std::vector<std::string> player_2_bears;
+
+  std::vector<std::string> taunts;
 
   std::list<btTransform> future_positions = { };
 

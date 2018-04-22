@@ -1,7 +1,7 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/wawa_shores_1.txt</value>
+  <value>Levels/test_level_3.txt</value>
   <!-- <value>Levels/wawa_shores_1.txt</value> -->
   <!-- <value>Levels/test_level_1.txt</value> -->
 </param>
@@ -9,7 +9,7 @@
 <param>
   <type>int</type>
   <name>use_music</name>
-  <value>1</value>
+  <value>0</value>
 </param>
 
 <param>
@@ -34,7 +34,49 @@
 
 
 
+<param>
+  <type>int</type>
+  <name>look_left_x</name>
+  <value>300</value>
+</param>
+<param>
+  <type>int</type>
+  <name>look_left_y</name>
+  <value>450</value>
+</param>
 
+<param>
+  <type>int</type>
+  <name>look_right_x</name>
+  <value>900</value>
+</param>
+<param>
+  <type>int</type>
+  <name>look_right_y</name>
+  <value>450</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>look_up_x</name>
+  <value>600</value>
+</param>
+<param>
+  <type>int</type>
+  <name>look_up_y</name>
+  <value>225</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>look_down_x</name>
+  <value>600</value>
+</param>
+<param>
+  <type>int</type>
+  <name>look_down_y</name>
+  <value>675</value>
+</param>
 
 <param>
   <type>int</type>
@@ -184,6 +226,31 @@
 <param>
   <type>int</type>
   <name>wicket_star_y</name>
+  <value>-32</value>
+</param>
+
+
+<param>
+  <type>int</type>
+  <name>free_star_font_x</name>
+  <value>-8</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>free_star_font_y</name>
+  <value>-60</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>free_star_star_x</name>
+  <value>-32</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>free_star_star_y</name>
   <value>-32</value>
 </param>
 

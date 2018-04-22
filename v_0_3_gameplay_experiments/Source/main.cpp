@@ -7,20 +7,27 @@
 
   This version is for refining the rules and mechanics of the game until it is fun.
 
-
-  
+  Changes:
+  +- Add free stars
+  +- Fix starting point issue
+  +- Filigree on the level sides
+  +- Reconfigurable number of bears (and test it on a level)
+  +- Free looking around
+  +- Slightly better indication of which bear is selected
+  +- Control glyphs
+  +- Comic patter comic bubbles (taunts and stuff)
 
   Some remainder goals from the last phase:
-  - Add free stars
-  - Grey out bears that are not the current bear somehow (or indicate the selected bear more)
-  - Refine shot power
-  - Control glyphs
-  - Filigree on the level sides
+  - Build a better level with one bear each
+  - Refine shot power to fit levels better
+  - Boxguys go by facing (true rotation) not just x vs y
+  - Make last wicket optional
   - more squish and bounce!
+  - fix physics bumper / rotation issue (test level 3)
   - Topspin and backspin 
   - Tutorial comic bubbles
-  - Comic patter comic bubbles (taunts and stuff)
-  - Fix alternating starts issue (see test level 2)
+  
+  - Even better indication of which bear is selected
 
 
   Tech debt for this phase:
@@ -170,6 +177,34 @@ bool initialize() {
   if (result != FMOD_OK) {
       printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
       return false;
+  }
+
+
+  // TO DO: factor out and move somewhere nice. Control Map maybe.
+  printf("Initializing controllers.\n");
+
+  SDL_GameController *controller = NULL;
+  SDL_Joystick *joy = NULL;
+  printf("This many joysticks %d\n", SDL_NumJoysticks());
+  for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+    printf("Counting %d\n", i);
+    if (SDL_IsGameController(i)) {
+      controller = SDL_GameControllerOpen(i);
+      printf("There is a controller named %s\n", SDL_JoystickNameForIndex(i));
+      if (controller) {
+        printf("Opened controller %d\n", i);
+      } else {
+        printf("Could not open gamecontroller %i: %s\n", i, SDL_GetError());
+      }
+    } else {
+      joy = SDL_JoystickOpen(i);
+      printf("There is a joystick named %s\n", SDL_JoystickNameForIndex(i));
+      if (joy) {
+        printf("Opened joystick %d\n", i);
+      } else {
+        printf("Could not open joystick %i: %s\n", i, SDL_GetError());
+      }
+    }
   }
 }
 

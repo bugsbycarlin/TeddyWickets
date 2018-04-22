@@ -23,6 +23,7 @@
     <type>player_1_start</type>
     <type>player_2_start</type>
     <type>bumper</type>
+    <type>free_star</type>
 </types>
 
 <shape>
@@ -393,8 +394,8 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="player_1_start">
-        <x>42</x>
-        <y>18</y>
+        <x>18</x>
+        <y>6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
@@ -467,6 +468,24 @@
     <tile type="bumper">
         <x>42</x>
         <y>36</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>45</x>
+        <y>27</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>45</x>
+        <y>33</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>45</x>
+        <y>39</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>

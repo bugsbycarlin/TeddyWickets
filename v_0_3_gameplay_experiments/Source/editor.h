@@ -37,6 +37,8 @@
 #include "textbox.h"
 #include "textures.h"
 #include "hazard.h"
+#include "wicket.h"
+#include "free_star.h"
 
 using namespace tinyxml2;
 
@@ -46,6 +48,8 @@ class Editor: public Screen {
   std::list<Surface*> surfaces = { };
   std::list<Bumper*> bumpers = { };
   std::list<Hazard*> hazards = { };
+  std::vector<Wicket*> wickets = { };
+  std::vector<FreeStar*> free_stars = { };
 
   Hazard* current_shape;
 

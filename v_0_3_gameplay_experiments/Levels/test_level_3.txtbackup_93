@@ -35,12 +35,6 @@
     </tile>
     <tile type="tile_flat">
         <x>0</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>0</x>
         <y>6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
@@ -70,18 +64,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>0</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>6</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
         <x>6</x>
         <y>0</y>
         <z>0</z>
@@ -114,18 +96,6 @@
     <tile type="tile_flat">
         <x>6</x>
         <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>6</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
-        <y>-6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
@@ -166,18 +136,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>12</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>18</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
         <x>18</x>
         <y>0</y>
         <z>0</z>
@@ -210,18 +168,6 @@
     <tile type="tile_flat">
         <x>18</x>
         <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>18</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>24</x>
-        <y>-6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
@@ -262,18 +208,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>24</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>30</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
         <x>30</x>
         <y>0</y>
         <z>0</z>
@@ -306,18 +240,6 @@
     <tile type="tile_flat">
         <x>30</x>
         <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>30</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>36</x>
-        <y>-6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
@@ -358,18 +280,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>36</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>42</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
         <x>42</x>
         <y>0</y>
         <z>0</z>
@@ -402,18 +312,6 @@
     <tile type="tile_flat">
         <x>42</x>
         <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>42</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>48</x>
-        <y>-6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
@@ -454,18 +352,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>48</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>54</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
         <x>54</x>
         <y>0</y>
         <z>0</z>
@@ -498,18 +384,6 @@
     <tile type="tile_flat">
         <x>54</x>
         <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>54</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>60</x>
-        <y>-6</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
@@ -550,18 +424,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>60</x>
-        <y>36</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>66</x>
-        <y>-6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
         <x>66</x>
         <y>0</y>
         <z>0</z>
@@ -598,129 +460,75 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="tile_flat">
-        <x>66</x>
-        <y>36</y>
+        <x>72</x>
+        <y>0</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="wicket">
-        <x>18</x>
-        <y>9</y>
+    <tile type="tile_flat">
+        <x>72</x>
+        <y>6</y>
         <z>0</z>
-        <r>1.5707963387197772</r>
+        <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="wicket">
-        <x>23</x>
-        <y>9</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
-        <x>28</x>
-        <y>9</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
-        <x>12</x>
+    <tile type="tile_flat">
+        <x>72</x>
         <y>12</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="wicket">
-        <x>12</x>
+    <tile type="tile_flat">
+        <x>72</x>
         <y>18</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
-    <tile type="wicket">
-        <x>12</x>
+    <tile type="tile_flat">
+        <x>72</x>
         <y>24</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>72</x>
+        <y>30</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="player_1_start">
-        <x>9</x>
-        <y>27</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="player_2_start">
-        <x>9</x>
+        <x>0</x>
         <y>6</y>
         <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="player_1_start">
-        <x>30</x>
-        <y>6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
+        <r>-3.8941437807693546e-07</r>
     </tile>
     <tile type="player_2_start">
-        <x>30</x>
-        <y>27</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="wicket">
-        <x>33</x>
+        <x>0</x>
         <y>24</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="wicket">
-        <x>33</x>
+        <x>12</x>
         <y>18</y>
         <z>0</z>
-        <r>8.7422780126189537e-08</r>
+        <r>1.5707963387197772</r>
     </tile>
     <tile type="wicket">
-        <x>27</x>
-        <y>30</y>
+        <x>21</x>
+        <y>18</y>
         <z>0</z>
         <r>1.5707963387197772</r>
     </tile>
     <tile type="wicket">
-        <x>18</x>
-        <y>30</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="player_1_start">
-        <x>18</x>
-        <y>27</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="player_2_start">
         <x>30</x>
         <y>18</y>
         <z>0</z>
-        <r>8.7422780126189537e-08</r>
+        <r>1.5707963387197772</r>
     </tile>
-    <tile type="boxguy">
-        <x>42</x>
+    <tile type="wicket">
+        <x>39</x>
         <y>18</y>
-        <z>2</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
-        <x>48</x>
-        <y>18</y>
-        <z>2</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
-        <x>24</x>
-        <y>0</y>
-        <z>2</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="last_wicket">
-        <x>33</x>
-        <y>36</y>
         <z>0</z>
-        <r>8.7422780126189537e-08</r>
+        <r>1.5707963387197772</r>
     </tile>
 </shape>

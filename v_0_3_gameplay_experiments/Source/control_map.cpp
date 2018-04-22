@@ -68,6 +68,23 @@ ControlMap::ControlMap() {
 
     key_map_file.close();
   }
+
+
+  textures->addTexture("keyboard", "keyboard.png");
+  textures->addTexture("pad_up", "pad_up.png");
+  textures->addTexture("pad_down", "pad_down.png");
+  textures->addTexture("pad_left", "pad_left.png");
+  textures->addTexture("pad_right", "pad_up.png");
+  textures->addTexture("button_1", "button_1.png");
+  textures->addTexture("button_2", "button_2.png");
+  textures->addTexture("button_3", "button_3.png");
+  textures->addTexture("button_4", "button_4.png");
+
+  info_box = new TextBox("candy_crayon.ttf", 40,
+    "A", 0, 0, 0, 0, 0);
+
+  info_box_small = new TextBox("candy_crayon.ttf", 22,
+    "A", 0, 0, 0, 0, 0);
 }
 
 // This method is the key map
@@ -99,16 +116,16 @@ std::string ControlMap::translateControllerEvent(SDL_Event e) {
   } else if (e.type == SDL_JOYAXISMOTION && e.jaxis.axis < 4) {
     if (e.jaxis.axis % 2 == 0 && e.jaxis.value < -3200) {
       // stick left
-      return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Left";
+      return prefix + std::to_string(e.jaxis.which) + " " + std::to_string(e.jaxis.axis / 2) + " Stick Left";
     } else if (e.jaxis.axis % 2 == 0 && e.jaxis.value > 3200) {
       // stick right
-      return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Right";
+      return prefix + std::to_string(e.jaxis.which) + " " + std::to_string(e.jaxis.axis / 2) + " Stick Right";
     } else if (e.jaxis.axis % 2 == 1 && e.jaxis.value < -3200) {
       // stick up
-      return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Up";
+      return prefix + std::to_string(e.jaxis.which) + " " + std::to_string(e.jaxis.axis / 2) + " Stick Up";
     } else if (e.jaxis.axis % 2 == 1 && e.jaxis.value > 3200) {
       // stick down
-      return prefix + std::to_string(e.jaxis.which) + " Stick " + std::to_string(e.jaxis.axis / 2) + " Down";
+      return prefix + std::to_string(e.jaxis.which) + " " + std::to_string(e.jaxis.axis / 2) + " Stick Down";
     }
   } else if (e.type == SDL_JOYHATMOTION) {
     if (e.jhat.value == SDL_HAT_UP) {
@@ -183,4 +200,60 @@ std::string ControlMap::translateKeyEvent(SDL_Event e) {
     case SDLK_z : short_name = "Z"; break;
   }
   return "Key " + short_name;
+}
+
+unsigned long ControlMap::hash(const std::string& str) {
+    unsigned long hash = 5381;
+    for (size_t i = 0; i < str.size(); ++i)
+        hash = 33 * hash + (unsigned char)str[i];
+    return hash;
+}
+
+void ControlMap::render(int x, int y, std::string action) {
+  std::string input_value = getAction(action);
+  if (input_value == "") return;
+
+  int last = (int) input_value.find_last_of(" ");
+  std::string key = input_value.substr(last+1);
+  std::string root = input_value.substr(0,last);
+  int second_to_last = (int) root.find_last_of(" ");
+  if (second_to_last >= root.size()) {
+    second_to_last = -1;
+  }
+  std::string button_type = root.substr(second_to_last+1);
+
+  //printf("--Key:%s Type:%s--\n", key.c_str(), button_type.c_str());
+  bool render_text = true;
+
+  if (button_type == "Key") {
+    textures->setTexture("keyboard");
+  } else if (button_type == "Dpad" || button_type == "Stick") {
+    if (key == "Left") textures->setTexture("pad_left");
+    if (key == "Right") textures->setTexture("pad_right");
+    if (key == "Up") textures->setTexture("pad_up");
+    if (key == "Down") textures->setTexture("pad_down");
+    render_text = false;
+  } else if (button_type == "Button") {
+    int button_value = hash(key);
+    textures->setTexture("button_" + std::to_string(button_value % 4 + 1));
+  } else {
+    //printf("Haven't implemented this glyph method\n");
+    //printf("Value: %s\n", input_value.c_str());
+    textures->setTexture("keyboard");
+  }
+  graphics->rectangle(x, y, 103, 103);
+
+  if (render_text) {
+    if (key.length() < 2) {
+      info_box->x = x + 25;
+      info_box->y = y + 18;
+      info_box->setText(key);
+      info_box->render();
+    } else {
+      info_box_small->x = x + 17;
+      info_box_small->y = y + 22;
+      info_box_small->setText(key);
+      info_box_small->render();
+    }
+  }
 }

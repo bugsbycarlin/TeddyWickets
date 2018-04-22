@@ -19,6 +19,7 @@ Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float
 
   float physics_rotation = rotation - M_PI;
   // I do not know or remember why this is
+  // and I need to fix it for bumpers too. they vary by rotation
   if (object_type == "wicket" || object_type == "ramp") {
     physics_rotation = rotation;
   }

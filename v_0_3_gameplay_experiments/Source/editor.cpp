@@ -82,6 +82,16 @@ void Editor::handleKeys(SDL_Event e) {
   if (e.key.keysym.sym == SDLK_n) {
     if (current_shape != nullptr) {
       hazards.push_front(current_shape);
+      if (current_shape->object_type == "wicket") {
+        Wicket* wicket = new Wicket(current_shape->object_type, physics,
+          new Point(current_shape->position->x, current_shape->position->y, current_shape->position->z), M_PI + current_shape->rotation);
+        wickets.push_back(wicket);
+      }
+      if (current_shape->object_type == "free_star") {
+        FreeStar* free_star = new FreeStar(current_shape->object_type, physics,
+          new Point(current_shape->position->x, current_shape->position->y, current_shape->position->z), M_PI + current_shape->rotation);
+        free_stars.push_back(free_star);
+      }
       last_x = current_shape->position->x;
       last_y = current_shape->position->y;
       last_z = current_shape->position->z;
@@ -289,6 +299,13 @@ void Editor::render() {
     (*hazard)->render();
   }
 
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    (*wicket)->setRenderInfo((current_time - start_time) / 1000.0f);
+  }
+  for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
+    (*free_star)->setRenderInfo((current_time - start_time) / 1000.0f);
+  }
+
   // Render theme tile
   if (theme == "water") {
     // for (int i = min_x - 30; i <= max_x + 40; i += 6) {
@@ -311,6 +328,16 @@ void Editor::render() {
 
   // render 2D overlay
   graphics->start2DDraw();
+
+  for (auto wicket = wickets.begin(); wicket != wickets.end(); ++wicket) {
+    (*wicket)->renderInfo();
+  }
+
+  for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
+    (*free_star)->renderInfo();
+  }
+
+
   graphics->end2DDraw();
 }
 
@@ -369,6 +396,18 @@ bool Editor::initializeLevel() {
 
     hazards.push_front(new Hazard(tile_type, physics,
         new Point(x, y, z), M_PI + r));
+
+    if (tile_type == "wicket") {
+      Wicket* wicket = new Wicket(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      wickets.push_back(wicket);
+    }
+
+    if (tile_type == "free_star") {
+      FreeStar* free_star = new FreeStar(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      free_stars.push_back(free_star);
+    }
 
     last_x = x;
     last_y = y;
