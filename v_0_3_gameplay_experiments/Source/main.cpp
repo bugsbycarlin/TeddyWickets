@@ -20,10 +20,11 @@
   +- put purple tile on select bears screen
   +- Fix free star height detection issue
   +- remove apostrophies from text
-  - Fix bear selection bug (it wasn't going from bear select screen to game screen)
+  +- Fix bear selection bug (it wasn't going from bear select screen to game screen)
+  - Finish blueblue_slopes_2 level
 
   Some remainder goals from the last phase:
-  - Build a better level with one bear each
+  - Finish blueblue_slopes_1 level
   - fix physics bumper / rotation issue (test level 3)
   - Even better indication of which bear is selected (hover on the sides)
 
