@@ -14,7 +14,9 @@ FreeStar::FreeStar(std::string object_type, Physics* physics, Point* position, f
 
   this->active = true;
 
-  radius_expander = 1.5f;
+  this->floating_position = new Point(position->x, position->y, position->z);
+
+  radius_expander = 1.3f;
 
   this->rotated = false;
   // assuming wicket is rotated +- Pi/2, or 0
@@ -34,14 +36,18 @@ void FreeStar::render() {
   Hazard::render();
 }
 
+void FreeStar::setFloatingHeight(float height) {
+  this->floating_position->z = this->position->z + height;
+}
+
 // Return true if player X has crossed the wicket. In that case, also flip the wicket's player owner.
-bool FreeStar::flipWicket(Point* current_point, float radius, int new_owner) {
+bool FreeStar::flipStar(Point* current_point, float radius, int new_owner) {
   if (!active) return false;
 
   // if (position->distance(current_point) < 10) {
   //   printf("flipWicket 2 %0.3f vs %0.3f\n", position->distance(current_point), radius * radius_expander);
   // }
-  if (position->distance(current_point) < radius * radius_expander) {
+  if (floating_position->distance(current_point) < radius * radius_expander) {
     active = false;
     this->player_owner = new_owner;
     return true;

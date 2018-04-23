@@ -56,7 +56,24 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
   taunts.push_back("The best bears are me and not you!");
   taunts.push_back("Sonny is gonna have a day with you!");
   taunts.push_back("Eggs! Eggs! Eggs! Eggs! Eggs! Wad.");
-  taunts.push_back("DABAAA DABAAAA de doo doo doo doo");
+  taunts.push_back("DABAAA DABAAAA dedoodoodoodoo");
+  taunts.push_back("Winnie the Pooh! Doesnt like you!");
+  taunts.push_back("It is hard to read an incomplete");
+  taunts.push_back("The fundamentals are overrated!");
+  taunts.push_back("Once upon a time you sucked.");
+  taunts.push_back("What gender am I? Think about it.");
+  taunts.push_back("Donut look down. Or do. Or donut.");
+  taunts.push_back("This is the song that never ends!");
+  taunts.push_back("Weeee are never ever ever getting");
+  taunts.push_back("Mmm bop mmm mmm mmm bop doobiedowa");
+  taunts.push_back("If you believe in life after love!");
+  taunts.push_back("I will mash your potatoes.");
+  taunts.push_back("Six plus seven plus three equals?");
+  taunts.push_back("You are now out of cool whip.");
+  taunts.push_back("Walk slowly, hipster.");
+  taunts.push_back("Pump jockey. Works for tips!");
+  taunts.push_back("Forget it. I am simply not credible.");
+  taunts.push_back("Where are my waffles?!");
   taunts.push_back("Tweet about it, douche!");
   taunt_time = 0;
 }
@@ -109,7 +126,6 @@ void Game::update() {
 
   if (current_time - framerate_time > 1000.0f) {
     printf("Framerate: %d\n", frames_since_last);
-    printf("Mode: %d\n", game_mode);
     //printf("Ball: %0.2f, %0.2f, %0.2f\n", character->position->x, character->position->y, character->position->z);
     framerate_time = current_time;
     frames_since_last = 0;
@@ -273,7 +289,7 @@ void Game::update() {
       }
 
       for (auto free_star = free_stars.begin(); free_star != free_stars.end(); ++free_star) {
-        (*free_star)->flipWicket((*character)->position_history[0], (*character)->radius, (*character)->player_number);
+        (*free_star)->flipStar((*character)->position_history[0], (*character)->radius, (*character)->player_number);
       }
 
       // Test character against final wicket
@@ -508,7 +524,6 @@ void Game::handleController(SDL_Event e) {
 
 // Handle actions as translated from the control map
 void Game::handleAction(std::string action) {
-  printf("Got action %s\n", action.c_str());
 
   if (game_mode == k_aim_mode || game_mode == k_power_mode || game_mode == k_action_mode) {
     // Taunt
@@ -883,10 +898,7 @@ bool Game::initializeGamePieces() {
     // physics->addMesh(theme_tile->getMeshAsTriangles(), new Point(50, 0, 0), M_PI);
   }
 
-  printf("This one\n");
   doc.FirstChildElement("bpm")->QueryFloatText(&bpm);
-  printf("This too\n");
-  printf("bpm: %0.2f\n", bpm);
 
   // Level Shape
   XMLElement* level_shape = doc.FirstChildElement("shape");
@@ -920,6 +932,7 @@ bool Game::initializeGamePieces() {
       FreeStar* free_star = new FreeStar(tile_type, physics,
         new Point(x, y, z), M_PI + r);
       free_star->bpm = bpm;
+      free_star->setFloatingHeight(0.75f);
       hazard = (Hazard*) free_star;
       hazards.push_front(hazard);
       free_stars.push_back(free_star);
@@ -945,7 +958,6 @@ bool Game::initializeGamePieces() {
       hazards.push_front(hazard);
     }
 
-    printf("Here\n");
     if (tile_type == "player_1_start") {
       std::string model_name = "";
 

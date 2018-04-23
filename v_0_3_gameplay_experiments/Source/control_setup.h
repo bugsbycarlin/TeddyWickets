@@ -22,6 +22,7 @@
 #include <string>
 
 // Teddy Wickets includes
+#include "hot_config.h"
 #include "control_map.h"
 #include "globals.h"
 #include "graphics.h"

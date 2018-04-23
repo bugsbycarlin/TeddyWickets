@@ -17,12 +17,12 @@ Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float
 
   this->model = model_cache->getModel(object_type + ".obj");
 
-  float physics_rotation = rotation - M_PI;
+  float physics_rotation = -rotation - M_PI;
   // I do not know or remember why this is
   // and I need to fix it for bumpers too. they vary by rotation
-  if (object_type == "wicket" || object_type == "ramp") {
-    physics_rotation = rotation;
-  }
+  // if (object_type == "wicket" || object_type == "ramp") {
+  //   physics_rotation = rotation;
+  // }
 
   this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, physics_rotation);
 }

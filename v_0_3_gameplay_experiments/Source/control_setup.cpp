@@ -9,10 +9,13 @@
 
 // ControlSetup constructor
 ControlSetup::ControlSetup() {
+
+  printf("In here now three\n");
   quit = false;
   current_screen = k_control_setup_screen;
   music = "";
   mode = k_control_view_mode;
+  printf("In here now four\n");
 }
 
 // ControlSetup loop. Main.cpp is running this on a loop until it's time to switch to a different part of the game.
@@ -166,35 +169,46 @@ void ControlSetup::setEmptyTextToMap() {
 }
 
 bool ControlSetup::initialize() {
+  printf("init d\n");
   graphics->initialize();
+  printf("init c\n");
 
   control_map = new ControlMap();
+  printf("init b\n");
 
   textures->addTexture("control_setup_screen", "control_setup_screen.png");
 
-  int x_shift = 56;
-  int y_shift = -2;
+  printf("init a\n");
+  int x_shift = hot_config->getInt("control_map_x");
+  int y_shift = hot_config->getInt("control_map_y");
 
-  view_mode_instruction = new TextBox("vintage_one.ttf", 32, "Press Return to Configure", 53, 62, 89, 40, 40);
-  configure_mode_instruction = new TextBox("vintage_one.ttf", 32, "Press Esc to Cancel", 53, 62, 89, 40, 40);
-  return_to_title_instruction = new TextBox("vintage_one.ttf", 32, "Press Esc to Exit to Title", 53, 62, 89, 980, 840);
+  printf("init 0\n");
 
-  player_1_up = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 115, 165 + y_shift);
-  player_1_down = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 192, 208 + y_shift);
-  player_1_left = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 207, 251 + y_shift);
-  player_1_right = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 273, 293 + y_shift);
-  player_1_shoot_accept = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 889, 94 + y_shift);
-  player_1_cancel_switch = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 934, 138 + y_shift);
-  player_1_special = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 959, 180 + y_shift);
-  player_1_view_taunt = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 965, 222 + y_shift);
-  player_2_up = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 178, 689 + y_shift);
-  player_2_down = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 256, 733 + y_shift);
-  player_2_left = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 271, 775 + y_shift);
-  player_2_right = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 336, 817 + y_shift);
-  player_2_shoot_accept = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 1129, 350 + y_shift);
-  player_2_cancel_switch = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 1176, 394 + y_shift);
-  player_2_special = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 1201, 435 + y_shift);
-  player_2_view_taunt = new TextBox("vintage_one.ttf", 32, "Key A", 80, 80, 80, 1209, 476 + y_shift);
+  view_mode_instruction = new TextBox(hot_config->getString("title_font"), 32, "Press Return to Configure", 53, 62, 89, 40, 40);
+  configure_mode_instruction = new TextBox(hot_config->getString("title_font"), 32, "Press Esc to Cancel", 53, 62, 89, 40, 40);
+  return_to_title_instruction = new TextBox(hot_config->getString("title_font"), 32, "Press Esc to Exit to Title", 53, 62, 89, 980, 840);
+
+  printf("init 1\n");
+  player_1_up = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 175 + x_shift, 165 + y_shift);
+  player_1_down = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 232 + x_shift, 208 + y_shift);
+  player_1_left = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 267 + x_shift, 251 + y_shift);
+  player_1_right = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 303 + x_shift, 293 + y_shift);
+  printf("init 2\n");
+  player_1_shoot_accept = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 899 + x_shift, 94 + y_shift);
+  player_1_cancel_switch = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 934 + x_shift, 138 + y_shift);
+  player_1_special = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 969 + x_shift, 180 + y_shift);
+  player_1_view_taunt = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 975 + x_shift, 222 + y_shift);
+  printf("init 3\n");
+  player_2_up = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 238 + x_shift, 689 + y_shift);
+  player_2_down = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 298 + x_shift, 733 + y_shift);
+  player_2_left = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 321 + x_shift, 775 + y_shift);
+  player_2_right = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 373 + x_shift, 817 + y_shift);
+  printf("init 4\n");
+  player_2_shoot_accept = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 1136 + x_shift, 350 + y_shift);
+  player_2_cancel_switch = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 1177 + x_shift, 394 + y_shift);
+  player_2_special = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 1212 + x_shift, 435 + y_shift);
+  player_2_view_taunt = new TextBox(hot_config->getString("title_font"), 32, "Key A", 80, 80, 80, 1219 + x_shift, 476 + y_shift);
+  printf("init 5\n");
 
   action_map = {};
   action_map["player_1_up"] = player_1_up;
@@ -214,9 +228,12 @@ bool ControlSetup::initialize() {
   action_map["player_2_special"] = player_2_special;
   action_map["player_2_view_taunt"] = player_2_view_taunt;
 
+  printf("init 6\n");
   setTextToMap();
 
   printf("Initializing controllers.\n");
+
+  printf("init 7\n");
 
   SDL_GameController *controller = NULL;
   SDL_Joystick *joy = NULL;
@@ -241,6 +258,8 @@ bool ControlSetup::initialize() {
       }
     }
   }
+
+  printf("init 8\n");
 
   return true;
 }

@@ -1,15 +1,17 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/test_level_3.txt</value>
+  <value>Levels/blueblue_slopes_2.txt</value>
   <!-- <value>Levels/wawa_shores_1.txt</value> -->
   <!-- <value>Levels/test_level_1.txt</value> -->
+  <!-- <value>Levels/blueblue_slopes_1.txt</value> -->
+  <!-- <value>Levels/blueblue_slopes_2.txt</value> -->
 </param>
 
 <param>
   <type>int</type>
   <name>use_music</name>
-  <value>0</value>
+  <value>1</value>
 </param>
 
 <param>
@@ -170,6 +172,24 @@
   <value>535</value>
 </param>
 
+
+<param>
+  <type>string</type>
+  <name>title_font</name>
+  <value>candy_crayon.ttf</value>
+</param>
+
+
+<param>
+  <type>int</type>
+  <name>control_map_x</name>
+  <value>-80</value>
+</param>
+<param>
+  <type>int</type>
+  <name>control_map_y</name>
+  <value>-2</value>
+</param>
 
 
 <param>

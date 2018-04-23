@@ -184,6 +184,9 @@ void BearSelect::render() {
 
   graphics->start2DDraw();
 
+  textures->setTexture("bear_select_background");
+  graphics->rectangle(0, 0, k_screen_width, k_screen_height);
+
   player_1_choose_text->render();
   player_2_choose_text->render();
 
@@ -191,6 +194,11 @@ void BearSelect::render() {
     choose_your_bears_text->render();
     bear_name_text->render();
     bear_description_text->render();
+
+    textures->setTexture("selection_2");
+    float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
+    float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
+    graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
 
     for (int i = 0; i < bear_choices.size(); i++) {
       textures->setTexture(bear_choices[i] + "_box");
@@ -205,8 +213,8 @@ void BearSelect::render() {
     }
 
     textures->setTexture("bear_selection_box");
-    float m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
-    float n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
+    m = k_bear_choice_x + k_bear_choice_margin * (bear_choice % 3);
+    n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
     graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
   } else if (game_mode == k_lets_go_mode) {
     go_text->render();
@@ -243,8 +251,6 @@ void BearSelect::render() {
 bool BearSelect::initialize() {
   graphics->initialize();
 
-  printf("Initialize 1\n");
-
   control_map = new ControlMap();
 
   // Initialize Textures
@@ -253,27 +259,23 @@ bool BearSelect::initialize() {
     return false;
   }
 
-  printf("Initialize 2\n");
-
   start_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
   last_time = start_time;
   framerate_time = start_time;
-
-  printf("Initialize 3\n");
 
   return true;
 }
 
 bool BearSelect::initializeTextures() {
 
-  printf("Textures 1\n");
+  textures->addTexture("bear_select_background", "bear_select_background.png");
+
+  textures->addTexture("selection_2", "selection_2.png");
 
   textures->addTexture("unfilled_bear_selection_box", "unfilled_bear_selection_box.png");
   textures->addTexture("unavailable_bear_selection_box", "unavailable_bear_selection_box.png");
   textures->addTexture("unknown_bear_selection_box", "unknown_bear_selection_box.png");
   textures->addTexture("bear_selection_box", "bear_selection_box.png");
-
-  printf("Textures 2\n");
 
   textures->addTexture("lil_jon_box", "lil_jon_box.png");
   textures->addTexture("mortimer_box", "mortimer_box.png");
@@ -285,28 +287,22 @@ bool BearSelect::initializeTextures() {
   textures->addTexture("jeff_bridges_box", "jeff_bridges_box.png");
   textures->addTexture("grim_box", "grim_box.png");
 
-  printf("Textures 3\n");
-
   Point* selection_box_color = colors->color("selection_box");
   Point* dark_box_color = colors->darker(selection_box_color);
   printf("Darker color: %d, %d, %d\n", (int) dark_box_color->x, (int) dark_box_color->y, (int) dark_box_color->z);
 
-  printf("Textures 4\n");
-
-  choose_your_bears_text = new TextBox("cartoon_blocks.ttf", 60,
+  choose_your_bears_text = new TextBox("candy_crayon.ttf", 60,
     "Choose your bears", 53, 62, 89, 44, 22);
-  player_1_choose_text = new TextBox("cartoon_blocks.ttf", 60,
+  player_1_choose_text = new TextBox("candy_crayon.ttf", 60,
     "Player 1", 140, 98, 57, 44, 128);
-  player_2_choose_text = new TextBox("cartoon_blocks.ttf", 60,
+  player_2_choose_text = new TextBox("candy_crayon.ttf", 60,
     "Player 2", 53, 62, 89, 1147, 128);
-  bear_name_text = new TextBox("cartoon_blocks.ttf", 50,
+  bear_name_text = new TextBox("candy_crayon.ttf", 50,
     bear_pretty_names[bear_choices[bear_choice]], 53, 62, 89, 362, 93);
-  bear_description_text = new TextBox("cartoon_blocks.ttf", 40,
+  bear_description_text = new TextBox("candy_crayon.ttf", 40,
     bear_descriptions[bear_choices[bear_choice]], 53, 62, 89, 362, 149);
-  go_text = new TextBox("cartoon_blocks.ttf", 200,
-    "let's go!", 53, 62, 89, k_bear_choice_x, k_bear_choice_y);
-
-  printf("Textures 5\n");
+  go_text = new TextBox("candy_crayon.ttf", 200,
+    "Go Go Go!", 53, 62, 89, k_bear_choice_x, k_bear_choice_y);
 
   return true;
 }

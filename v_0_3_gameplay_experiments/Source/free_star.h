@@ -36,14 +36,16 @@ class FreeStar: public Hazard {
     bool active;
 
     float radius_expander;
+    Point* floating_position;
 
     int player_owner;
 
     FreeStar(std::string object_type, Physics* physics, Point* position, float rotation);
 
     void render();
+    void setFloatingHeight(float height);
 
-    bool flipWicket(Point* current_point, float radius, int player_owner);
+    bool flipStar(Point* current_point, float radius, int player_owner);
 
     void setRenderInfo(float time_step);
     void renderInfo();

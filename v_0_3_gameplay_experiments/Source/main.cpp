@@ -16,14 +16,23 @@
   +- Slightly better indication of which bear is selected
   +- Control glyphs
   +- Comic patter comic bubbles (taunts and stuff)
+  +- Fix font in early screens
+  +- put purple tile on select bears screen
+  +- Fix free star height detection issue
+  +- remove apostrophies from text
+  - Fix bear selection bug (it wasn't going from bear select screen to game screen)
 
   Some remainder goals from the last phase:
   - Build a better level with one bear each
+  - fix physics bumper / rotation issue (test level 3)
+  - Even better indication of which bear is selected (hover on the sides)
+
+  STOP THERE!
   - Refine shot power to fit levels better
   - Boxguys go by facing (true rotation) not just x vs y
   - Make last wicket optional
   - more squish and bounce!
-  - fix physics bumper / rotation issue (test level 3)
+  
   - Topspin and backspin 
   - Tutorial comic bubbles
   
@@ -233,7 +242,7 @@ int main(int argc, char* args[]) {
 
   //defaults
   player_1_bears = {"lil_jon", "mortimer", "gluke"};
-  player_2_bears = {"mags", "bob_smith", "lord_lonsdale"};
+  player_2_bears = {"hpf_swinnerton_dyer", "bob_smith", "lord_lonsdale"};
 
   if (argc > 1 &&
     (std::string(args[1]) == "title" ||
@@ -308,18 +317,18 @@ int main(int argc, char* args[]) {
 
     screen->loop(window, sound_system);
 
-    if (loop_counter % 30 == 0 && hot_loads_counter + 1 < hot_loads.size()) {
-      if (hot_loads[hot_loads_counter] == "model") {
-        Model* model = model_cache->getModel(hot_loads[hot_loads_counter + 1]);
-        //model->render();
-      } else if (hot_loads[hot_loads_counter] == "texture") {
-        textures->addTexture(hot_loads[hot_loads_counter + 1], hot_loads[hot_loads_counter + 1] + ".png");
-      }
+    // if (loop_counter % 30 == 0 && hot_loads_counter + 1 < hot_loads.size()) {
+    //   if (hot_loads[hot_loads_counter] == "model") {
+    //     Model* model = model_cache->getModel(hot_loads[hot_loads_counter + 1]);
+    //     //model->render();
+    //   } else if (hot_loads[hot_loads_counter] == "texture") {
+    //     textures->addTexture(hot_loads[hot_loads_counter + 1], hot_loads[hot_loads_counter + 1] + ".png");
+    //   }
 
-      hot_loads_counter += 2;
-    }
+    //   hot_loads_counter += 2;
+    // }
 
-    if (last_screen == k_bear_select_screen && current_screen == k_2p_game_screen) {
+    if (last_screen == k_bear_select_screen && screen->current_screen == k_2p_game_screen) {
       player_1_bears = ((BearSelect*) screen)->player_1_bears;
       player_2_bears = ((BearSelect*) screen)->player_2_bears;
     }

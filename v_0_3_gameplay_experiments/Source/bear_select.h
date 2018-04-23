@@ -66,15 +66,15 @@ class BearSelect: public Screen {
   std::map<int, int> available_bear_choices;
 
   std::map<std::string, std::string> bear_pretty_names = {
-    {"lil_jon", "Lil' Jon"},
-    {"mortimer", "Mortimer"},
-    {"gluke", "Gluke"},
+    {"lil_jon", "Lil Bounce Bear"},
+    {"mortimer", "Boss Bear"},
+    {"gluke", "Glitchy Bear"},
     {"mags", "Mags"},
-    {"bob_smith", "Bob Smith"},
-    {"lord_lonsdale", "Lord Lonsdale"},
+    {"bob_smith", "Emo Bob"},
+    {"lord_lonsdale", "Lord Dartsdale"},
     {"hpf_swinnerton_dyer", "H.P.F. Swinnerton-Dyer"},
     {"jeff_bridges", "Jeff Bridges"},
-    {"grim", "Grim"}
+    {"grim", "Grim Bear"}
   };
 
   std::map<std::string, std::string> bear_descriptions = {

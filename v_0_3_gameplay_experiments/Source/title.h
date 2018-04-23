@@ -25,6 +25,7 @@
 #include "fmod.hpp"
 
 // Teddy Wickets includes
+#include "hot_config.h"  
 #include "globals.h"
 #include "screen.h"
 #include "textbox.h"
@@ -40,8 +41,8 @@ class Title: public Screen {
 
   TextBox* title;
 
-  TextBox* one_player_selected;
-  TextBox* one_player_unselected;
+  // TextBox* one_player_selected;
+  // TextBox* one_player_unselected;
   TextBox* two_player_selected;
   TextBox* two_player_unselected;
   TextBox* control_setup_selected;
@@ -56,7 +57,6 @@ class Title: public Screen {
   void render();
 
   void handleKeys(SDL_Event e);
-  void handleMouse(SDL_Event e);
 
   bool initialize();
   void shutdown();
