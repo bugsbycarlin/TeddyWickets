@@ -41,6 +41,8 @@ class Character {
 
     btTransform save_transform;
 
+    std::string name;
+
     int status;
 
     float radius;

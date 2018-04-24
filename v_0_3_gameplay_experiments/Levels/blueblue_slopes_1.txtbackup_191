@@ -13,8 +13,11 @@
     <type>tile_down_x_y</type>
     <type>tile_down_x_siding</type>
     <type>tile_down_x_siding_obverse</type>
+    <type>tile_down_y_siding</type>
+    <type>tile_down_y_siding_obverse</type>
     <type>flat_siding</type>
     <type>flat_siding_down_x</type>
+    <type>flat_siding_down_y</type>
     <type>flat_siding_up_x</type>
     <type>flat_siding_sideways</type>
     <type>flat_siding_filigree</type>

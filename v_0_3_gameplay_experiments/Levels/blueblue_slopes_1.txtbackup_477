@@ -2781,111 +2781,45 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="free_star">
-        <x>-81</x>
-        <y>33</y>
-        <z>18</z>
+        <x>-66</x>
+        <y>-15</y>
+        <z>30</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>-66</x>
+        <y>-9</y>
+        <z>28</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>-66</x>
+        <y>-3</y>
+        <z>26</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>-66</x>
+        <y>3</y>
+        <z>24</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>-66</x>
+        <y>9</y>
+        <z>22</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>-75</x>
+        <y>39</y>
+        <z>20</z>
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="free_star">
         <x>-9</x>
         <y>3</y>
         <z>4</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>-84</x>
-        <y>42</y>
-        <z>20</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>-78</x>
-        <y>42</y>
-        <z>20</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>-72</x>
-        <y>42</y>
-        <z>20</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>-66</x>
-        <y>42</y>
-        <z>20</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>-60</x>
-        <y>42</y>
-        <z>20</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>42</y>
-        <z>20</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>-66</y>
-        <z>34</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>-60</y>
-        <z>34</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>-54</y>
-        <z>34</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>-48</y>
-        <z>34</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>-42</y>
-        <z>34</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>-54</x>
-        <y>-36</y>
-        <z>34</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="free_star">
-        <x>-69</x>
-        <y>-18</y>
-        <z>28</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="free_star">
-        <x>-69</x>
-        <y>-12</y>
-        <z>26</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="free_star">
-        <x>-69</x>
-        <y>-6</y>
-        <z>24</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="free_star">
-        <x>-69</x>
-        <y>0</y>
-        <z>22</z>
         <r>8.7422780126189537e-08</r>
     </tile>
 </shape>

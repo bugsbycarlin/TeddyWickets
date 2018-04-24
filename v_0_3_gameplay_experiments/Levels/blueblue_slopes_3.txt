@@ -1,4 +1,4 @@
-<music>Sound/Piano.mp3</music>
+<music>Sound/Nothing_to_Doubt.mp3</music>
 
 <theme>cloud</theme>
 

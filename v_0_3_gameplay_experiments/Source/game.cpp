@@ -653,11 +653,11 @@ void Game::render() {
     look_adjust_y = look_y;
   }
   if (current_character->status == k_bear_status_normal) {
-    graphics->standardCamera(current_character->position->x + 15 + look_adjust_x, current_character->position->y + 15 + look_adjust_y, 10,
-      current_character->position->x + look_adjust_x, current_character->position->y + look_adjust_y, 0);
+    graphics->standardCamera(current_character->position->x + 15 + look_adjust_x, current_character->position->y + 15 + look_adjust_y, current_character->position->z + 10,
+      current_character->position->x + look_adjust_x, current_character->position->y + look_adjust_y, current_character->position->z);
   } else {
-    graphics->standardCamera(current_character->last_drop_position->x + 15 + look_adjust_x, current_character->last_drop_position->y + 15 + look_adjust_y, 10,
-      current_character->last_drop_position->x + look_adjust_x, current_character->last_drop_position->y + look_adjust_y, 0);
+    graphics->standardCamera(current_character->last_drop_position->x + 15 + look_adjust_x, current_character->last_drop_position->y + 15 + look_adjust_y, current_character->last_drop_position->z + 10,
+      current_character->last_drop_position->x + look_adjust_x, current_character->last_drop_position->y + look_adjust_y, current_character->last_drop_position->z);
   }
 
   float cycle = ((current_time - start_time) / 1000.0f) / 100.0f;
@@ -725,10 +725,10 @@ void Game::render() {
   textures->setTexture("player_2_HUD_background");
   graphics->rectangle(k_screen_width - 120, 0, 120, k_screen_height);
 
-  //if ((int) ((current_time - start_time) / 20.0f) % 2 == 0) {
-    textures->setTexture("selection_2");
-    graphics->rectangle(hot_config->getInt("player_" + std::to_string(current_character_number % 2 + 1) + "_x_margin"), hot_config->getInt("y_margin") + ((int) current_character_number / 2) * hud_step, 103, 103);
-  //}
+  // Selection bear is drawn in full
+  textures->setTexture(current_character->name + "_plain");
+  graphics->rectangle(hot_config->getInt("player_" + std::to_string(current_character_number % 2 + 1) + "_selection_x"), hot_config->getInt("player_selection_y"), 155, 155);
+
 
   for (int i = 0; i < player_1_bears.size(); i++) {
     textures->setTexture(player_1_bears[i] + "_box");
@@ -968,6 +968,7 @@ bool Game::initializeGamePieces() {
 
       character->roster_number = player_1_starts * 2;
       character->player_number = 1;
+      character->name = player_1_bears[player_1_starts];
       characters[player_1_starts * 2] = character;
       player_1_starts += 1;
       total_starts +=1;
@@ -982,6 +983,7 @@ bool Game::initializeGamePieces() {
       
       character->roster_number = player_2_starts * 2 + 1;
       character->player_number = 2;
+      character->name = player_2_bears[player_2_starts];
       characters[player_2_starts * 2 + 1] = character;
       player_2_starts += 1;
       total_starts += 1;
@@ -1067,6 +1069,16 @@ bool Game::initializeTextures() {
   textures->addTexture("hpf_swinnerton_dyer_box", "hpf_swinnerton_dyer_box.png");
   textures->addTexture("jeff_bridges_box", "jeff_bridges_box.png");
   textures->addTexture("grim_box", "grim_box.png");
+
+  textures->addTexture("lil_jon_plain", "lil_jon_plain.png");
+  textures->addTexture("mortimer_plain", "mortimer_plain.png");
+  textures->addTexture("gluke_plain", "gluke_plain.png");
+  textures->addTexture("mags_plain", "mags_plain.png");
+  textures->addTexture("bob_smith_plain", "bob_smith_plain.png");
+  textures->addTexture("lord_lonsdale_plain", "lord_lonsdale_plain.png");
+  textures->addTexture("hpf_swinnerton_dyer_plain", "hpf_swinnerton_dyer_plain.png");
+  textures->addTexture("jeff_bridges_plain", "jeff_bridges_plain.png");
+  textures->addTexture("grim_plain", "grim_plain.png");
 
   textures->addTexture("flat_shot_glyph", "flat_shot_glyph.png");
   textures->addTexture("up_shot_glyph", "up_shot_glyph.png");

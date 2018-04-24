@@ -8,11 +8,10 @@
 #include "boxguy.h"
 
 BoxGuy::BoxGuy(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation) {
-  this->rotated = false;
+  this->rotated = true;
   // assuming wicket is rotated +- Pi/2, or 0
-  if (rotation - M_PI > 0.2 || rotation - M_PI < -0.2) {
-    printf("Rotation was %0.2f, so this has been deemed a rotated\n", rotation);
-    this->rotated = true;
+  if (abs(rotation - M_PI) < 0.2 || abs(rotation - M_PI - M_PI) < 0.2) {
+    this->rotated = false;
   }
 
   squish = 1.0f;
