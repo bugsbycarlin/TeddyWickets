@@ -23,23 +23,17 @@
   +- Fix bear selection bug (it wasn't going from bear select screen to game screen)
   +- fix physics bumper / rotation issue
   +- Finish blueblue_slopes_2 level
-
-  Some remainder goals from the last phase:
-  - Finish blueblue_slopes_1 level
-  - Even better indication of which bear is selected (hover on the sides)
+  +- Finish blueblue_slopes_1 level
+  +- Even better indication of which bear is selected (hover on the sides)
 
   STOP THERE!
   - Refine shot power to fit levels better
   - Boxguys go by facing (true rotation) not just x vs y
   - Make last wicket optional
   - more squish and bounce!
-  
   - Topspin and backspin 
   - Tutorial comic bubbles
   
-  - Even better indication of which bear is selected
-
-
   Tech debt for this phase:
   - Lint for style
   - Refactor a little to make sure things are happening in the right place

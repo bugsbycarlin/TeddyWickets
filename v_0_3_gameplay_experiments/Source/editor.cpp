@@ -79,7 +79,7 @@ void Editor::handleKeys(SDL_Event e) {
     saveMap();
   }
 
-  if (e.key.keysym.sym == SDLK_n) {
+  if (e.key.keysym.sym == SDLK_n || e.key.keysym.sym == SDLK_v) {
     if (current_shape != nullptr) {
       hazards.push_front(current_shape);
       if (current_shape->object_type == "wicket") {
@@ -98,6 +98,9 @@ void Editor::handleKeys(SDL_Event e) {
     }
     current_shape = new Hazard(shape_types[current_shape_type], physics,
         new Point(last_x, last_y + 6, last_z), M_PI);
+    if (e.key.keysym.sym == SDLK_v) {
+      current_shape->position->y = current_shape->position->y - 6;
+    }
   }
 
   if (e.key.keysym.sym == SDLK_z) {
@@ -130,6 +133,12 @@ void Editor::handleKeys(SDL_Event e) {
       current_shape->position->z = current_shape->position->z - 1;
     } else if (e.key.keysym.sym == SDLK_a) {
       current_shape->position->z = current_shape->position->z + 1;
+    } else if (e.key.keysym.sym == SDLK_b) {
+      current_shape->position->y = current_shape->position->y - 6;
+      current_shape->position->x = current_shape->position->x + 6;
+    } else if (e.key.keysym.sym == SDLK_m) {
+      current_shape->position->y = current_shape->position->y - 6;
+      current_shape->position->x = current_shape->position->x - 6;
     } else if (e.key.keysym.sym == SDLK_r) {
       current_shape->rotation = current_shape->rotation + M_PI / 4.0f;
       if (current_shape->rotation > 2 * M_PI) {

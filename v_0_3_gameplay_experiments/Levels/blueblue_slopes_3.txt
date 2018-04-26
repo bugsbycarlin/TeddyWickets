@@ -1,4 +1,4 @@
-<music>Sound/Nothing_to_Doubt.mp3</music>
+<music>Sound/Golf_Theme.mp3</music>
 
 <theme>cloud</theme>
 

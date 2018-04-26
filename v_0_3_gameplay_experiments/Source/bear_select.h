@@ -45,7 +45,9 @@ class BearSelect: public Screen {
   TextBox* player_2_choose_text;
   TextBox* bear_name_text;
   TextBox* bear_description_text;
-  TextBox* go_text;
+  TextBox* go_text_1;
+  TextBox* go_text_2;
+  TextBox* go_text_3;
 
   int bear_choice;
 

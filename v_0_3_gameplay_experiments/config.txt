@@ -1,17 +1,30 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/blueblue_slopes_1.txt</value>
-  <!-- <value>Levels/wawa_shores_1.txt</value> -->
+  <value>Levels/blueblue_slopes_4.txt</value>
   <!-- <value>Levels/test_level_1.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_1.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_2.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_3.txt</value> -->
+  <!-- <value>Levels/blueblue_slopes_4.txt</value> -->
+  <!-- <value>Levels/blueblue_slopes_5.txt</value> -->
 </param>
 
 <param>
   <type>int</type>
   <name>use_music</name>
+  <value>1</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>default_zoom</name>
+  <value>17</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>squish_experiment</name>
   <value>1</value>
 </param>
 

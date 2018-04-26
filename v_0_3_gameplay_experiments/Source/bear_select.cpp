@@ -76,12 +76,12 @@ void BearSelect::update() {
   }
 
   if (game_mode == k_lets_go_mode) {
-    if (current_time - mark_time > 2000.0f) {
+    if (current_time - mark_time > 1500.0f) {
       current_screen = k_2p_game_screen;
     } else {
-      go_text->setColor(rand() % static_cast<int>(250 + 1),
-        rand() % static_cast<int>(250 + 1),
-        rand() % static_cast<int>(250 + 1));
+      // go_text->setColor(rand() % static_cast<int>(250 + 1),
+      //   rand() % static_cast<int>(250 + 1),
+      //   rand() % static_cast<int>(250 + 1));
     }
   }
 }
@@ -217,7 +217,23 @@ void BearSelect::render() {
     n = k_bear_choice_y + k_bear_choice_margin * (bear_choice / 3);
     graphics->rectangle(m, n, k_selection_box_size, k_selection_box_size);
   } else if (game_mode == k_lets_go_mode) {
-    go_text->render();
+    int max = (int) ((last_time - mark_time - 100.0f) / 100.0f);
+    if (max > 9) max = 9;
+    // if (last_time - mark_time > 200.0f) {
+    //   go_text_1->render();
+    // }
+    // if (last_time - mark_time > 300.0f) {
+    //   go_text_2->render();
+    // }
+    // if (last_time - mark_time > 400.0f) {
+    //   go_text_3->render();
+    // }
+    for (int i = 0; i < max; i++) {
+      int num = i * 7 % 9;
+      go_text_1->x = k_bear_choice_x + k_bear_choice_margin * (num % 3);
+      go_text_1->y = k_bear_choice_y + k_bear_choice_margin * (num / 3);
+      go_text_1->render();
+    }
   }
 
   for (int j = 0; j < 3; j++) {
@@ -241,7 +257,7 @@ void BearSelect::render() {
   }
 
   if (game_mode == k_lets_go_mode) {
-    graphics->fadeOut(1.0f, 2.0f, ((last_time - mark_time) / 1000.0f) - 1.0f);
+    graphics->fadeOut(0.5f, 1.5f, ((last_time - mark_time) / 1000.0f) - 0.5f);
   }
 
   graphics->end2DDraw();
@@ -301,8 +317,15 @@ bool BearSelect::initializeTextures() {
     bear_pretty_names[bear_choices[bear_choice]], 53, 62, 89, 362, 93);
   bear_description_text = new TextBox("candy_crayon.ttf", 40,
     bear_descriptions[bear_choices[bear_choice]], 53, 62, 89, 362, 149);
-  go_text = new TextBox("candy_crayon.ttf", 200,
-    "Go Go Go!", 53, 62, 89, k_bear_choice_x, k_bear_choice_y);
+   
+  go_text_1 = new TextBox("candy_crayon.ttf", 160,
+  "Go", 0, 0, 0, k_bear_choice_x, k_bear_choice_y);
+
+  // go_text_2 = new TextBox("candy_crayon.ttf", 160,
+  // "Go", 0, 0, 0, k_bear_choice_x + k_bear_choice_margin, k_bear_choice_y + k_bear_choice_margin);
+
+  // go_text_3 = new TextBox("candy_crayon.ttf", 160,
+  // "Go!", 0, 0, 0, k_bear_choice_x + 2 * k_bear_choice_margin, k_bear_choice_y + 2 * k_bear_choice_margin);
 
   return true;
 }

@@ -1,11 +1,11 @@
-player_1_up:Key Up
-player_1_down:Key Down
-player_1_left:Key Left
-player_1_right:Key Right
-player_1_shoot_accept:Key A
-player_1_cancel_switch:Key S
-player_1_special:Key D
-player_1_view_taunt:Key W
+player_1_up:P0 Dpad Up
+player_1_down:P0 Dpad Down
+player_1_left:P0 Dpad Left
+player_1_right:P0 Dpad Right
+player_1_shoot_accept:P0 Button 2
+player_1_cancel_switch:P0 Button 1
+player_1_special:P0 Button 0
+player_1_view_taunt:P0 Button 3
 player_2_up:Key Up
 player_2_down:Key Down
 player_2_left:Key Left

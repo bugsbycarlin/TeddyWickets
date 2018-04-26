@@ -22,7 +22,7 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
   quit = false;
   current_screen = k_2p_game_screen;
 
-  zoom = k_default_zoom;
+  zoom = hot_config->getFloat("default_zoom");
   default_speed_ramping = k_default_speed_ramping;
   simulation_speed = k_default_minimum_speed;
 

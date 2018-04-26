@@ -1,4 +1,4 @@
-<music>Sound/Phantom_Godmother.mp3</music>
+<music>Sound/Golf_Theme.mp3</music>
 
 <theme>No</theme>
 
