@@ -18,6 +18,7 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
   } else {
     this->model = model_cache->getModel("teddy_bear_draft_3.obj");
   }
+  //this->model = model_cache->getModel("plain_ball.obj");
 
   this->status = k_bear_status_sidelined;
 
@@ -27,9 +28,15 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
   shot_power = 0;
   up_shot = false;
 
-  radius = 0.75;
+  radius = 1.0;
+
+  //Model* plain_ball = model_cache->getModel("plain_ball.obj");
+
+  //this->identity = physics->addBallMesh(model->getMeshAsTriangles(), radius, position->x, position->y, position->z);
 
   identity = physics->addBall(radius, position->x, position->y, position->z);
+
+
   //identity = physics->addSoftball(this->model->getMeshAsTriangles(), this->position, shot_rotation);
 }
 

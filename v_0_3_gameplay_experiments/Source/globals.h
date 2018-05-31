@@ -97,8 +97,8 @@ enum {
 };
 
 // Game variables
-const float k_default_speed_ramping = 2.0f;
-const float k_default_minimum_speed = 1.25f;
+const float k_default_speed_ramping = 1.0f;
+const float k_default_minimum_speed = 1.0f;
 const float k_up_shot_angle = 60.0f * M_PI / 180.0f;
 
 

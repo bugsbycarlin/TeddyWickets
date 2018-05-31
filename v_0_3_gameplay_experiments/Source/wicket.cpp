@@ -38,15 +38,22 @@ void Wicket::render() {
 bool Wicket::flipWicket(Point* current_point, Point* last_point, int new_owner) {
   //printf("In flipWicket\n");
   // Return false if outside the box
-  if (last_point->x > position->x + 1.5f || last_point->x < position->x - 1.5f) {
+  float wicket_height = 4.0f;
+  float x_margin = 2.5f;
+  float y_margin = 1.0f;
+  if (this->rotated) {
+    x_margin = 1.0f;
+    y_margin = 2.5f;
+  }
+  if (last_point->x > position->x + x_margin || last_point->x < position->x - x_margin) {
     return false;
-  } else if (last_point->y > position->y + 1.5f || last_point->y < position->y - 1.5f) {
+  } else if (last_point->y > position->y + y_margin || last_point->y < position->y - y_margin) {
     return false;
-  } else if (current_point->x > position->x + 1.5f || current_point->x < position->x - 1.5f) {
+  } else if (current_point->x > position->x + x_margin || current_point->x < position->x - x_margin) {
     return false;
-  } else if (current_point->y > position->y + 1.5f || current_point->y < position->y - 1.5f) {
+  } else if (current_point->y > position->y + y_margin || current_point->y < position->y - y_margin) {
     return false;
-  } else if (current_point->z < position->z || current_point->z > position->z + 3.0f) {
+  } else if (current_point->z < position->z || current_point->z > position->z + wicket_height) {
     return false;
   }
 

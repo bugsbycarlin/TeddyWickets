@@ -27,6 +27,16 @@ Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float
   this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, physics_rotation);
 }
 
+// No physics
+Hazard::Hazard(std::string object_type, Point* position, float rotation) {
+  this->position = position;
+  this->rotation = rotation;
+
+  this->object_type = object_type;
+
+  this->model = model_cache->getModel(object_type + ".obj");
+}
+
 void Hazard::render() {
   graphics->color(1.0f, 1.0f, 1.0f, 1.0f);
 

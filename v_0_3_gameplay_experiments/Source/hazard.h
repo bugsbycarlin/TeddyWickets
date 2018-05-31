@@ -31,6 +31,7 @@ class Hazard {
     Model* model;
 
     Hazard(std::string object_type, Physics* physics, Point* position, float rotation);
+    Hazard(std::string object_type, Point* position, float rotation); // no physics
 
     virtual void render();
     virtual void update(float time_step);

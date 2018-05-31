@@ -84,6 +84,8 @@ class Game: public Screen {
 
   int hud_step;
 
+  bool pause_physics;
+
   std::string theme;
 
   float bpm;
@@ -119,7 +121,7 @@ class Game: public Screen {
 
   std::vector<std::string> taunts;
 
-  std::list<btTransform> future_positions = { };
+  std::list<Point*> future_positions = { };
 
   Game(std::vector<std::string> player_1_bears, std::vector<std::string> player_2_bears);
 

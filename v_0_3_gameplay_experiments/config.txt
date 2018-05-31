@@ -1,31 +1,90 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/blueblue_slopes_4.txt</value>
+  <value>Levels/meanmean_greens_1.txt</value>
   <!-- <value>Levels/test_level_1.txt</value> -->
+  <!-- <value>Levels/test_level_5.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_1.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_2.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_3.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_4.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_5.txt</value> -->
+  <!-- <value>Levels/meanmean_greens_1.txt</value> -->
 </param>
 
 <param>
   <type>int</type>
   <name>use_music</name>
-  <value>1</value>
+  <value>0</value>
+</param>
+
+<param>
+  <type>int</type>
+  <name>pause_physics</name>
+  <value>0</value>
 </param>
 
 <param>
   <type>float</type>
   <name>default_zoom</name>
-  <value>17</value>
+  <value>19</value>
 </param>
+
+
+<param>
+  <type>float</type>
+  <name>shot_fineness</name>
+  <value>50</value>
+</param>
+
 
 <param>
   <type>int</type>
   <name>squish_experiment</name>
   <value>1</value>
+</param>
+
+<param>
+<type>int</type>
+  <name>last_shot_drop</name>
+  <value>1</value>
+</param>
+
+<param>
+<type>float</type>
+  <name>ball_rolling_friction</name>
+  <value>0.1</value>
+</param>
+
+<param>
+<type>float</type>
+  <name>ball_friction</name>
+  <value>1.0</value>
+</param>
+
+<param>
+<type>float</type>
+  <name>world_rolling_friction</name>
+  <value>0.1</value>
+</param>
+
+<param>
+<type>float</type>
+  <name>world_friction</name>
+  <value>1.0</value>
+</param>
+
+
+<param>
+<type>float</type>
+  <name>bumper_restitution</name>
+  <value>1.2</value>
+</param>
+
+<param>
+<type>float</type>
+  <name>spikes_restitution</name>
+  <value>2</value>
 </param>
 
 <param>
@@ -300,7 +359,7 @@
 <param>
   <type>int</type>
   <name>free_star_star_y</name>
-  <value>-32</value>
+  <value>-24</value>
 </param>
 
 <param>

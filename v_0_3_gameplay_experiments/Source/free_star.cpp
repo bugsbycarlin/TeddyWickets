@@ -16,7 +16,7 @@ FreeStar::FreeStar(std::string object_type, Physics* physics, Point* position, f
 
   this->floating_position = new Point(position->x, position->y, position->z);
 
-  radius_expander = 1.3f;
+  radius_expander = 1.2f;
 
   this->rotated = false;
   // assuming wicket is rotated +- Pi/2, or 0

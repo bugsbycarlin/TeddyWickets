@@ -31,6 +31,11 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
 
   recompute_trajectory = false;
 
+  pause_physics = false;
+  if (hot_config->getInt("pause_physics") == 1) {
+    pause_physics = true;
+  }
+
   sway = 0;
 
   hud_step = hot_config->getInt("hud_step");
@@ -116,7 +121,9 @@ void Game::loop(SDL_Window* window, FMOD::System *sound_system) {
 void Game::update() {
   // Set time and perform physics update
   current_time = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-  physics->update(simulation_speed * (current_time - last_time) / 1000.0f);
+  if (!pause_physics) {
+    physics->update(simulation_speed * (current_time - last_time) / 1000.0f);
+  }
   last_time = current_time;
   if (simulation_speed > k_default_minimum_speed) {
     simulation_speed *= 0.98f;
@@ -188,13 +195,20 @@ void Game::update() {
     } else {
       // ... using a flat shot
       current_character->impulse(current_character->default_shot_power * sin(current_character->shot_rotation),
-        -current_character->default_shot_power * cos(current_character->shot_rotation), 0.5);
+        -current_character->default_shot_power * cos(current_character->shot_rotation), 0);
     }
 
     // Calculate all the future positions
     for (int i = 0; i < 300; i++) {
       physics->update(1.0f / 60.f);
-      if (i > 0 && i % 8 == 0) future_positions.push_front(btTransform(physics->getTransform(current_character->identity)));
+      if (i > 0 && i % 8 == 0) {
+        //future_positions.push_front(btTransform(physics->getTransform(current_character->identity)));
+        float x =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getX();
+        float y =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getY();
+        float z =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getZ();
+        future_positions.push_front(new Point(x, y, z));
+      } 
+
     }
 
     // Reset the bears
@@ -265,6 +279,11 @@ void Game::update() {
   for (auto character = characters.begin(); character != characters.end(); ++character) {
     // Update the character position (for rendering and game logic) from physics
     (*character)->updateFromPhysics();
+
+    // Print height in action mode
+    if (game_mode == k_action_mode) {
+      printf("Height: %0.4f\n", current_character->position->z);
+    }
 
     // If the character has slowed to a crawl, stop the character
     if (physics->getVelocity((*character)->identity) < 0.02f) {
@@ -477,9 +496,17 @@ void Game::shoot() {
   }
   future_positions.clear();
   simulation_speed = default_speed_ramping;
+  if (hot_config->getInt("last_shot_drop") == 1) {
+    current_character->last_drop_position->x = current_character->position->x;
+    current_character->last_drop_position->y = current_character->position->y;
+    current_character->last_drop_position->z = current_character->position->z;
+  }
   if (current_character->up_shot) {
     // an angled shot
 
+    // hack:
+    // The shot power on an upward shot is too low. So for now, I'm averaging the chosen shot power with the max shot power.
+    float hack_shot_power = (current_character->shot_power + 2 * current_character->default_shot_power) / 3.0f;
     current_character->impulse(cos(k_up_shot_angle) * current_character->shot_power * sin(current_character->shot_rotation),
       cos(k_up_shot_angle) * -current_character->shot_power * cos(current_character->shot_rotation),
       sin(k_up_shot_angle) * current_character->shot_power);
@@ -487,7 +514,7 @@ void Game::shoot() {
     // a flat shot
     current_character->impulse(current_character->shot_power * sin(current_character->shot_rotation),
       -current_character->shot_power * cos(current_character->shot_rotation),
-      0.5);
+      0.0);
   }
   // Reset shot rotation
   current_character->shot_rotation = current_character->default_shot_rotation;
@@ -499,6 +526,10 @@ void Game::handleKeys(SDL_Event e) {
 
   if (e.key.keysym.sym == SDLK_ESCAPE) {
     quit = true;
+  }
+
+  if (pause_physics && e.key.keysym.sym == SDLK_n) {
+    physics->update(simulation_speed * 50.0f / 1000.0f);
   }
 
   std::string value = control_map->translateKeyEvent(e);
@@ -543,13 +574,13 @@ void Game::handleAction(std::string action) {
     if (!look) {
       if ((action == "player_1_right" && current_character_number % 2 == 0) ||
           ((action == "player_2_right" && current_character_number % 2 == 1))) {
-        current_character->setShotRotation(current_character->shot_rotation - M_PI / 25, false);
+        current_character->setShotRotation(current_character->shot_rotation - M_PI / hot_config->getFloat("shot_fineness"), false);
         recompute_trajectory = true;
       }
 
       if ((action == "player_1_left" && current_character_number % 2 == 0) ||
           ((action == "player_2_left" && current_character_number % 2 == 1))) {
-        current_character->setShotRotation(current_character->shot_rotation + M_PI / 25, false);
+        current_character->setShotRotation(current_character->shot_rotation + M_PI / hot_config->getFloat("shot_fineness"), false);
         recompute_trajectory = true;
       }
 
@@ -613,11 +644,15 @@ void Game::handleAction(std::string action) {
 
     if ((action == "player_1_shoot_accept" && current_character_number % 2 == 0) ||
         ((action == "player_2_shoot_accept" && current_character_number % 2 == 1))) {
-      look = false;
-      game_mode = k_power_mode;
-      current_character->shot_power = 0;
-      shot_rising = true;
-      return;
+      if (look) {
+        look = false;
+        return;
+      } else {
+        game_mode = k_power_mode;
+        current_character->shot_power = 0;
+        shot_rising = true;
+        return;
+      }
     }
   }
 
@@ -680,13 +715,20 @@ void Game::render() {
 
   // Render shot marker
   if (game_mode == k_aim_mode || game_mode == k_power_mode) {
-    for (auto position = future_positions.begin(); position != future_positions.end(); ++position) {
-      btScalar transform_matrix[16];
-      position->getOpenGLMatrix(transform_matrix);
+    Point* last_future_position = current_character->position;
+    float scale = float ((current_time - start_time) % 600) / 600.0f;
+    for (auto position = future_positions.rbegin(); position != future_positions.rend(); ++position) {
+      // btScalar transform_matrix[16];
+      // position->getOpenGLMatrix(transform_matrix);
       graphics->pushModelMatrix();
-      graphics->multMatrix(transform_matrix);
+      graphics->translate(
+        scale * (*position)->x + (1 - scale) * last_future_position->x,
+        scale * (*position)->y + (1 - scale) * last_future_position->y,
+        scale * (*position)->z + (1 - scale) * last_future_position->z - current_character->radius + 0.01f);
+      // graphics->multMatrix(transform_matrix);
       shot_marker->render();
       graphics->popModelMatrix();
+      last_future_position = (*position);
     }
   }
 
@@ -952,13 +994,21 @@ bool Game::initializeGamePieces() {
       boxguy->bpm = bpm;
       hazard = (Hazard*) boxguy;
       hazards.push_front(hazard);
-    } else {
+    } else if (tile_type == "bumper") {
       hazard = new Hazard(tile_type, physics,
         new Point(x, y, z), M_PI + r);
       hazards.push_front(hazard);
-    }
+      physics->getBodyById(hazard->identity)->setRestitution(hot_config->getFloat("bumper_restitution"));
+    } else if (tile_type == "spikes") {
+      hazard = new Hazard(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      hazards.push_front(hazard);
+      physics->getBodyById(hazard->identity)->setRestitution(hot_config->getFloat("spikes_restitution"));
+    } else if (tile_type == "player_1_start") {
+      hazard = new Hazard(tile_type, // no physics
+        new Point(x, y, z), M_PI + r);
+      hazards.push_front(hazard);
 
-    if (tile_type == "player_1_start") {
       std::string model_name = "";
 
       Character* character = new Character(physics, new Point(x + hot_config->getInt("x_drop"), y + hot_config->getInt("y_drop"), z + k_character_drop_height), model_name); // 
@@ -974,6 +1024,10 @@ bool Game::initializeGamePieces() {
       total_starts +=1;
 
     } else if (tile_type == "player_2_start") {
+      hazard = new Hazard(tile_type, // no physics
+        new Point(x, y, z), M_PI + r);
+      hazards.push_front(hazard);
+
       std::string model_name = "teddy_2.obj";
 
       Character* character = new Character(physics, new Point(x + hot_config->getInt("x_drop"), y + hot_config->getInt("y_drop"), z + k_character_drop_height), model_name); // 
@@ -987,7 +1041,13 @@ bool Game::initializeGamePieces() {
       characters[player_2_starts * 2 + 1] = character;
       player_2_starts += 1;
       total_starts += 1;
+    } else {
+      hazard = new Hazard(tile_type, physics,
+        new Point(x, y, z), M_PI + r);
+      hazards.push_front(hazard);
     }
+
+    
 
     tile_element = tile_element->NextSiblingElement("tile");
   }

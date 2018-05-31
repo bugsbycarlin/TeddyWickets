@@ -6,6 +6,11 @@
 
 <types>
     <type>tile_flat</type>
+    <type>low_poly_tree</type>
+    <type>boulder_polar_grey</type>
+    <type>boulder_slate_grey</type>
+    <type>spikes</type>
+    <type>low_poly_tree</type>
     <type>tile_down_x</type>
     <type>tile_down_y</type>
     <type>tile_up_x</type>
@@ -95,42 +100,6 @@
     </tile>
     <tile type="tile_flat">
         <x>6</x>
-        <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
-        <y>0</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
-        <y>6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
-        <y>12</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
-        <y>18</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
-        <y>24</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="tile_flat">
-        <x>12</x>
         <y>30</y>
         <z>0</z>
         <r>8.7422780126189537e-08</r>
@@ -508,36 +477,6 @@
         <r>8.7422780126189537e-08</r>
     </tile>
     <tile type="wicket">
-        <x>12</x>
-        <y>18</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
-        <x>21</x>
-        <y>18</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
-        <x>30</x>
-        <y>18</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
-        <x>39</x>
-        <y>18</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
-        <x>48</x>
-        <y>18</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="wicket">
         <x>57</x>
         <y>18</y>
         <z>0</z>
@@ -550,280 +489,10 @@
         <r>1.5707963387197772</r>
     </tile>
     <tile type="boxguy">
-        <x>62</x>
-        <y>18</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
-        <x>53</x>
-        <y>18</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
-        <x>44</x>
-        <y>18</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
         <x>35</x>
         <y>18</y>
         <z>1</z>
         <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
-        <x>26</x>
-        <y>18</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="boxguy">
-        <x>17</x>
-        <y>18</y>
-        <z>1</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>0</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>6</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>12</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>18</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>24</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>30</y>
-        <z>0</z>
-        <r>8.7422780126189537e-08</r>
-    </tile>
-    <tile type="bumper">
-        <x>0</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>12</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>18</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>24</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>12</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>18</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>24</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>30</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>36</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>42</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>48</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>54</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>60</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>66</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="bumper">
-        <x>78</x>
-        <y>30</y>
-        <z>0</z>
-        <r>-1.5707967599206647</r>
-    </tile>
-    <tile type="ramp">
-        <x>10</x>
-        <y>9</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="ramp">
-        <x>10</x>
-        <y>27</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>36</y>
-        <z>0</z>
-        <r>3.1415923515981952</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>30</y>
-        <z>0</z>
-        <r>3.1415923515981952</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>6</y>
-        <z>0</z>
-        <r>3.1415923515981952</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>12</y>
-        <z>0</z>
-        <r>3.1415923515981952</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>18</y>
-        <z>0</z>
-        <r>3.1415923515981952</r>
-    </tile>
-    <tile type="bumper">
-        <x>6</x>
-        <y>24</y>
-        <z>0</z>
-        <r>3.1415923515981952</r>
-    </tile>
-    <tile type="bumper">
-        <x>30</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>36</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>42</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.570795861882619</r>
-    </tile>
-    <tile type="bumper">
-        <x>48</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707953850454608</r>
-    </tile>
-    <tile type="bumper">
-        <x>54</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>60</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>66</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
-    </tile>
-    <tile type="bumper">
-        <x>72</x>
-        <y>6</y>
-        <z>0</z>
-        <r>1.5707963387197772</r>
     </tile>
     <tile type="flat_siding_filigree">
         <x>75</x>
@@ -936,6 +605,774 @@
     <tile type="flat_siding_sideways">
         <x>78</x>
         <y>33</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>21</x>
+        <y>27</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="free_star">
+        <x>21</x>
+        <y>9</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>3</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>9</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>15</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>21</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>27</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>33</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>39</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>45</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>51</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>57</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>63</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>69</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>75</x>
+        <y>1</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>75</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>3</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>9</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>15</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>21</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>27</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>33</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>69</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>63</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>57</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>51</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>45</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>39</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>33</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>27</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>21</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>15</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>9</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>3</x>
+        <y>36</y>
+        <z>0</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>3</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>9</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>15</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>21</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>27</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>33</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>3</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>9</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>15</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>21</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>27</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>33</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>39</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>45</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>51</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>57</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>63</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.570795861882619</r>
+    </tile>
+    <tile type="bumper">
+        <x>69</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>75</x>
+        <y>36</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>33</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>27</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>21</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>15</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>9</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>77</x>
+        <y>3</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>75</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>69</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>63</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>57</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>51</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>45</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>39</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>33</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>27</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>21</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>15</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>9</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>3</x>
+        <y>1</y>
+        <z>1</z>
+        <r>1.5707963387197772</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>3</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>9</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>15</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>21</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>27</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="bumper">
+        <x>0</x>
+        <y>33</y>
+        <z>1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>12</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>18</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>24</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>30</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>36</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>42</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>48</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>54</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>60</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>66</x>
+        <y>6</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>66</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>60</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>54</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>48</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>42</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>36</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>30</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>24</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>18</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="low_poly_tree">
+        <x>12</x>
+        <y>30</y>
+        <z>0</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>12</x>
+        <y>0</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>12</x>
+        <y>6</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>12</x>
+        <y>12</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>12</x>
+        <y>18</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>12</x>
+        <y>24</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="tile_flat">
+        <x>12</x>
+        <y>30</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>0</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>3</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>6</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>9</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>12</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>15</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>18</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>21</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>24</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>27</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>30</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>15</x>
+        <y>33</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>33</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>30</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>27</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>24</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>21</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>18</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>15</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>12</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>9</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>6</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>3</y>
+        <z>-1</z>
+        <r>8.7422780126189537e-08</r>
+    </tile>
+    <tile type="spikes">
+        <x>18</x>
+        <y>0</y>
         <z>-1</z>
         <r>8.7422780126189537e-08</r>
     </tile>

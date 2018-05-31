@@ -121,6 +121,15 @@ void Editor::handleKeys(SDL_Event e) {
       current_shape->model = model_cache->getModel(shape_types[current_shape_type] + ".obj");
     }
 
+    if (e.key.keysym.sym == SDLK_e) {
+      current_shape_type -= 1;
+      if (current_shape_type < 0) {
+        current_shape_type = shape_types.size() - 1;
+      }
+      current_shape->object_type = shape_types[current_shape_type];
+      current_shape->model = model_cache->getModel(shape_types[current_shape_type] + ".obj");
+    }
+
     if (e.key.keysym.sym == SDLK_UP) {
       current_shape->position->x = current_shape->position->x - 1;
     } else if (e.key.keysym.sym == SDLK_DOWN) {

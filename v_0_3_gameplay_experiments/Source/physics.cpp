@@ -141,7 +141,7 @@ int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rota
   rotation_quaternion.setEuler(0, 0, rotation);
   transform.setRotation(rotation_quaternion);
 
-  return addBody(shape, transform, 0.0f, 0.4f, 0.05f, 0.8f);
+  return addBody(shape, transform, 0.0f, hot_config->getFloat("world_friction"), hot_config->getFloat("world_rolling_friction"), 0.8f);
 }
 
 // Add a mesh which is to be used as a softbody for the player ball
@@ -168,8 +168,8 @@ int Physics::addSoftball(std::list<Triangle*> triangles, Point* position, float 
   transform.setRotation(rotation_quaternion);
 
   float mass = 1.0f;
-  float friction = 0.4f;
-  float rolling_friction = 0.05f;
+  float friction = hot_config->getFloat("ball_friction");
+  float rolling_friction = hot_config->getFloat("ball_rolling_friction");
   float restitution = 0.7f;
 
   const btVector3 meshScaling = mesh->getScaling();
@@ -276,7 +276,33 @@ int Physics::addBall(float radius, float x_pos, float y_pos, float z_pos) {
   rotation_quaternion.setEuler(0, 0, k_default_shot_rotation);
   transform.setRotation(rotation_quaternion);
 
-  return addBody(shape, transform, 1.0f, 0.4f, 0.05f, 0.7f);
+  return addBody(shape, transform, 1.0f, hot_config->getFloat("ball_friction"), hot_config->getFloat("ball_rolling_friction"), 0.7f);
+}
+
+// Add a ball/character object to the physics system.
+int Physics::addBallMesh(std::list<Triangle*> triangles, float radius, float x_pos, float y_pos, float z_pos) {
+  btTriangleMesh *mesh = new btTriangleMesh();
+  int counter = 0;
+  for (auto triangle = triangles.begin(); triangle != triangles.end(); ++triangle) {
+    mesh->addTriangle(btVector3((*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y),
+      btVector3((*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y),
+      btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y));
+    counter += 1;
+  }
+  //printf("Added %d triangles to the physics system.\n", counter);
+  btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+
+  collision_shapes.push_back(shape);
+
+  btTransform transform;
+  transform.setIdentity();
+  transform.setOrigin(btVector3(x_pos, y_pos, z_pos));
+
+  btQuaternion rotation_quaternion;
+  rotation_quaternion.setEuler(0, 0, k_default_shot_rotation);
+  transform.setRotation(rotation_quaternion);
+
+  return addBody(shape, transform, 1.0f, hot_config->getFloat("ball_friction"), hot_config->getFloat("ball_rolling_friction"), 0.7f);
 }
 
 // Get a rigid body by integer identity
