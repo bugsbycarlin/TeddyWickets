@@ -1,6 +1,7 @@
 .PHONY: TeddyWickets
 .PHONY: ModelViewer
 .PHONY: GLTest
+.PHONY: CollisionIssue
 
 TeddyWickets:
 		g++ -w \
@@ -88,4 +89,16 @@ GLTest:
 		./Libraries/libLinearMath_gmake_x64_release.a \
 		-I Source/fmod_src \
 		./Libraries/libfmod.dylib \
+		-rpath ./Libraries
+
+
+CollisionIssue:
+	  g++ -w \
+		./Source/collision_issue.cpp \
+		-std=c++11 \
+		-o CollisionIssue \
+		-I Source/bullet_src \
+		./Libraries/libBulletCollision_gmake_x64_release.a \
+		./Libraries/libBulletDynamics_gmake_x64_release.a \
+		./Libraries/libLinearMath_gmake_x64_release.a \
 		-rpath ./Libraries
