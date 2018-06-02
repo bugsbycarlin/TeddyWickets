@@ -33,12 +33,6 @@
 </types>
 
 <shape>
-    <tile type="huge_tile">
-        <x>-60</x>
-        <y>-60</y>
-        <z>0</z>
-        <r>0</r>
-    </tile>
     <tile type="wicket">
         <x>84</x>
         <y>81</y>

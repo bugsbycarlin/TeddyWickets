@@ -48,6 +48,7 @@
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
 #include "BulletSoftBody/btSoftBodyHelpers.h"
 #include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
+#include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 
 btSoftRigidDynamicsWorld* dynamics_world;
 btSequentialImpulseConstraintSolver* solver;
@@ -98,28 +99,43 @@ btRigidBody* addBall(float radius, float x_pos, float y_pos, float z_pos) {
   body->setRollingFriction(rolling_friction);
   body->setRestitution(restitution);
 
+  body->setAnisotropicFriction(shape->getAnisotropicRollingFrictionDirection(),btCollisionObject::CF_ANISOTROPIC_ROLLING_FRICTION);
+
   dynamics_world->addRigidBody(body);
 
   return body;
 }
 
-btRigidBody* addFloor(float size) {
+// static bool CustomMaterialCombinerCallback(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0,int partId0,int index0,const btCollisionObjectWrapper* colObj1,int partId1,int index1)
+// {
+//   btAdjustInternalEdgeContacts(cp,colObj1,colObj0, partId1,index1);
+//   return true;
+// }
+
+// extern ContactAddedCallback   gContactAddedCallback;
+
+btRigidBody* addFloorTile(float x, float y, float size) {
   btTriangleMesh *mesh = new btTriangleMesh();
   int counter = 0;
   mesh->addTriangle(
-    btVector3(-size, -size, 0),
-    btVector3(-size, size, 0),
-    btVector3(size, size, 0));
+    btVector3(x + -size, y + -size, 0),
+    btVector3(x + -size, y + size, 0),
+    btVector3(x + size, y + size, 0));
   mesh->addTriangle(
-    btVector3(-size, -size, 0),
-    btVector3(size, size, 0),
-    btVector3(size, -size, 0));
+    btVector3(x + -size, y + -size, 0),
+    btVector3(x + size, y + size, 0),
+    btVector3(x + size, y + -size, 0));
 
-  btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+  btConvexTriangleMeshShape* shape = new btConvexTriangleMeshShape(mesh, true);
+
+  // shape->setCollisionFlags(shape->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
+  // btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
+  // btGenerateInternalEdgeInfo(shape, triangleInfoMap);
 
   btTransform transform;
   transform.setIdentity();
-  transform.setOrigin(btVector3(0, 0, 0));
+  transform.setOrigin(btVector3(0, 0, 0.0));
 
   btQuaternion rotation_quaternion;
   rotation_quaternion.setEuler(0, 0, 0);
@@ -128,6 +144,7 @@ btRigidBody* addFloor(float size) {
   float mass = 0.0f;
   btScalar bt_mass(mass);
   btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(bt_mass, local_inertia);
 
   btDefaultMotionState* motion_state = new btDefaultMotionState(transform);
   btRigidBody::btRigidBodyConstructionInfo rigid_body_info(bt_mass, motion_state, shape, local_inertia);
@@ -135,7 +152,63 @@ btRigidBody* addFloor(float size) {
 
   float friction = 1.0;
   float rolling_friction = 0.1;
-  float restitution = 0.7f;
+  float restitution = 0.8f;
+  body->setFriction(friction);
+  body->setRollingFriction(rolling_friction);
+  body->setRestitution(restitution);
+
+  body->setAnisotropicFriction(shape->getAnisotropicRollingFrictionDirection(),btCollisionObject::CF_ANISOTROPIC_ROLLING_FRICTION);
+
+  dynamics_world->addRigidBody(body);
+
+  return body;
+}
+
+btRigidBody* addFloor(float size) {
+  btTriangleMesh *mesh = new btTriangleMesh();
+  int counter = 0;
+  for (int k = -size/20; k <= size/20; k++) {
+    for (int l = -size/20; l <= size/20; l++) {
+      //btRigidBody* floor = addFloor(20 * k, 20 * l, 10.0f);
+
+      mesh->addTriangle(
+        btVector3(20 * k + -10, 20 * l + -10, 0),
+        btVector3(20 * k + -10, 20 * l + 10, 0),
+        btVector3(20 * k + 10, 20 * l + 10, 0));
+      mesh->addTriangle(
+        btVector3(20 * k + -10, 20 * l + -10, 0),
+        btVector3(20 * k + 10, 20 * l + 10, 0),
+        btVector3(20 * k + 10, 20 * l + -10, 0));
+    }
+  }
+
+  btConvexTriangleMeshShape* shape = new btConvexTriangleMeshShape(mesh, true);
+
+  // shape->setCollisionFlags(shape->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
+  // btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
+  // btGenerateInternalEdgeInfo(shape, triangleInfoMap);
+
+  btTransform transform;
+  transform.setIdentity();
+  transform.setOrigin(btVector3(0, 0, 0.0));
+
+  btQuaternion rotation_quaternion;
+  rotation_quaternion.setEuler(0, 0, 0);
+  transform.setRotation(rotation_quaternion);
+
+  float mass = 0.0f;
+  btScalar bt_mass(mass);
+  btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(bt_mass, local_inertia);
+
+  btDefaultMotionState* motion_state = new btDefaultMotionState(transform);
+  btRigidBody::btRigidBodyConstructionInfo rigid_body_info(bt_mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(rigid_body_info);
+
+  float friction = 1.0;
+  float rolling_friction = 0.1;
+  float restitution = 0.8f;
   body->setFriction(friction);
   body->setRollingFriction(rolling_friction);
   body->setRestitution(restitution);
@@ -179,6 +252,17 @@ int main(int argc, char* args[]) {
   // Smack the ball this hard
   float shot_power = 20.0f;
 
+  // Create the floor
+  //btRigidBody* floor = addFloor(200.0f);
+
+  // Or create floor tiles
+  float size = 200.0f;
+  for (int k = -size/20; k <= size/20; k++) {
+    for (int l = -size/20; l <= size/20; l++) {
+      addFloorTile(20 * k, 20 * l, 10.0f);
+    }
+  }
+
   // Run this simulation with each of 50 ball angles from 0 to PI.
   for (int i = 0; i < 50; i++) {
 
@@ -186,14 +270,15 @@ int main(int argc, char* args[]) {
     float theta = i * (M_PI / 50.0f);
     printf ("Testing the shot at angle %0.3f.\n", theta);
 
-    // Create the ball and the floor
+    // Create the ball
     btRigidBody* ball = addBall(1.0f, 0.0f, 0.0f, 1.0f);
-    btRigidBody* floor = addFloor(50.0f);
 
     // Let the simulation rest for a few steps
-    for (int j = 0; j < 10; j++) {
+    for (int j = 0; j < 200; j++) {
       dynamics_world->stepSimulation(regular_time_step, 10);
     }
+
+    ball->activate(true);
 
     // Rotate like a chump
     setRotation(ball, 0, 0, theta);
@@ -201,7 +286,7 @@ int main(int argc, char* args[]) {
     // Smack the ball in the theta direction
     float impulse_x = shot_power * sin(theta);
     float impulse_y = -1 * shot_power * cos(theta);
-    ball->applyCentralImpulse(btVector3(impulse_x, impulse_y, 0));
+    ball->applyCentralImpulse(btVector3(impulse_x, impulse_y, 0.5));
 
     // Step forward 120 steps, each 1/60 plus or minus some jitter
     float max_z = -10;
@@ -240,6 +325,6 @@ int main(int argc, char* args[]) {
 
     // Remove the ball and floor
     dynamics_world->removeCollisionObject(ball);
-    dynamics_world->removeCollisionObject(floor);
+    //dynamics_world->removeCollisionObject(floor);
   }
 }

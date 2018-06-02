@@ -63,6 +63,8 @@ class Physics {
     int addMesh(std::list<Triangle*> triangles, Point* position, float rotation);
     int addSoftball(std::list<Triangle*> triangles, Point* position, float rotation);
 
+    int addFloor(float size);
+
     void update(float time_step);
 
     void impulse(int identity, float x_impulse, float y_impulse, float z_impulse);

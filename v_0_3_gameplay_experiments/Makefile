@@ -2,6 +2,8 @@
 .PHONY: ModelViewer
 .PHONY: GLTest
 .PHONY: CollisionIssue
+.PHONY: CollisionIssueStep2
+.PHONY: CollisionIssueStep3
 
 TeddyWickets:
 		g++ -w \
@@ -100,5 +102,32 @@ CollisionIssue:
 		-I Source/bullet_src \
 		./Libraries/libBulletCollision_gmake_x64_release.a \
 		./Libraries/libBulletDynamics_gmake_x64_release.a \
+		./Libraries/libBulletSoftBody_gmake_x64_release.a \
+		./Libraries/libLinearMath_gmake_x64_release.a \
+		-rpath ./Libraries
+
+
+CollisionIssueStep2:
+	  g++ -w \
+		./Source/collision_issue_step_2.cpp \
+		-std=c++11 \
+		-o CollisionIssueStep2 \
+		-I Source/bullet_src \
+		./Libraries/libBulletCollision_gmake_x64_release.a \
+		./Libraries/libBulletDynamics_gmake_x64_release.a \
+		./Libraries/libBulletSoftBody_gmake_x64_release.a \
+		./Libraries/libLinearMath_gmake_x64_release.a \
+		-rpath ./Libraries
+
+
+CollisionIssueStep3:
+	  g++ -w \
+		./Source/collision_issue_step_3.cpp \
+		-std=c++11 \
+		-o CollisionIssueStep3 \
+		-I Source/bullet_src \
+		./Libraries/libBulletCollision_gmake_x64_release.a \
+		./Libraries/libBulletDynamics_gmake_x64_release.a \
+		./Libraries/libBulletSoftBody_gmake_x64_release.a \
 		./Libraries/libLinearMath_gmake_x64_release.a \
 		-rpath ./Libraries

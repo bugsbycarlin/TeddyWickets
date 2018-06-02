@@ -1,7 +1,7 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/meanmean_greens_1.txt</value>
+  <value>Levels/test_level_5.txt</value>
   <!-- <value>Levels/test_level_1.txt</value> -->
   <!-- <value>Levels/test_level_5.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_1.txt</value> -->

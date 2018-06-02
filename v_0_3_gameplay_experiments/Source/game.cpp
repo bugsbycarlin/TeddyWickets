@@ -186,41 +186,44 @@ void Game::update() {
     }
 
     // Set up the shot
-    future_positions.clear();
-    if (current_character->up_shot) {
-      // ... using an angled degree shot
-      current_character->impulse(cos(k_up_shot_angle) * current_character->default_shot_power * sin(current_character->shot_rotation),
-        cos(k_up_shot_angle) * -current_character->default_shot_power * cos(current_character->shot_rotation),
-        sin(k_up_shot_angle) * current_character->default_shot_power);
-    } else {
-      // ... using a flat shot
-      current_character->impulse(current_character->default_shot_power * sin(current_character->shot_rotation),
-        -current_character->default_shot_power * cos(current_character->shot_rotation), 0);
-    }
+    bool use_future = true;
+    if (use_future) {
+      future_positions.clear();
+      if (current_character->up_shot) {
+        // ... using an angled degree shot
+        current_character->impulse(cos(k_up_shot_angle) * current_character->default_shot_power * sin(current_character->shot_rotation),
+          cos(k_up_shot_angle) * -current_character->default_shot_power * cos(current_character->shot_rotation),
+          sin(k_up_shot_angle) * current_character->default_shot_power);
+      } else {
+        // ... using a flat shot
+        current_character->impulse(current_character->default_shot_power * sin(current_character->shot_rotation),
+          -current_character->default_shot_power * cos(current_character->shot_rotation), 0);
+      }
 
-    // Calculate all the future positions
-    for (int i = 0; i < 300; i++) {
-      physics->update(1.0f / 60.f);
-      if (i > 0 && i % 8 == 0) {
-        //future_positions.push_front(btTransform(physics->getTransform(current_character->identity)));
-        float x =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getX();
-        float y =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getY();
-        float z =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getZ();
-        future_positions.push_front(new Point(x, y, z));
-      } 
+      // Calculate all the future positions
+      for (int i = 0; i < 300; i++) {
+        physics->update(1.0f / 60.f);
+        if (i > 0 && i % 8 == 0) {
+          //future_positions.push_front(btTransform(physics->getTransform(current_character->identity)));
+          float x =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getX();
+          float y =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getY();
+          float z =  btTransform(physics->getTransform(current_character->identity)).getOrigin().getZ();
+          future_positions.push_front(new Point(x, y, z));
+        } 
 
-    }
+      }
 
-    // Reset the bears
-    for (auto character = characters.begin(); character != characters.end(); ++character) {
-      physics->setTransform((*character)->identity, (*character)->save_transform);
+      // Reset the bears
+      for (auto character = characters.begin(); character != characters.end(); ++character) {
+        physics->setTransform((*character)->identity, (*character)->save_transform);
 
-      if ((*character)->status != k_bear_status_finished) {
-        physics->stop((*character)->identity);
-        physics->setPositionAndRotation((*character)->identity,
-          new Point((*character)->position->x, (*character)->position->y, (*character)->position->z),
-          0, 0, (*character)->shot_rotation);
-        physics->activate((*character)->identity);
+        if ((*character)->status != k_bear_status_finished) {
+          physics->stop((*character)->identity);
+          physics->setPositionAndRotation((*character)->identity,
+            new Point((*character)->position->x, (*character)->position->y, (*character)->position->z),
+            0, 0, (*character)->shot_rotation);
+          physics->activate((*character)->identity);
+        }
       }
     }
 
@@ -1063,6 +1066,8 @@ bool Game::initializeGamePieces() {
   }
   current_character_number = 0;
   current_character = characters[current_character_number];
+
+  physics->addFloor(50.0f);
 
   return true;
 }

@@ -25,8 +25,10 @@ int Physics::addBody(btCollisionShape* shape,
 
   btVector3 local_inertia(0, 0, 0);
 
-  if (mass != 0.f)
+  if (mass != 0.f) {
     shape->calculateLocalInertia(bt_mass, local_inertia);
+    printf("I calculated local inertia for this one\n");
+  }
 
   btDefaultMotionState* motion_state = new btDefaultMotionState(transform);
   btRigidBody::btRigidBodyConstructionInfo rigid_body_info(bt_mass, motion_state, shape, local_inertia);
@@ -123,11 +125,16 @@ int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rota
   btTriangleMesh *mesh = new btTriangleMesh();
   int counter = 0;
   for (auto triangle = triangles.begin(); triangle != triangles.end(); ++triangle) {
-    mesh->addTriangle(btVector3((*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y),
+    mesh->addTriangle(btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y),
       btVector3((*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y),
-      btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y));
+      btVector3((*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y));
+    printf("Adding triangle with points %0.8f,%0.8f,%0.8f and %0.8f,%0.8f,%0.8f and %0.8f,%0.8f,%0.8f\n",
+      (*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y,
+      (*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y,
+      (*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y);
     counter += 1;
   }
+
   //printf("Added %d triangles to the physics system.\n", counter);
   btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
 
@@ -277,6 +284,48 @@ int Physics::addBall(float radius, float x_pos, float y_pos, float z_pos) {
   transform.setRotation(rotation_quaternion);
 
   return addBody(shape, transform, 1.0f, hot_config->getFloat("ball_friction"), hot_config->getFloat("ball_rolling_friction"), 0.7f);
+}
+
+int Physics::addFloor(float size) {
+  btTriangleMesh *mesh = new btTriangleMesh();
+  int counter = 0;
+  mesh->addTriangle(
+    btVector3(-size, -size, 0),
+    btVector3(-size, size, 0),
+    btVector3(size, size, 0));
+  mesh->addTriangle(
+    btVector3(-size, -size, 0),
+    btVector3(size, size, 0),
+    btVector3(size, -size, 0));
+
+  btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+
+  btTransform transform;
+  transform.setIdentity();
+  transform.setOrigin(btVector3(0, 0, 0));
+
+  btQuaternion rotation_quaternion;
+  rotation_quaternion.setEuler(0, 0, 0);
+  transform.setRotation(rotation_quaternion);
+
+  float mass = 0.0f;
+  btScalar bt_mass(mass);
+  btVector3 local_inertia(0, 0, 0);
+
+  btDefaultMotionState* motion_state = new btDefaultMotionState(transform);
+  btRigidBody::btRigidBodyConstructionInfo rigid_body_info(bt_mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(rigid_body_info);
+
+  float friction = 1.0;
+  float rolling_friction = 0.1;
+  float restitution = 0.7f;
+  body->setFriction(friction);
+  body->setRollingFriction(rolling_friction);
+  body->setRestitution(restitution);
+
+  dynamics_world->addRigidBody(body);
+
+  return -500;
 }
 
 // Add a ball/character object to the physics system.
