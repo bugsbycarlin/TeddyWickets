@@ -30,7 +30,7 @@ class Hazard {
     Physics* physics;
     Model* model;
 
-    Hazard(std::string object_type, Physics* physics, Point* position, float rotation);
+    Hazard(std::string object_type, Physics* physics, Point* position, float rotation, bool convex);
     Hazard(std::string object_type, Point* position, float rotation); // no physics
 
     virtual void render();

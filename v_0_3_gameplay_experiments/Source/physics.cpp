@@ -38,6 +38,8 @@ int Physics::addBody(btCollisionShape* shape,
   body->setRollingFriction(rolling_friction);
   body->setRestitution(restitution);
 
+  body->setDamping(hot_config->getFloat("linear_damping"), 0.0f);
+
   int identity = object_counter;
   dynamics_world->addRigidBody(body);
   object_counter++;
@@ -121,34 +123,51 @@ int Physics::addSurface(Point* p1, Point* p2, Point* p3, Point* p4) {
 }
 
 // Add a whole mesh
-int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rotation) {
+int Physics::addMesh(std::list<Triangle*> triangles, Point* position, float rotation, bool convex) {
   btTriangleMesh *mesh = new btTriangleMesh();
   int counter = 0;
   for (auto triangle = triangles.begin(); triangle != triangles.end(); ++triangle) {
     mesh->addTriangle(btVector3((*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y),
       btVector3((*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y),
       btVector3((*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y));
-    printf("Adding triangle with points %0.8f,%0.8f,%0.8f and %0.8f,%0.8f,%0.8f and %0.8f,%0.8f,%0.8f\n",
-      (*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y,
-      (*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y,
-      (*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y);
+    // printf("Adding triangle with points %0.8f,%0.8f,%0.8f and %0.8f,%0.8f,%0.8f and %0.8f,%0.8f,%0.8f\n",
+    //   (*triangle)->p3->z, (*triangle)->p3->x, (*triangle)->p3->y,
+    //   (*triangle)->p2->z, (*triangle)->p2->x, (*triangle)->p2->y,
+    //   (*triangle)->p1->z, (*triangle)->p1->x, (*triangle)->p1->y);
     counter += 1;
   }
 
   //printf("Added %d triangles to the physics system.\n", counter);
-  btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+  if (convex) {
+    btConvexTriangleMeshShape* shape = new btConvexTriangleMeshShape(mesh, true);
 
-  collision_shapes.push_back(shape);
+    collision_shapes.push_back(shape);
 
-  btTransform transform;
-  transform.setIdentity();
-  transform.setOrigin(btVector3(position->x, position->y, position->z));
+    btTransform transform;
+    transform.setIdentity();
+    transform.setOrigin(btVector3(position->x, position->y, position->z));
 
-  btQuaternion rotation_quaternion;
-  rotation_quaternion.setEuler(0, 0, rotation);
-  transform.setRotation(rotation_quaternion);
+    btQuaternion rotation_quaternion;
+    rotation_quaternion.setEuler(0, 0, rotation);
+    transform.setRotation(rotation_quaternion);
 
-  return addBody(shape, transform, 0.0f, hot_config->getFloat("world_friction"), hot_config->getFloat("world_rolling_friction"), 0.8f);
+    return addBody(shape, transform, 0.0f, hot_config->getFloat("world_friction"), hot_config->getFloat("world_rolling_friction"), 0.8f);
+  } else {
+    btBvhTriangleMeshShape* shape = new btBvhTriangleMeshShape(mesh, true);
+
+    collision_shapes.push_back(shape);
+
+    btTransform transform;
+    transform.setIdentity();
+    transform.setOrigin(btVector3(position->x, position->y, position->z));
+
+    btQuaternion rotation_quaternion;
+    rotation_quaternion.setEuler(0, 0, rotation);
+    transform.setRotation(rotation_quaternion);
+
+    return addBody(shape, transform, 0.0f, hot_config->getFloat("world_friction"), hot_config->getFloat("world_rolling_friction"), 0.8f);
+  }
+  
 }
 
 // Add a mesh which is to be used as a softbody for the player ball

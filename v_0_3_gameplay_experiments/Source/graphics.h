@@ -118,6 +118,7 @@ class Graphics {
   void clearScreen();
   void clearScreenWithColor(float r, float g, float b, float a);
   void set3d(float zoom);
+  void setPerspective3d();
   void standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z);
   void standardLightPosition();
   void setLightPosition(float x, float y, float z);

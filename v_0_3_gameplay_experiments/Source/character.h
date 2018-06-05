@@ -13,6 +13,7 @@
 #include <queue>
 #include <deque>
 
+#include "hot_config.h"
 #include "globals.h"
 #include "graphics.h"
 #include "model_cache.h"

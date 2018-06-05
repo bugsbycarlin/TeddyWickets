@@ -7,7 +7,7 @@
 
 #include "boxguy.h"
 
-BoxGuy::BoxGuy(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation) {
+BoxGuy::BoxGuy(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation, false) {
   this->rotated = true;
   // assuming wicket is rotated +- Pi/2, or 0
   if (abs(rotation - M_PI) < 0.2 || abs(rotation - M_PI - M_PI) < 0.2) {

@@ -7,7 +7,7 @@
 
 #include "hazard.h"
 
-Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float rotation) {
+Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float rotation, bool convex) {
   this->position = position;
   this->rotation = rotation;
 
@@ -24,7 +24,7 @@ Hazard::Hazard(std::string object_type, Physics* physics, Point* position, float
   //   physics_rotation = rotation;
   // }
 
-  this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, physics_rotation);
+  this->identity = physics->addMesh(this->model->getMeshAsTriangles(), this->position, physics_rotation, convex);
 }
 
 // No physics

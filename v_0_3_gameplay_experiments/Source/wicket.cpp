@@ -7,7 +7,7 @@
 
 #include "wicket.h"
 
-Wicket::Wicket(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation) {
+Wicket::Wicket(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation, false) {
   this->value = 3;
 
   this->player_owner = 0;

@@ -7,7 +7,7 @@
 
 #include "free_star.h"
 
-FreeStar::FreeStar(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation) {
+FreeStar::FreeStar(std::string object_type, Physics* physics, Point* position, float rotation) : Hazard(object_type, physics, position, rotation, false) {
   this->value = 1;
 
   this->player_owner = 0;

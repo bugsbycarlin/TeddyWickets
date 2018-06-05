@@ -1,7 +1,7 @@
 <param>
   <type>string</type>
   <name>map_file</name>
-  <value>Levels/test_level_5.txt</value>
+  <value>Levels/indoor_snores_2.txt</value>
   <!-- <value>Levels/test_level_1.txt</value> -->
   <!-- <value>Levels/test_level_5.txt</value> -->
   <!-- <value>Levels/blueblue_slopes_1.txt</value> -->
@@ -25,9 +25,9 @@
 </param>
 
 <param>
-  <type>float</type>
+  <type>int</type>
   <name>default_zoom</name>
-  <value>19</value>
+  <value>55</value>
 </param>
 
 
@@ -35,6 +35,40 @@
   <type>float</type>
   <name>shot_fineness</name>
   <value>50</value>
+</param>
+
+
+<param>
+  <type>float</type>
+  <name>three_fourths_camera_x_offset</name>
+  <value>0</value>
+</param>
+
+
+<param>
+  <type>float</type>
+  <name>three_fourths_camera_y_offset</name>
+  <value>0.5</value>
+</param>
+
+<param>
+  <type>float</type>
+  <name>three_fourths_camera_z_offset</name>
+  <value>1.0</value>
+</param>
+
+
+<param>
+  <type>float</type>
+  <name>default_shot_rotation</name>
+  <value>0</value>
+</param>
+
+
+<param>
+  <type>float</type>
+  <name>linear_damping</name>
+  <value>0.7</value>
 </param>
 
 
@@ -371,7 +405,7 @@
 <param>
   <type>float</type>
   <name>shot_power</name>
-  <value>15.0</value>
+  <value>30.0</value>
 </param>
 
 <param>

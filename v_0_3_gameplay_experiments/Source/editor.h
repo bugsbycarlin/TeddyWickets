@@ -65,6 +65,8 @@ class Editor: public Screen {
 
   float zoom;
 
+  bool three_fourths_cam = true;
+
   unsigned long start_time;
   unsigned long last_time;
   unsigned long mark_time;

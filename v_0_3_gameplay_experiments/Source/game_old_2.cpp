@@ -22,7 +22,7 @@ Game::Game(std::vector<std::string> player_1_bears, std::vector<std::string> pla
   quit = false;
   current_screen = k_2p_game_screen;
 
-  zoom = hot_config->getInt("default_zoom");
+  zoom = hot_config->getFloat("default_zoom");
   default_speed_ramping = k_default_speed_ramping;
   simulation_speed = k_default_minimum_speed;
 
@@ -679,38 +679,24 @@ void Game::render() {
 
   renderBackground();
 
-  // graphics->set3d(zoom);
-  // graphics->enableLights();
-
-  // // Set the camera to look down at the character.
-  // // For fun, change the z-value to change the viewing angle of the game.
-  // int look_adjust_x = 0;
-  // int look_adjust_y = 0;
-  // if (game_mode == k_aim_mode && look) {
-  //   look_adjust_x = look_x;
-  //   look_adjust_y = look_y;
-  // }
-  // if (current_character->status == k_bear_status_normal) {
-  //   graphics->standardCamera(current_character->position->x + 15 + look_adjust_x, current_character->position->y + 15 + look_adjust_y, current_character->position->z + 10,
-  //     current_character->position->x + look_adjust_x, current_character->position->y + look_adjust_y, current_character->position->z);
-  // } else {
-  //   graphics->standardCamera(current_character->last_drop_position->x + 15 + look_adjust_x, current_character->last_drop_position->y + 15 + look_adjust_y, current_character->last_drop_position->z + 10,
-  //     current_character->last_drop_position->x + look_adjust_x, current_character->last_drop_position->y + look_adjust_y, current_character->last_drop_position->z);
-  // }
-
-
-  float x_offset = 15;
-  float y_offset = 15;
-  float z_offset = 10;
-  graphics->setPerspective3d();
-  x_offset = hot_config->getFloat("three_fourths_camera_x_offset") * zoom;
-  y_offset = hot_config->getFloat("three_fourths_camera_y_offset") * zoom;
-  z_offset = hot_config->getFloat("three_fourths_camera_z_offset") * zoom;
-  graphics->standardCamera(-39 + x_offset, 24.5 + y_offset, 0 + z_offset,
-    -39, 24.5, 0);
-
+  graphics->set3d(zoom);
   graphics->enableLights();
 
+  // Set the camera to look down at the character.
+  // For fun, change the z-value to change the viewing angle of the game.
+  int look_adjust_x = 0;
+  int look_adjust_y = 0;
+  if (game_mode == k_aim_mode && look) {
+    look_adjust_x = look_x;
+    look_adjust_y = look_y;
+  }
+  if (current_character->status == k_bear_status_normal) {
+    graphics->standardCamera(current_character->position->x + 15 + look_adjust_x, current_character->position->y + 15 + look_adjust_y, current_character->position->z + 10,
+      current_character->position->x + look_adjust_x, current_character->position->y + look_adjust_y, current_character->position->z);
+  } else {
+    graphics->standardCamera(current_character->last_drop_position->x + 15 + look_adjust_x, current_character->last_drop_position->y + 15 + look_adjust_y, current_character->last_drop_position->z + 10,
+      current_character->last_drop_position->x + look_adjust_x, current_character->last_drop_position->y + look_adjust_y, current_character->last_drop_position->z);
+  }
 
   float cycle = ((current_time - start_time) / 1000.0f) / 100.0f;
   float distance = 200;
@@ -970,11 +956,11 @@ bool Game::initializeGamePieces() {
 
   XMLElement * tile_element = level_shape->FirstChildElement("tile");
   while (tile_element != nullptr) {
-    float x, y, z;
+    int x, y, z, grade;
     float r;
-    tile_element->FirstChildElement("x")->QueryFloatText(&x);
-    tile_element->FirstChildElement("y")->QueryFloatText(&y);
-    tile_element->FirstChildElement("z")->QueryFloatText(&z);
+    tile_element->FirstChildElement("x")->QueryIntText(&x);
+    tile_element->FirstChildElement("y")->QueryIntText(&y);
+    tile_element->FirstChildElement("z")->QueryIntText(&z);
     tile_element->FirstChildElement("r")->QueryFloatText(&r);
     std::string tile_type(tile_element->Attribute("type"));
 
@@ -1013,12 +999,12 @@ bool Game::initializeGamePieces() {
       hazards.push_front(hazard);
     } else if (tile_type == "bumper") {
       hazard = new Hazard(tile_type, physics,
-        new Point(x, y, z), M_PI + r, false);
+        new Point(x, y, z), M_PI + r);
       hazards.push_front(hazard);
       physics->getBodyById(hazard->identity)->setRestitution(hot_config->getFloat("bumper_restitution"));
     } else if (tile_type == "spikes") {
       hazard = new Hazard(tile_type, physics,
-        new Point(x, y, z), M_PI + r, false);
+        new Point(x, y, z), M_PI + r);
       hazards.push_front(hazard);
       physics->getBodyById(hazard->identity)->setRestitution(hot_config->getFloat("spikes_restitution"));
     } else if (tile_type == "player_1_start") {
@@ -1060,7 +1046,7 @@ bool Game::initializeGamePieces() {
       total_starts += 1;
     } else {
       hazard = new Hazard(tile_type, physics,
-        new Point(x, y, z), M_PI + r, false);
+        new Point(x, y, z), M_PI + r);
       hazards.push_front(hazard);
     }
 

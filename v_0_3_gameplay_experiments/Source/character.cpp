@@ -23,8 +23,8 @@ Character::Character(Physics* physics, Point* position, std::string model_name) 
   this->status = k_bear_status_sidelined;
 
   default_shot_rotation = k_default_shot_rotation;
-  shot_rotation = default_shot_rotation;
-  default_shot_power = k_default_shot_power;
+  shot_rotation = hot_config->getFloat("default_shot_rotation");
+  default_shot_power = hot_config->getFloat("shot_power");
   shot_power = 0;
   up_shot = false;
 

@@ -194,6 +194,26 @@ void Graphics::set3d(float zoom) {
   glUniformMatrix4fv(v_matrix_id, 1, GL_FALSE, glm::value_ptr(view));
 }
 
+void Graphics::setPerspective3d() {
+  // // Set one of these perspectives:
+
+  // 1. this is cool, super zoomed out
+  // ortho(-50, 50, -50, 50, -50, 50);
+
+  // 2. weirdly reasonable ortho
+  // ortho(-zoom * k_aspect_ratio, zoom * k_aspect_ratio, -zoom, zoom, -10 * zoom, 10 * zoom);
+
+  // 3. normal perspective
+  // perspective(45.0f,k_screen_width/(1.0 * k_screen_height),0.1f,1000.0f);
+
+  model = glm::mat4(1.0);
+  view = glm::mat4(1.0);
+  projection = glm::perspective(45.0,k_screen_width/(1.0 * k_screen_height),0.1,1000.0);
+  glUniformMatrix4fv(mvp_matrix_id, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+  glUniformMatrix4fv(m_matrix_id, 1, GL_FALSE, glm::value_ptr(model));
+  glUniformMatrix4fv(v_matrix_id, 1, GL_FALSE, glm::value_ptr(view));
+}
+
 void Graphics::standardCamera(float cam_x, float cam_y, float cam_z, float target_x, float target_y, float target_z) {
   // // Set the camera to look down at the character.
   // // For fun, change the z-value to change the viewing angle of the game.

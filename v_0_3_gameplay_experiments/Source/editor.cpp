@@ -25,7 +25,7 @@ Editor::Editor(std::string map_file) {
   current_shape_type = 0;
   //num_types = 18;
   this->map_file = map_file;
-  zoom = k_default_zoom;
+  zoom = hot_config->getInt("default_zoom");
   music = ""; 
 }
 
@@ -97,7 +97,7 @@ void Editor::handleKeys(SDL_Event e) {
       last_z = current_shape->position->z;
     }
     current_shape = new Hazard(shape_types[current_shape_type], physics,
-        new Point(last_x, last_y + 6, last_z), M_PI);
+        new Point(last_x, last_y + 6, last_z), M_PI, false);
     if (e.key.keysym.sym == SDLK_v) {
       current_shape->position->y = current_shape->position->y - 6;
     }
@@ -108,6 +108,14 @@ void Editor::handleKeys(SDL_Event e) {
       current_shape = nullptr;
     } else if (hazards.size() > 0) {
       hazards.pop_back();
+    }
+  }
+
+  if (e.key.keysym.sym == SDLK_c) {
+    if (three_fourths_cam == false) {
+      three_fourths_cam = true;
+    } else {
+      three_fourths_cam = false;
     }
   }
 
@@ -131,13 +139,13 @@ void Editor::handleKeys(SDL_Event e) {
     }
 
     if (e.key.keysym.sym == SDLK_UP) {
-      current_shape->position->x = current_shape->position->x - 1;
-    } else if (e.key.keysym.sym == SDLK_DOWN) {
-      current_shape->position->x = current_shape->position->x + 1;
-    } else if (e.key.keysym.sym == SDLK_LEFT) {
       current_shape->position->y = current_shape->position->y - 1;
-    } else if (e.key.keysym.sym == SDLK_RIGHT) {
+    } else if (e.key.keysym.sym == SDLK_DOWN) {
       current_shape->position->y = current_shape->position->y + 1;
+    } else if (e.key.keysym.sym == SDLK_LEFT) {
+      current_shape->position->x = current_shape->position->x + 1;
+    } else if (e.key.keysym.sym == SDLK_RIGHT) {
+      current_shape->position->x = current_shape->position->x - 1;
     } else if (e.key.keysym.sym == SDLK_s) {
       current_shape->position->z = current_shape->position->z - 1;
     } else if (e.key.keysym.sym == SDLK_a) {
@@ -165,13 +173,13 @@ void Editor::handleKeys(SDL_Event e) {
     }
   } else {
     if (e.key.keysym.sym == SDLK_UP) {
-      last_x -= 1;
-    } else if (e.key.keysym.sym == SDLK_DOWN) {
-      last_x += 1;
-    } else if (e.key.keysym.sym == SDLK_LEFT) {
       last_y -= 1;
-    } else if (e.key.keysym.sym == SDLK_RIGHT) {
+    } else if (e.key.keysym.sym == SDLK_DOWN) {
       last_y += 1;
+    } else if (e.key.keysym.sym == SDLK_LEFT) {
+      last_x += 1;
+    } else if (e.key.keysym.sym == SDLK_RIGHT) {
+      last_x -= 1;
     } else if (e.key.keysym.sym == SDLK_s) {
       last_z -= 1;
     } else if (e.key.keysym.sym == SDLK_a) {
@@ -287,12 +295,21 @@ void Editor::render() {
   graphics->set3d(zoom);
   graphics->enableLights();
 
+  float x_offset = 15;
+  float y_offset = 15;
+  float z_offset = 10;
+  if (three_fourths_cam) {
+    graphics->setPerspective3d();
+    x_offset = hot_config->getFloat("three_fourths_camera_x_offset") * zoom;
+    y_offset = hot_config->getFloat("three_fourths_camera_y_offset") * zoom;
+    z_offset = hot_config->getFloat("three_fourths_camera_z_offset") * zoom;
+  }
   if (current_shape != nullptr) {
     Point* position = current_shape->position;
-    graphics->standardCamera(position->x + 15, position->y + 15, position->z + 10,
+    graphics->standardCamera(position->x + x_offset, position->y + y_offset, position->z + z_offset,
       position->x, position->y, position->z);
   } else {
-    graphics->standardCamera(last_x + 15, last_y + 15, last_z + 10,
+    graphics->standardCamera(last_x + x_offset, last_y + y_offset, last_z + z_offset,
       last_x, last_y, last_z);
   }
 
@@ -404,16 +421,16 @@ bool Editor::initializeLevel() {
 
   XMLElement * tile_element = level_shape->FirstChildElement("tile");
   while (tile_element != nullptr) {
-    int x, y, z, grade;
+    float x, y, z, grade;
     float r;
-    tile_element->FirstChildElement("x")->QueryIntText(&x);
-    tile_element->FirstChildElement("y")->QueryIntText(&y);
-    tile_element->FirstChildElement("z")->QueryIntText(&z);
+    tile_element->FirstChildElement("x")->QueryFloatText(&x);
+    tile_element->FirstChildElement("y")->QueryFloatText(&y);
+    tile_element->FirstChildElement("z")->QueryFloatText(&z);
     tile_element->FirstChildElement("r")->QueryFloatText(&r);
     std::string tile_type(tile_element->Attribute("type"));
 
     hazards.push_front(new Hazard(tile_type, physics,
-        new Point(x, y, z), M_PI + r));
+        new Point(x, y, z), M_PI + r, false));
 
     if (tile_type == "wicket") {
       Wicket* wicket = new Wicket(tile_type, physics,
